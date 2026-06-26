@@ -25,6 +25,49 @@ func (c *PharmacyController) GetMyPrescriptions(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", prescriptions))
 }
+
+func (c *PharmacyController) CreatePrescription(ctx *gin.Context) {
+	userIDVal, exists := ctx.Get("user_id")
+	if !exists {
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		return
+	}
+	userID := uint(userIDVal.(float64))
+
+	var req models.Prescription
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.Error(utils.NewAppError(utils.ErrValidation, http.StatusUnprocessableEntity, err.Error()))
+		return
+	}
+	req.UserID = userID
+	req.Status = "Pending"
+
+	if err := c.service.CreatePrescription(&req); err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusCreated, utils.BuildSuccess("OK", "Prescription created", req))
+}
+
+func (c *PharmacyController) DeletePrescription(ctx *gin.Context) {
+	userIDVal, exists := ctx.Get("user_id")
+	if !exists {
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		return
+	}
+	userID := uint(userIDVal.(float64))
+
+	idStr := ctx.Param("id")
+	id, _ := strconv.Atoi(idStr)
+
+	if err := c.service.DeletePrescription(uint(id), &userID); err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Prescription deleted", nil))
+}
+
 func (c *PharmacyController) GetPrescriptionDetail(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, _ := strconv.Atoi(idStr)

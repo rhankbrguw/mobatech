@@ -31,4 +31,10 @@ func SetupAuthRoutes(r *gin.Engine, db *gorm.DB) {
 		userGroup.POST("/family-members", profileController.AddFamilyMember)
 		userGroup.DELETE("/family-members/:id", profileController.DeleteFamilyMember)
 	}
+
+	adminGroup := r.Group("/api/admin")
+	adminGroup.Use(middleware.AdminMiddleware())
+	{
+		adminGroup.GET("/users", authController.GetAllUsers)
+	}
 }

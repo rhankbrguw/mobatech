@@ -9,7 +9,7 @@ final appointmentRepositoryProvider = Provider((ref) {
   return AppointmentRepository(ref.watch(dioProvider));
 });
 
-final selectedSpecializationProvider = StateProvider<String>((ref) => 'All');
+final selectedPolyclinicIdProvider = StateProvider<int?>((ref) => null);
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
@@ -21,8 +21,8 @@ final doctorSortProvider = StateProvider<DoctorSortOption>(
 
 final doctorsProvider = FutureProvider<List<Doctor>>((ref) {
   final repository = ref.watch(appointmentRepositoryProvider);
-  final specialization = ref.watch(selectedSpecializationProvider);
-  return repository.getDoctors(specialization: specialization);
+  final polyclinicId = ref.watch(selectedPolyclinicIdProvider);
+  return repository.getDoctors(polyclinicId: polyclinicId);
 });
 
 final filteredDoctorsProvider = FutureProvider<List<Doctor>>((ref) async {

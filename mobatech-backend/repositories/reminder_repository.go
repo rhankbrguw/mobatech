@@ -56,7 +56,7 @@ func (r *reminderRepository) Create(reminder *models.Reminder) error {
 }
 
 func (r *reminderRepository) Update(reminder *models.Reminder) error {
-	return r.db.Save(reminder).Error
+	return r.db.Omit("created_at").Save(reminder).Error
 }
 
 func (r *reminderRepository) Delete(id uint) error {

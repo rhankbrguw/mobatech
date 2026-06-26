@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
-import '../../../../../core/providers/mock_ui_providers.dart';
+import '../../models/pharmacy_order.dart';
 
 class OrderTrackingHeader extends StatelessWidget {
-  final PharmacyOrderMock? order;
+  final PharmacyOrder? order;
   final String orderTitle;
   final String status;
 
@@ -70,7 +70,7 @@ class OrderTrackingHeader extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Tgl Pemesanan: ${order?.date ?? "Hari ini"}',
+            'Tgl Pemesanan: Hari ini',
             style: const TextStyle(color: AppColors.textGrey),
           ),
         ],

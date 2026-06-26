@@ -8,6 +8,7 @@ import (
 )
 
 type ScheduleRepository interface {
+	FindUpcomingSchedules(limit int) ([]models.DoctorSchedule, error)
 	FindByDoctorID(doctorID uint, fromDate time.Time) ([]models.DoctorSchedule, error)
 	FindByID(id uint) (*models.DoctorSchedule, error)
 	Create(schedule *models.DoctorSchedule) error
@@ -21,6 +22,18 @@ type scheduleRepository struct {
 
 func NewScheduleRepository(db *gorm.DB) ScheduleRepository {
 	return &scheduleRepository{db}
+}
+
+func (r *scheduleRepository) FindUpcomingSchedules(limit int) ([]models.DoctorSchedule, error) {
+	var schedules []models.DoctorSchedule
+	now := time.Now()
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+	err := r.db.Preload("Doctor").
+		Where("date >= ? AND is_available = ?", today, true).
+		Order("date asc, start_time asc").
+		Limit(limit).
+		Find(&schedules).Error
+	return schedules, err
 }
 
 func (r *scheduleRepository) FindByDoctorID(doctorID uint, fromDate time.Time) ([]models.DoctorSchedule, error) {
@@ -46,7 +59,7 @@ func (r *scheduleRepository) Create(schedule *models.DoctorSchedule) error {
 }
 
 func (r *scheduleRepository) Update(schedule *models.DoctorSchedule) error {
-	return r.db.Save(schedule).Error
+	return r.db.Omit("created_at").Save(schedule).Error
 }
 
 func (r *scheduleRepository) Delete(id uint) error {

@@ -138,3 +138,13 @@ func (c *ChatController) handleStream(ctx *gin.Context, outChan <-chan string, e
 		}
 	})
 }
+
+func (c *ChatController) GetAllSessions(ctx *gin.Context) {
+	sessions, err := c.service.GetAllSessions()
+	if err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", sessions))
+}

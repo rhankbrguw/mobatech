@@ -1,8 +1,26 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'dart:io' show Platform;
 
 // Localhost mapping for emulator/web environment bridging.
-const String baseUrl = 'http://127.0.0.1:8080/api';
+String get baseUrl {
+  final envUrl = dotenv.env['API_BASE_URL'];
+  if (envUrl != null && envUrl.isNotEmpty) return envUrl;
+
+  if (Platform.isAndroid) return 'http://10.0.2.2:8080/api';
+  return 'http://127.0.0.1:8080/api';
+}
+
+String get baseMediaUrl {
+  final envUrl = dotenv.env['API_BASE_URL'];
+  if (envUrl != null && envUrl.isNotEmpty) {
+    return envUrl.replaceAll('/api', '');
+  }
+  if (Platform.isAndroid) return 'http://10.0.2.2:8080';
+  return 'http://127.0.0.1:8080';
+}
 
 String? globalAuthToken;
 

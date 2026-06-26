@@ -22,7 +22,7 @@ func (r *pharmacyRepository) AddToCart(userID uint, medicineID uint, quantity in
 	err = r.db.Where("cart_id = ? AND medicine_id = ?", cart.ID, medicineID).First(&item).Error
 	if err == nil {
 		item.Quantity += quantity
-		return r.db.Save(&item).Error
+		return r.db.Omit("created_at").Save(&item).Error
 	} else if err == gorm.ErrRecordNotFound {
 		newItem := models.CartItem{
 			CartID:     cart.ID,

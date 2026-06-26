@@ -22,6 +22,7 @@ import '../../features/pharmacy/presentation/screens/order_tracking_screen.dart'
 import '../../features/pharmacy/presentation/screens/cart_screen.dart';
 import '../../features/home/presentation/screens/search_screen.dart';
 import '../../core/providers/mock_ui_providers.dart';
+import '../../features/pharmacy/models/pharmacy_order.dart';
 
 final List<RouteBase> authAndProfileRoutes = [
   GoRoute(path: '/splash', builder: (context, state) => const SplashScreen()),
@@ -97,6 +98,6 @@ final List<RouteBase> featureRoutes = [
   GoRoute(
     path: '/pharmacy/tracking',
     builder: (context, state) =>
-        OrderTrackingScreen(order: state.extra as PharmacyOrderMock?),
+        OrderTrackingScreen(order: state.extra as PharmacyOrder?),
   ),
 ];

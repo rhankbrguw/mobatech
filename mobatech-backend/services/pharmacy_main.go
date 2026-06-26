@@ -25,6 +25,7 @@ type PharmacyService interface {
 	GetPrescriptionByID(id uint) (*models.Prescription, error)
 	GetAllPrescriptions() ([]models.Prescription, error)
 	CreatePrescription(p *models.Prescription) error
+	DeletePrescription(id uint, userID *uint) error
 	UpdatePrescriptionStatus(id uint, status string) error
 
 	// Orders

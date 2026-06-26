@@ -27,8 +27,9 @@ func SetupEmergencyRoutes(r *gin.Engine, db *gorm.DB) {
 		userGroup.GET("/history", controller.GetUserHistory)
 	}
 
-	// Admin Routes (Can be protected by AdminMiddleware if you have one, using basic for now)
+	// Admin Routes (Protected)
 	adminGroup := r.Group("/api/admin/emergencies")
+	adminGroup.Use(middleware.AdminMiddleware())
 	{
 		adminGroup.GET("", controller.GetAllAdmin)
 		adminGroup.PUT("/:id/status", controller.UpdateStatusAdmin)

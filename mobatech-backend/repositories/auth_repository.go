@@ -13,6 +13,7 @@ type AuthRepository interface {
 	UpdateUser(user *models.User) error
 	AddFamilyMember(member *models.FamilyMember) error
 	DeleteFamilyMember(id uint) error
+	GetAllUsers() ([]models.User, error)
 }
 
 type authRepository struct {
@@ -40,7 +41,7 @@ func (r *authRepository) FindByID(id uint) (*models.User, error) {
 }
 
 func (r *authRepository) UpdateUser(user *models.User) error {
-	return r.db.Save(user).Error
+	return r.db.Omit("created_at").Save(user).Error
 }
 
 func (r *authRepository) AddFamilyMember(member *models.FamilyMember) error {
@@ -49,4 +50,10 @@ func (r *authRepository) AddFamilyMember(member *models.FamilyMember) error {
 
 func (r *authRepository) DeleteFamilyMember(id uint) error {
 	return r.db.Delete(&models.FamilyMember{}, id).Error
+}
+
+func (r *authRepository) GetAllUsers() ([]models.User, error) {
+	var users []models.User
+	err := r.db.Preload("FamilyMembers").Find(&users).Error
+	return users, err
 }

@@ -49,7 +49,7 @@ func (r *medicalResultRepository) Create(medicalResult *models.MedicalResult) er
 }
 
 func (r *medicalResultRepository) Update(medicalResult *models.MedicalResult) error {
-	return r.db.Save(medicalResult).Error
+	return r.db.Omit("created_at").Save(medicalResult).Error
 }
 
 func (r *medicalResultRepository) Delete(id uint) error {

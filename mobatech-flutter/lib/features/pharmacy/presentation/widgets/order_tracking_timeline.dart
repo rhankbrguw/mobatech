@@ -7,16 +7,47 @@ class OrderTrackingTimeline extends StatelessWidget {
   final bool isProcessing;
   final bool isReady;
   final bool isCompleted;
+  final bool isCancelled;
 
   const OrderTrackingTimeline({
     super.key,
     required this.isProcessing,
     required this.isReady,
     required this.isCompleted,
+    this.isCancelled = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (isCancelled) {
+      return Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundWhite,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.shadowColor,
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            _TimelineItem(
+              title: 'Pesanan Dibatalkan',
+              description: 'Pesanan ini telah dibatalkan.',
+              time: 'Selesai',
+              isCompleted: true,
+              isLast: true,
+              isError: true,
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -42,16 +73,16 @@ class OrderTrackingTimeline extends StatelessWidget {
           _TimelineItem(
             title: 'Sedang Diproses',
             description: 'Apoteker sedang menyiapkan pesanan Anda.',
-            time: isProcessing || isReady || isCompleted ? '08:30' : '-',
-            isCompleted: isProcessing || isReady || isCompleted,
+            time: isProcessing ? '08:30' : '-',
+            isCompleted: isProcessing,
             isLast: false,
           ),
           _TimelineItem(
             title: 'Siap Diambil/Dikirim',
             description:
                 'Obat siap diambil di konter atau sedang diantar kurir.',
-            time: isReady || isCompleted ? '10:00' : '-',
-            isCompleted: isReady || isCompleted,
+            time: isReady ? '10:00' : '-',
+            isCompleted: isReady,
             isLast: false,
           ),
           _TimelineItem(

@@ -18,14 +18,20 @@ class OrdersTabView extends ConsumerWidget {
         if (orders.isEmpty) {
           return const Center(child: Text(AppStrings.noOrders));
         }
-        return ListView.separated(
-          padding: const EdgeInsets.all(16.0),
-          itemCount: orders.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 16),
-          itemBuilder: (context, index) {
-            final order = orders[index];
+        return RefreshIndicator (
+          onRefresh: () async {
+            ref.invalidate(ordersProvider);
+            await ref.read(ordersProvider.future);
+          },
+          child: ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16.0),
+            itemCount: orders.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 16),
+            itemBuilder: (context, index) {
+              final order = orders[index];
             return GestureDetector(
-              onTap: () => context.push('/pharmacy/tracking'),
+              onTap: () => context.push('/pharmacy/tracking', extra: order),
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -121,6 +127,7 @@ class OrdersTabView extends ConsumerWidget {
               ),
             );
           },
+        ),
         );
       },
       loading: () => ListView.separated(

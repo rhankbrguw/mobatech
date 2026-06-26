@@ -3,10 +3,13 @@ package services
 import (
 	"backend/models"
 	"backend/repositories"
+	"bytes"
+	"net/http"
 	"time"
 )
 
 type ScheduleService interface {
+	GetUpcomingSchedules(limit int) ([]models.DoctorSchedule, error)
 	GetDoctorSchedules(doctorID uint) ([]models.DoctorSchedule, error)
 	CreateSchedule(schedule *models.DoctorSchedule) error
 	UpdateSchedule(id uint, input *models.DoctorSchedule) (*models.DoctorSchedule, error)
@@ -21,16 +24,34 @@ func NewScheduleService(scheduleRepo repositories.ScheduleRepository) ScheduleSe
 	return &scheduleService{scheduleRepo}
 }
 
+func (s *scheduleService) GetUpcomingSchedules(limit int) ([]models.DoctorSchedule, error) {
+	return s.scheduleRepo.FindUpcomingSchedules(limit)
+}
+
+func triggerRAGSync() {
+	go func() {
+		url := "http://localhost:8000/api/rag/sync"
+		resp, err := http.Post(url, "application/json", bytes.NewBuffer([]byte("{}")))
+		if err == nil {
+			resp.Body.Close()
+		}
+	}()
+}
+
 func (s *scheduleService) GetDoctorSchedules(doctorID uint) ([]models.DoctorSchedule, error) {
-	// Only show schedules from today onwards
-	now := time.Now().Truncate(24 * time.Hour)
-	return s.scheduleRepo.FindByDoctorID(doctorID, now)
+	now := time.Now()
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+	return s.scheduleRepo.FindByDoctorID(doctorID, today)
 }
 
 func (s *scheduleService) CreateSchedule(schedule *models.DoctorSchedule) error {
 	schedule.IsAvailable = true
 	schedule.Booked = 0
-	return s.scheduleRepo.Create(schedule)
+	err := s.scheduleRepo.Create(schedule)
+	if err == nil {
+		triggerRAGSync()
+	}
+	return err
 }
 
 func (s *scheduleService) UpdateSchedule(id uint, input *models.DoctorSchedule) (*models.DoctorSchedule, error) {
@@ -57,9 +78,14 @@ func (s *scheduleService) UpdateSchedule(id uint, input *models.DoctorSchedule) 
 		return nil, err
 	}
 
+	triggerRAGSync()
 	return schedule, nil
 }
 
 func (s *scheduleService) DeleteSchedule(id uint) error {
-	return s.scheduleRepo.Delete(id)
+	err := s.scheduleRepo.Delete(id)
+	if err == nil {
+		triggerRAGSync()
+	}
+	return err
 }

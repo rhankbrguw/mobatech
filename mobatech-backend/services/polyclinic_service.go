@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"backend/models"
 	"backend/repositories"
 )
@@ -43,6 +44,16 @@ func (s *polyclinicService) UpdatePolyclinic(polyclinic *models.Polyclinic) erro
 }
 
 func (s *polyclinicService) DeletePolyclinic(id uint) error {
+	polyclinic, err := s.repo.FindByID(id)
+	if err != nil {
+		return err
+	}
+
+	// Check if there are active doctors before deleting
+	if len(polyclinic.Doctors) > 0 {
+		return errors.New("Tidak bisa menghapus poliklinik karena masih ada dokter yang terdaftar di dalamnya. Pindahkan dokternya terlebih dahulu.")
+	}
+
 	return s.repo.Delete(id)
 }
 

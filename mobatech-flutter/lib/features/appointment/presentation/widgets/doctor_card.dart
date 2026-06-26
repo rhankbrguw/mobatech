@@ -69,6 +69,11 @@ class DoctorCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 6),
                           _buildInfoRow(
+                            Icons.local_hospital_outlined,
+                            doctor.polyclinicName ?? 'Belum ada poliklinik',
+                          ),
+                          const SizedBox(height: 4),
+                          _buildInfoRow(
                             Icons.medical_services_outlined,
                             doctor.specialization,
                           ),

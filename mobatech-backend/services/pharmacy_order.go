@@ -24,6 +24,19 @@ func (s *pharmacyService) CreatePrescription(p *models.Prescription) error {
 	return s.repo.CreatePrescription(p)
 }
 
+func (s *pharmacyService) DeletePrescription(id uint, userID *uint) error {
+	if userID != nil {
+		p, err := s.repo.GetPrescriptionByID(id)
+		if err != nil {
+			return err
+		}
+		if p.UserID != *userID {
+			return errors.New("unauthorized to delete this prescription")
+		}
+	}
+	return s.repo.DeletePrescription(id)
+}
+
 func (s *pharmacyService) UpdatePrescriptionStatus(id uint, status string) error {
 	return s.repo.UpdatePrescriptionStatus(id, status)
 }
@@ -75,6 +88,24 @@ func (s *pharmacyService) CreateOrder(order *models.PharmacyOrder) error {
 }
 
 func (s *pharmacyService) UpdateOrderStatus(id uint, status string) error {
+	order, err := s.repo.GetOrderByID(id)
+	if err != nil {
+		return err
+	}
+
+	// Handle stock restoration if order is cancelled
+	if status == "Cancelled" && order.Status != "Cancelled" {
+		for _, item := range order.Items {
+			// Increase stock back by item.Quantity
+			s.repo.UpdateMedicineStock(item.MedicineID, item.Quantity)
+		}
+	} else if order.Status == "Cancelled" && status != "Cancelled" {
+		// If order status is changed from Cancelled back to something else, deduct the stock again
+		for _, item := range order.Items {
+			s.repo.UpdateMedicineStock(item.MedicineID, -item.Quantity)
+		}
+	}
+
 	return s.repo.UpdateOrderStatus(id, status)
 }
 

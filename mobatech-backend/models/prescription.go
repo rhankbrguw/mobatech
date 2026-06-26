@@ -10,6 +10,7 @@ type Prescription struct {
 	Diagnosis        string             `json:"diagnosis" gorm:"type:text"`
 	PrescriptionDate string             `json:"prescription_date"`
 	ExpiryDate       string             `json:"expiry_date"`
+	ImageUrl         string             `json:"image_url"`
 	Status           string             `json:"status"` // Active, Redeemed, Expired
 	Notes            string             `json:"notes" gorm:"type:text"`
 	Items            []PrescriptionItem `json:"items" gorm:"foreignKey:PrescriptionID"`

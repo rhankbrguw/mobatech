@@ -1,29 +1,26 @@
 import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/providers/mock_ui_providers.dart';
+import '../../models/pharmacy_order.dart';
 import '../widgets/order_tracking_header.dart';
 import '../widgets/order_tracking_timeline.dart';
 
 class OrderTrackingScreen extends StatelessWidget {
-  final PharmacyOrderMock? order;
+  final PharmacyOrder? order;
 
   const OrderTrackingScreen({super.key, this.order});
 
   @override
   Widget build(BuildContext context) {
-    final orderTitle = order?.title ?? 'ORD-PH-20231015-001';
-    final status = order?.status ?? 'Diproses';
+    final orderTitle = order?.orderNumber ?? 'ORD-PH-UNKNOWN';
+    final status = order?.status ?? 'Pending';
     final statusLower = status.toLowerCase();
 
-    bool isProcessing =
-        statusLower.contains('proses') ||
-        statusLower.contains('verifying') ||
-        statusLower.contains('processing');
-    bool isReady =
-        statusLower.contains('ready') || statusLower.contains('dikirim');
-    bool isCompleted =
-        statusLower.contains('selesai') || statusLower.contains('completed');
+    bool isProcessing = statusLower == 'processing' || statusLower == 'ready' || statusLower == 'completed';
+    bool isReady = statusLower == 'ready' || statusLower == 'completed';
+    bool isCompleted = statusLower == 'completed';
+    bool isCancelled = statusLower == 'cancelled';
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLightGrey,
@@ -75,7 +72,33 @@ class OrderTrackingScreen extends StatelessWidget {
               isProcessing: isProcessing,
               isReady: isReady,
               isCompleted: isCompleted,
+              isCancelled: isCancelled,
             ),
+            const SizedBox(height: 40),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.go('/home');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Kembali ke Beranda',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textWhite,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

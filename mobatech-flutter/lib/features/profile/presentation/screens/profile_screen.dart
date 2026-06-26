@@ -11,6 +11,7 @@ import '../widgets/profile_menu_section.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/network/dio_client.dart';
+import '../widgets/medical_summary_card.dart';
 
 part 'profile_screen_parts.dart';
 
@@ -49,6 +50,8 @@ class ProfileScreen extends ConsumerWidget {
                         child: Column(
                           children: [
                             ProfileUserCard(user: user),
+                            const SizedBox(height: 24),
+                            MedicalSummaryCard(user: user, ref: ref),
                             const SizedBox(height: 32),
                             const ProfileMenuSection(),
                             const SizedBox(height: 32),

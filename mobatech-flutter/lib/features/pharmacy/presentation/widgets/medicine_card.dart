@@ -13,6 +13,7 @@ class MedicineCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 120, // Fixed height for list item
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(16),
@@ -24,11 +25,11 @@ class MedicineCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(flex: 3, child: _buildImage()),
-          Expanded(flex: 4, child: _buildDetails()),
+          Expanded(flex: 7, child: _buildDetails()),
         ],
       ),
     );
@@ -36,15 +37,27 @@ class MedicineCard extends StatelessWidget {
 
   Widget _buildImage() {
     return Container(
-      width: double.infinity,
       decoration: const BoxDecoration(
         color: AppColors.backgroundWave,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
       ),
-      child: const Icon(
-        Icons.medication,
-        size: 48,
-        color: AppColors.backgroundWhite,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
+        child: medicine.imageUrl.isNotEmpty
+            ? Image.network(
+                medicine.imageUrl.replaceAll('127.0.0.1', '10.0.2.2').replaceAll('localhost', '10.0.2.2'),
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => const Center(
+                  child: Icon(Icons.medication, size: 40, color: AppColors.backgroundWhite),
+                ),
+              )
+            : const Center(
+                child: Icon(
+                  Icons.medication,
+                  size: 40,
+                  color: AppColors.backgroundWhite,
+                ),
+              ),
       ),
     );
   }
@@ -74,7 +87,7 @@ class MedicineCard extends StatelessWidget {
             fontSize: 14,
             color: AppColors.textDark,
           ),
-          maxLines: 2,
+          maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 4),
@@ -127,19 +140,30 @@ class MedicineCard extends StatelessWidget {
   }
 
   Widget _buildAddToCartButton() {
+    final isOutOfStock = medicine.stock <= 0;
+
     return GestureDetector(
-      onTap: onAddToCart,
+      onTap: isOutOfStock ? null : onAddToCart,
       child: Container(
-        padding: const EdgeInsets.all(4),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: AppColors.primaryLight,
+          color: isOutOfStock ? AppColors.backgroundWave : AppColors.primaryLight,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Icon(
-          Icons.add,
-          color: AppColors.primary,
-          size: 16,
-        ),
+        child: isOutOfStock
+            ? const Text(
+                'Stok Habis',
+                style: TextStyle(
+                  color: AppColors.textGrey,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            : const Icon(
+                Icons.add,
+                color: AppColors.primary,
+                size: 18,
+              ),
       ),
     );
   }

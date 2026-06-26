@@ -2,21 +2,42 @@ import '../../../../core/constants/app_strings.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/network/dio_client.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HospitalCard extends StatelessWidget {
   final String name;
   final String address;
   final String distance;
+  final String? imageUrl;
+  final String? gmapsLink;
 
   const HospitalCard({
     super.key,
     required this.name,
     required this.address,
     required this.distance,
+    this.imageUrl,
+    this.gmapsLink,
   });
+
+  void _launchMaps() async {
+    final url = (gmapsLink != null && gmapsLink!.isNotEmpty) 
+      ? Uri.parse(gmapsLink!)
+      : Uri.parse('https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent('$name $address')}');
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final bool hasImage = imageUrl != null && imageUrl!.isNotEmpty;
+    final String fullImageUrl = hasImage 
+        ? (imageUrl!.startsWith('http') ? imageUrl! : '$baseMediaUrl$imageUrl')
+        : '';
+
     return Container(
       margin: const EdgeInsets.only(top: 16, left: 24, right: 24),
       decoration: BoxDecoration(
@@ -45,7 +66,16 @@ class HospitalCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.borderGrey,
                     borderRadius: BorderRadius.circular(8),
+                    image: hasImage
+                        ? DecorationImage(
+                            image: NetworkImage(fullImageUrl),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
                   ),
+                  child: !hasImage
+                      ? const Icon(Icons.local_hospital, color: Colors.white)
+                      : null,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -107,32 +137,36 @@ class HospitalCard extends StatelessWidget {
                   color: AppColors.dividerGrey.withValues(alpha: 0.5),
                 ),
                 const SizedBox(width: 16),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: AppColors.borderGrey.withValues(alpha: 0.5),
+                GestureDetector(
+                  onTap: _launchMaps,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.borderGrey.withValues(alpha: 0.5),
+                          ),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        child: const Icon(
+                          Icons.directions_outlined,
+                          color: AppColors.primary,
+                          size: 20,
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.directions_outlined,
-                        color: AppColors.primary,
-                        size: 20,
+                      const SizedBox(height: 4),
+                      Text(
+                        AppStrings.extRute,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      AppStrings.extRute,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Column(
@@ -155,9 +189,10 @@ class HospitalCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       AppStrings.extMore,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
                       ),
                     ),
                   ],

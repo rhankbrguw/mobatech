@@ -72,3 +72,12 @@ func (c *AuthController) Me(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", user))
 }
+
+func (c *AuthController) GetAllUsers(ctx *gin.Context) {
+	users, err := c.service.GetAllUsers()
+	if err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", users))
+}

@@ -7,12 +7,10 @@ import 'appointment_header_widgets.dart';
 
 class AppointmentSliverHeader extends ConsumerWidget {
   final TextEditingController searchController;
-  final String selectedSpecialization;
 
   const AppointmentSliverHeader({
     super.key,
     required this.searchController,
-    required this.selectedSpecialization,
   });
 
   @override
@@ -87,9 +85,7 @@ class AppointmentSliverHeader extends ConsumerWidget {
                     AppointmentSearchBar(searchController: searchController),
                     const SizedBox(height: 20),
                     // Filter Chips
-                    AppointmentFilterChips(
-                      selectedSpecialization: selectedSpecialization,
-                    ),
+                    const AppointmentFilterChips(),
                   ],
                 ),
               ),

@@ -39,7 +39,7 @@ func (r *hospitalServiceRepository) Create(service *models.HospitalService) erro
 }
 
 func (r *hospitalServiceRepository) Update(service *models.HospitalService) error {
-	return r.db.Save(service).Error
+	return r.db.Omit("created_at").Save(service).Error
 }
 
 func (r *hospitalServiceRepository) Delete(id uint) error {

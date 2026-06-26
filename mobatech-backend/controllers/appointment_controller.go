@@ -113,3 +113,15 @@ func (c *AppointmentController) ApproveAppointment(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
 }
+
+// POST /api/admin/appointments/:id/complete
+func (c *AppointmentController) CompleteAppointment(ctx *gin.Context) {
+	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+
+	if err := c.appointmentService.CompleteAppointment(uint(id)); err != nil {
+		ctx.Error(utils.NewValidationError(err.Error()))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
+}

@@ -73,6 +73,10 @@ func (c *PolyclinicController) UpdatePolyclinic(ctx *gin.Context) {
 func (c *PolyclinicController) DeletePolyclinic(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	if err := c.service.DeletePolyclinic(uint(id)); err != nil {
+		if err.Error() == "Tidak bisa menghapus poliklinik karena masih ada dokter yang terdaftar di dalamnya. Pindahkan dokternya terlebih dahulu." {
+			ctx.Error(utils.NewAppError(utils.ErrConflict, http.StatusConflict, err.Error()))
+			return
+		}
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}

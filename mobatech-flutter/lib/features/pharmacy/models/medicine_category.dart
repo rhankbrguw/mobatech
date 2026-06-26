@@ -7,7 +7,7 @@ class MedicineCategory {
 
   factory MedicineCategory.fromJson(Map<String, dynamic> json) {
     return MedicineCategory(
-      id: json['id'] as int,
+      id: json['ID'] ?? json['id'] as int,
       name: json['name'] as String,
       icon: json['icon'] as String,
     );

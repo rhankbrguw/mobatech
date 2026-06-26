@@ -20,8 +20,9 @@ class Reminder {
       id: json['id']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
       message: json['message']?.toString() ?? '',
-      dateTime:
-          json['date_time']?.toString() ?? json['dateTime']?.toString() ?? '',
+      dateTime: json['reminder_date']?.toString() ??
+          json['date_time']?.toString() ??
+          json['dateTime']?.toString() ?? '',
       type: json['type']?.toString() ?? '',
       isRead:
           json['is_read'] == 1 ||

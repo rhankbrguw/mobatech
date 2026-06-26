@@ -30,6 +30,7 @@ func SetupPatientSupportRoutes(r *gin.Engine, db *gorm.DB) {
 	}
 
 	mrAdminGroup := r.Group("/api/admin/medical-results")
+	mrAdminGroup.Use(middleware.AdminMiddleware())
 	{
 		mrAdminGroup.GET("", mrController.GetAll)
 		mrAdminGroup.POST("", mrController.Create)
@@ -47,6 +48,7 @@ func SetupPatientSupportRoutes(r *gin.Engine, db *gorm.DB) {
 	}
 
 	remAdminGroup := r.Group("/api/admin/reminders")
+	remAdminGroup.Use(middleware.AdminMiddleware())
 	{
 		remAdminGroup.GET("", remController.GetAll)
 		remAdminGroup.POST("", remController.Create)

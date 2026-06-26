@@ -15,6 +15,7 @@ class DoctorDetailContent extends StatelessWidget {
   final TextEditingController symptomsController;
   final bool isBooking;
   final VoidCallback onBook;
+  final Future<void> Function()? onRefresh;
 
   const DoctorDetailContent({
     super.key,
@@ -25,6 +26,7 @@ class DoctorDetailContent extends StatelessWidget {
     required this.symptomsController,
     required this.isBooking,
     required this.onBook,
+    this.onRefresh,
   });
 
   @override
@@ -35,27 +37,36 @@ class DoctorDetailContent extends StatelessWidget {
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 800),
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DoctorProfileCard(doctor: doctor),
-                    SchedulesCard(
-                      schedulesAsync: schedulesAsync,
-                      selectedScheduleId: selectedScheduleId,
-                      onScheduleSelected: onScheduleSelected,
-                    ),
-                    SymptomsCard(controller: symptomsController),
-                  ],
-                ),
-              ),
+              child: onRefresh == null 
+                ? _buildScrollableContent()
+                : RefreshIndicator(
+                    onRefresh: onRefresh!,
+                    child: _buildScrollableContent(),
+                  ),
             ),
           ),
         ),
         BookingBottomBar(isBooking: isBooking, onBook: onBook),
       ],
+    );
+  }
+
+  Widget _buildScrollableContent() {
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DoctorProfileCard(doctor: doctor),
+          SchedulesCard(
+            schedulesAsync: schedulesAsync,
+            selectedScheduleId: selectedScheduleId,
+            onScheduleSelected: onScheduleSelected,
+          ),
+          SymptomsCard(controller: symptomsController),
+        ],
+      ),
     );
   }
 }

@@ -14,11 +14,15 @@ class CartItem {
   });
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
+    final med = Medicine.fromJson(json['medicine'] as Map<String, dynamic>);
+    final qty = json['quantity'] as int;
     return CartItem(
-      id: json['id'] as int,
-      medicine: Medicine.fromJson(json['medicine'] as Map<String, dynamic>),
-      quantity: json['quantity'] as int,
-      totalPrice: (json['total_price'] as num).toDouble(),
+      id: json['ID'] ?? json['id'] as int, // Support GORM ID formatting
+      medicine: med,
+      quantity: qty,
+      totalPrice: json['total_price'] != null 
+          ? (json['total_price'] as num).toDouble() 
+          : med.price * qty,
     );
   }
 
@@ -43,9 +47,17 @@ class Cart {
     List<CartItem> cartItems = itemsList
         .map((i) => CartItem.fromJson(i))
         .toList();
+        
+    double computedTotal = 0.0;
+    for (var item in cartItems) {
+      computedTotal += item.totalPrice;
+    }
+
     return Cart(
       items: cartItems,
-      totalPrice: (json['total_price'] as num?)?.toDouble() ?? 0.0,
+      totalPrice: json['total_price'] != null 
+          ? (json['total_price'] as num).toDouble() 
+          : computedTotal,
     );
   }
 

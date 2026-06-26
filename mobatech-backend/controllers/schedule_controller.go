@@ -29,6 +29,17 @@ func (c *ScheduleController) GetDoctorSchedules(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", schedules))
 }
 
+// GET /api/admin/schedules
+func (c *ScheduleController) GetAllSchedules(ctx *gin.Context) {
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	schedules, err := c.scheduleService.GetUpcomingSchedules(limit)
+	if err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", schedules))
+}
+
 // POST /api/admin/schedules
 func (c *ScheduleController) CreateSchedule(ctx *gin.Context) {
 	var input models.DoctorSchedule

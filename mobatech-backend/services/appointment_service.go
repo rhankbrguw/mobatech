@@ -12,6 +12,7 @@ type AppointmentService interface {
 	BookAppointment(userID uint, req *models.Appointment) (*models.Appointment, error)
 	CancelAppointment(id uint, userID uint, isAdmin bool) error
 	ApproveAppointment(id uint) error
+	CompleteAppointment(id uint) error
 }
 
 type appointmentService struct {
@@ -109,4 +110,18 @@ func (s *appointmentService) ApproveAppointment(id uint) error {
 func (s *appointmentService) rollbackScheduleBooking(schedule *models.DoctorSchedule) {
 	schedule.Booked -= 1
 	s.scheduleRepo.Update(schedule)
+}
+
+func (s *appointmentService) CompleteAppointment(id uint) error {
+	appointment, err := s.appointmentRepo.FindByID(id)
+	if err != nil {
+		return errors.New("appointment not found")
+	}
+
+	if appointment.Status != "approved" {
+		return errors.New("can only complete approved appointments")
+	}
+
+	appointment.Status = "completed"
+	return s.appointmentRepo.Update(appointment)
 }

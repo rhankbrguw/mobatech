@@ -43,6 +43,12 @@ class QuickAccessGrid extends ConsumerWidget {
             iconColor: AppColors.errorRed,
             onTap: () => context.push('/emergency'),
           ),
+          QuickAccessItem(
+            icon: Icons.local_pharmacy_outlined,
+            label: 'Apotek',
+            iconColor: AppColors.primary,
+            onTap: () => context.push('/pharmacy'),
+          ),
         ];
 
         for (var service in services) {

@@ -53,6 +53,7 @@ class _DoctorDetailScreenState extends ConsumerState<DoctorDetailScreen> {
       );
       if (mounted) {
         ref.invalidate(userAppointmentsProvider);
+        ref.invalidate(doctorSchedulesProvider(widget.doctorId));
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         CustomSnackbar.showSuccess(context, AppStrings.extJanjitemuberhasildibuat);
         Navigator.pop(context); // go back
@@ -103,6 +104,11 @@ class _DoctorDetailScreenState extends ConsumerState<DoctorDetailScreen> {
               symptomsController: _symptomsController,
               isBooking: _isBooking,
               onBook: _bookAppointment,
+              onRefresh: () async {
+                ref.invalidate(doctorDetailProvider(widget.doctorId));
+                ref.invalidate(doctorSchedulesProvider(widget.doctorId));
+                await Future.delayed(const Duration(milliseconds: 500));
+              },
             );
           },
           loading: () => const Padding(

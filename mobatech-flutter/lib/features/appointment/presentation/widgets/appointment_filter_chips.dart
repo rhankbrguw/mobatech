@@ -1,33 +1,13 @@
 part of 'appointment_header_widgets.dart';
 
 class AppointmentFilterChips extends ConsumerWidget {
-  final String selectedSpecialization;
-
-  const AppointmentFilterChips({
-    super.key,
-    required this.selectedSpecialization,
-  });
-
-  Widget _buildFilterChip(
-    WidgetRef ref,
-    String selected,
-    String label,
-    IconData icon,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        ref.read(selectedSpecializationProvider.notifier).state = label;
-      },
-      child: AppointmentFilterChip(
-        label: label,
-        isSelected: selected == label,
-        icon: icon,
-      ),
-    );
-  }
+  const AppointmentFilterChips({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final polyclinicsAsync = ref.watch(polyclinicsProvider);
+    final selectedId = ref.watch(selectedPolyclinicIdProvider);
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -35,19 +15,43 @@ class AppointmentFilterChips extends ConsumerWidget {
         parent: BouncingScrollPhysics(),
       ),
       child: Row(
-        children: _buildChips(ref),
+        children: [
+          _buildChip(ref, selectedId, null, 'Semua', Icons.border_all),
+          ...polyclinicsAsync.when(
+            data: (polyclinics) => polyclinics
+                .where((p) => p.isActive)
+                .map((p) => _buildChip(
+                      ref,
+                      selectedId,
+                      p.id,
+                      p.name,
+                      Icons.local_hospital,
+                    )),
+            loading: () => [],
+            error: (_, __) => [],
+          ),
+        ],
       ),
     );
   }
 
-  List<Widget> _buildChips(WidgetRef ref) {
-    return [
-      _buildFilterChip(ref, selectedSpecialization, 'All', Icons.border_all),
-      _buildFilterChip(ref, selectedSpecialization, 'Spesialis Anak', Icons.child_care),
-      _buildFilterChip(ref, selectedSpecialization, 'Spesialis Gigi', Icons.medical_services_outlined),
-      _buildFilterChip(ref, selectedSpecialization, 'Spesialis Penyakit Dalam', Icons.monitor_heart_outlined),
-      _buildFilterChip(ref, selectedSpecialization, 'Spesialis Kulit & Kelamin', Icons.face),
-      _buildFilterChip(ref, selectedSpecialization, 'Spesialis Kandungan', Icons.pregnant_woman),
-    ];
+  Widget _buildChip(
+    WidgetRef ref,
+    int? selectedId,
+    int? polyId,
+    String label,
+    IconData icon,
+  ) {
+    final isSelected = selectedId == polyId;
+    return GestureDetector(
+      onTap: () {
+        ref.read(selectedPolyclinicIdProvider.notifier).state = polyId;
+      },
+      child: AppointmentFilterChip(
+        label: label,
+        isSelected: isSelected,
+        icon: icon,
+      ),
+    );
   }
 }

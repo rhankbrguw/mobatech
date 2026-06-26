@@ -27,6 +27,10 @@ func (r *pharmacyRepository) CreatePrescription(p *models.Prescription) error {
 	return r.db.Create(p).Error
 }
 
+func (r *pharmacyRepository) DeletePrescription(id uint) error {
+	return r.db.Delete(&models.Prescription{}, id).Error
+}
+
 func (r *pharmacyRepository) UpdatePrescriptionStatus(id uint, status string) error {
 	return r.db.Model(&models.Prescription{}).Where("id = ?", id).Update("status", status).Error
 }

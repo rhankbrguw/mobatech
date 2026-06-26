@@ -75,7 +75,12 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           if (cart.items.isEmpty) return null;
           final ongkir = _pickupMethod == 'Delivery' ? 10000 : 0;
           final grandTotal = cart.totalPrice + ongkir;
-          return CheckoutBottomSheet(grandTotal: grandTotal);
+          return CheckoutBottomSheet(
+            grandTotal: grandTotal,
+            cart: cart,
+            paymentMethod: _paymentMethod,
+            pickupMethod: _pickupMethod,
+          );
         },
       ),
     );

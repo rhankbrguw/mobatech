@@ -27,6 +27,7 @@ type PharmacyRepository interface {
 	GetPrescriptionByID(id uint) (*models.Prescription, error)
 	GetAllPrescriptions() ([]models.Prescription, error)
 	CreatePrescription(p *models.Prescription) error
+	DeletePrescription(id uint) error
 	UpdatePrescriptionStatus(id uint, status string) error
 
 	// Orders
@@ -69,7 +70,7 @@ func (r *pharmacyRepository) CreateCategory(cat *models.MedicineCategory) error 
 }
 
 func (r *pharmacyRepository) UpdateCategory(cat *models.MedicineCategory) error {
-	return r.db.Save(cat).Error
+	return r.db.Omit("created_at").Save(cat).Error
 }
 
 func (r *pharmacyRepository) DeleteCategory(id uint) error {
@@ -104,7 +105,7 @@ func (r *pharmacyRepository) CreateMedicine(med *models.Medicine) error {
 }
 
 func (r *pharmacyRepository) UpdateMedicine(med *models.Medicine) error {
-	return r.db.Save(med).Error
+	return r.db.Omit("created_at").Save(med).Error
 }
 
 func (r *pharmacyRepository) DeleteMedicine(id uint) error {

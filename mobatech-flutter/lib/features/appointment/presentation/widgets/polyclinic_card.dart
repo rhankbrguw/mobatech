@@ -94,16 +94,12 @@ class PolyclinicCard extends ConsumerWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              final spec = poly.name.replaceAll(
-                                'Poli ',
-                                'Spesialis ',
-                              );
                               ref
                                       .read(
-                                        selectedSpecializationProvider.notifier,
+                                        selectedPolyclinicIdProvider.notifier,
                                       )
                                       .state =
-                                  spec;
+                                  poly.id;
                               Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(

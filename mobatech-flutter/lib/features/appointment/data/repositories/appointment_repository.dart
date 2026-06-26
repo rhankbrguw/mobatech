@@ -8,16 +8,18 @@ class AppointmentRepository {
 
   AppointmentRepository(this._dio);
 
-  Future<List<Doctor>> getDoctors({String? specialization}) async {
+  Future<List<Doctor>> getDoctors({String? specialization, int? polyclinicId}) async {
     try {
+      final Map<String, dynamic> params = {};
+      if (specialization != null && specialization.isNotEmpty && specialization != 'All') {
+        params['specialization'] = specialization;
+      }
+      if (polyclinicId != null && polyclinicId > 0) {
+        params['polyclinic_id'] = polyclinicId.toString();
+      }
       final response = await _dio.get(
         '/doctors',
-        queryParameters:
-            specialization != null &&
-                specialization.isNotEmpty &&
-                specialization != 'All'
-            ? {'specialization': specialization}
-            : null,
+        queryParameters: params.isNotEmpty ? params : null,
       );
       final List<dynamic> data = response.data ?? [];
       return data.map((json) => Doctor.fromJson(json)).toList();

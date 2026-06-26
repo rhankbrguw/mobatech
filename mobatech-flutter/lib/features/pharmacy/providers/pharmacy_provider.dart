@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/network/dio_client.dart';
 import '../data/medicine_repository.dart';
@@ -27,7 +28,6 @@ final pharmacyOrderRepositoryProvider = Provider<PharmacyOrderRepository>((
 final cartRepositoryProvider = Provider<CartRepository>((ref) {
   return CartRepository(
     ref.watch(dioProvider),
-    ref.watch(medicineRepositoryProvider),
   );
 });
 
@@ -36,21 +36,31 @@ final categoriesProvider = FutureProvider<List<MedicineCategory>>((ref) async {
   return repo.getCategories();
 });
 
-final medicinesProvider = FutureProvider.family<List<Medicine>, int?>((
+typedef MedicineFilter = ({int? categoryId, String? search});
+
+final medicinesProvider = FutureProvider.family<List<Medicine>, MedicineFilter>((
   ref,
-  categoryId,
+  filter,
 ) async {
   final repo = ref.watch(medicineRepositoryProvider);
-  return repo.getMedicines(categoryId: categoryId);
+  return repo.getMedicines(categoryId: filter.categoryId, search: filter.search);
 });
 
 final prescriptionsProvider = FutureProvider<List<Prescription>>((ref) async {
   final repo = ref.watch(prescriptionRepositoryProvider);
+  final timer = Timer(const Duration(seconds: 5), () {
+    ref.invalidateSelf();
+  });
+  ref.onDispose(() => timer.cancel());
   return repo.getMyPrescriptions();
 });
 
 final ordersProvider = FutureProvider<List<PharmacyOrder>>((ref) async {
   final repo = ref.watch(pharmacyOrderRepositoryProvider);
+  final timer = Timer(const Duration(seconds: 5), () {
+    ref.invalidateSelf();
+  });
+  ref.onDispose(() => timer.cancel());
   return repo.getMyOrders();
 });
 

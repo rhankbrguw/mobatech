@@ -50,11 +50,16 @@ class Polyclinic {
         .map((i) => PolyclinicSchedule.fromJson(i))
         .toList();
 
+    String rawImageUrl = json['image_url'] ?? '';
+    if (rawImageUrl.startsWith('http://127.0.0.1:8080')) {
+      rawImageUrl = rawImageUrl.replaceAll('http://127.0.0.1:8080', 'http://10.0.2.2:8080');
+    }
+
     return Polyclinic(
       id: json['ID'] ?? 0,
       name: json['name'] ?? '',
       description: json['description'] ?? '',
-      imageUrl: json['image_url'] ?? '',
+      imageUrl: rawImageUrl,
       isActive: json['is_active'] ?? false,
       schedules: schedulesList,
     );

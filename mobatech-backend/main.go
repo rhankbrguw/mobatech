@@ -2,10 +2,13 @@ package main
 
 import (
 	"backend/config"
+	"backend/controllers"
 	"backend/middleware"
 	"backend/models"
 	"backend/routes"
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -15,15 +18,62 @@ func main() {
 	// Initialize Database Connection
 	config.ConnectDatabase()
 
-	// Run Auto Migrations for our example User model and Chat models
-	config.DB.AutoMigrate(&models.User{}, &models.ChatSession{}, &models.ChatMessage{})
+	// Run Auto Migrations for all models
+	config.DB.AutoMigrate(
+		&models.User{},
+		&models.ChatSession{},
+		&models.ChatMessage{},
+		&models.MedicalResult{},
+		&models.Reminder{},
+		&models.MedicineCategory{},
+		&models.Medicine{},
+		&models.Prescription{},
+		&models.PrescriptionItem{},
+		&models.PharmacyOrder{},
+		&models.PharmacyOrderItem{},
+		&models.Cart{},
+		&models.CartItem{},
+		&models.Branch{},
+	)
 
 	// Initialize Gin Router
 	r := gin.Default()
 	r.Use(middleware.ErrorHandler())
-	r.Use(cors.Default())
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
+	r.Use(cors.New(corsConfig))
+
+	// Routes
+	branchCtrl := controllers.NewBranchController(config.DB)
+	r.GET("/api/branches", branchCtrl.GetBranches)
+	r.GET("/api/branches/:id", branchCtrl.GetBranchByID)
+	
+	admin := r.Group("/api/admin")
+	admin.Use(middleware.AuthMiddleware())
+	admin.POST("/branches", branchCtrl.CreateBranch)
+	admin.PUT("/branches/:id", branchCtrl.UpdateBranch)
+	admin.DELETE("/branches/:id", branchCtrl.DeleteBranch)
 
 	r.Static("/uploads", "./uploads")
+
+	r.POST("/api/upload", func(c *gin.Context) {
+		file, err := c.FormFile("file")
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "No file uploaded"})
+			return
+		}
+		// Ensure unique filename
+		filename := fmt.Sprintf("%d_%s", time.Now().Unix(), file.Filename)
+		dst := "uploads/" + filename
+		if err := c.SaveUploadedFile(file, dst); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"url": "http://127.0.0.1:8080/uploads/" + filename,
+		})
+	})
 
 	// Health check endpoint
 	r.GET("/ping", func(c *gin.Context) {
@@ -57,6 +107,8 @@ func main() {
 	routes.SetupPatientSupportRoutes(r, config.DB)
 	// Setup For You Routes
 	routes.SetupForYouRoutes(r, config.DB)
+	// Setup RAG Routes
+	routes.SetupRAGRoutes(r)
 
 	// Start the server
 	r.Run(":8080")

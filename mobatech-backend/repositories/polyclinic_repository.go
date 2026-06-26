@@ -29,13 +29,13 @@ func NewPolyclinicRepository(db *gorm.DB) PolyclinicRepository {
 
 func (r *polyclinicRepository) FindAll() ([]models.Polyclinic, error) {
 	var polyclinics []models.Polyclinic
-	err := r.db.Preload("Schedules").Find(&polyclinics).Error
+	err := r.db.Preload("Schedules").Preload("Doctors").Find(&polyclinics).Error
 	return polyclinics, err
 }
 
 func (r *polyclinicRepository) FindByID(id uint) (*models.Polyclinic, error) {
 	var polyclinic models.Polyclinic
-	err := r.db.Preload("Schedules").First(&polyclinic, id).Error
+	err := r.db.Preload("Schedules").Preload("Doctors").First(&polyclinic, id).Error
 	return &polyclinic, err
 }
 
@@ -44,7 +44,7 @@ func (r *polyclinicRepository) Create(polyclinic *models.Polyclinic) error {
 }
 
 func (r *polyclinicRepository) Update(polyclinic *models.Polyclinic) error {
-	return r.db.Save(polyclinic).Error
+	return r.db.Omit("created_at").Save(polyclinic).Error
 }
 
 func (r *polyclinicRepository) Delete(id uint) error {
@@ -62,7 +62,7 @@ func (r *polyclinicRepository) CreateSchedule(schedule *models.PolyclinicSchedul
 }
 
 func (r *polyclinicRepository) UpdateSchedule(schedule *models.PolyclinicSchedule) error {
-	return r.db.Save(schedule).Error
+	return r.db.Omit("created_at").Save(schedule).Error
 }
 
 func (r *polyclinicRepository) DeleteSchedule(id uint) error {

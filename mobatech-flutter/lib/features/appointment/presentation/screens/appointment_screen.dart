@@ -35,7 +35,6 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
   @override
   Widget build(BuildContext context) {
     final doctorsAsync = ref.watch(filteredDoctorsProvider);
-    final selectedSpecialization = ref.watch(selectedSpecializationProvider);
 
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
@@ -57,7 +56,6 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
           slivers: [
             AppointmentSliverHeader(
               searchController: _searchController,
-              selectedSpecialization: selectedSpecialization,
             ),
             SliverPadding(
               padding: const EdgeInsets.all(24),

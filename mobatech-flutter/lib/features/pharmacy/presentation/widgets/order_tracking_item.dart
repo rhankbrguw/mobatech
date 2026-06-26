@@ -6,6 +6,7 @@ class _TimelineItem extends StatelessWidget {
   final String time;
   final bool isCompleted;
   final bool isLast;
+  final bool isError;
 
   const _TimelineItem({
     required this.title,
@@ -13,6 +14,7 @@ class _TimelineItem extends StatelessWidget {
     required this.time,
     required this.isCompleted,
     required this.isLast,
+    this.isError = false,
   });
 
   @override
@@ -34,16 +36,18 @@ class _TimelineItem extends StatelessWidget {
           width: 24,
           height: 24,
           decoration: BoxDecoration(
-            color: isCompleted ? AppColors.primary : AppColors.backgroundLightGrey,
+            color: isError ? AppColors.errorRed : (isCompleted ? AppColors.primary : AppColors.backgroundLightGrey),
             shape: BoxShape.circle,
             border: Border.all(
-              color: isCompleted ? AppColors.primary : AppColors.borderGrey,
+              color: isError ? AppColors.errorRed : (isCompleted ? AppColors.primary : AppColors.borderGrey),
               width: 2,
             ),
           ),
-          child: isCompleted
-              ? const Icon(Icons.check, size: 16, color: AppColors.textWhite)
-              : null,
+          child: isError
+              ? const Icon(Icons.close, size: 16, color: AppColors.textWhite)
+              : (isCompleted
+                  ? const Icon(Icons.check, size: 16, color: AppColors.textWhite)
+                  : null),
         ),
         if (!isLast)
           Container(
@@ -68,7 +72,7 @@ class _TimelineItem extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  color: isCompleted ? AppColors.textDark : AppColors.textGrey,
+                  color: isError ? AppColors.errorRed : (isCompleted ? AppColors.textDark : AppColors.textGrey),
                 ),
               ),
               Text(

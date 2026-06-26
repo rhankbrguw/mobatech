@@ -1,73 +1,46 @@
-import 'medicine.dart';
-
-class PrescriptionItem {
-  final Medicine medicine;
-  final int quantity;
-  final String dosage;
-
-  PrescriptionItem({
-    required this.medicine,
-    required this.quantity,
-    required this.dosage,
-  });
-
-  factory PrescriptionItem.fromJson(Map<String, dynamic> json) {
-    return PrescriptionItem(
-      medicine: Medicine.fromJson(json['medicine'] as Map<String, dynamic>),
-      quantity: json['quantity'] as int? ?? 1,
-      dosage: json['dosage'] as String? ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'medicine': medicine.toJson(),
-      'quantity': quantity,
-      'dosage': dosage,
-    };
-  }
-}
-
 class Prescription {
   final int id;
-  final String doctorName;
-  final String diagnosis;
-  final DateTime prescriptionDate;
+  final int userId;
+  final String imageUrl;
+  final String notes;
   final String status;
-  final List<PrescriptionItem> items;
+  final DateTime createdAt;
 
   Prescription({
     required this.id,
-    required this.doctorName,
-    required this.diagnosis,
-    required this.prescriptionDate,
+    required this.userId,
+    required this.imageUrl,
+    required this.notes,
     required this.status,
-    required this.items,
+    required this.createdAt,
   });
 
   factory Prescription.fromJson(Map<String, dynamic> json) {
+    String rawImageUrl = json['image_url'] as String? ?? '';
+    if (rawImageUrl.startsWith('http://127.0.0.1:8080')) {
+      rawImageUrl = rawImageUrl.replaceAll('http://127.0.0.1:8080', 'http://10.0.2.2:8080');
+    }
+
     return Prescription(
-      id: json['id'] as int,
-      doctorName: json['doctor_name'] as String? ?? '',
-      diagnosis: json['diagnosis'] as String? ?? '',
-      prescriptionDate: DateTime.parse(json['prescription_date'] as String),
-      status: json['status'] as String? ?? '',
-      items:
-          (json['items'] as List<dynamic>?)
-              ?.map((e) => PrescriptionItem.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      id: json['ID'] ?? json['id'] as int,
+      userId: json['user_id'] as int? ?? 0,
+      imageUrl: rawImageUrl,
+      notes: json['notes'] as String? ?? '',
+      status: json['status'] as String? ?? 'Pending',
+      createdAt: json['CreatedAt'] != null 
+          ? DateTime.parse(json['CreatedAt']) 
+          : DateTime.now(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'doctor_name': doctorName,
-      'diagnosis': diagnosis,
-      'prescription_date': prescriptionDate.toIso8601String(),
+      'user_id': userId,
+      'image_url': imageUrl,
+      'notes': notes,
       'status': status,
-      'items': items.map((e) => e.toJson()).toList(),
+      'CreatedAt': createdAt.toIso8601String(),
     };
   }
 }

@@ -53,5 +53,5 @@ func (r *appointmentRepository) Create(appointment *models.Appointment) error {
 }
 
 func (r *appointmentRepository) Update(appointment *models.Appointment) error {
-	return r.db.Save(appointment).Error
+	return r.db.Omit("created_at").Save(appointment).Error
 }

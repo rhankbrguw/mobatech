@@ -9,6 +9,7 @@ type Polyclinic struct {
 	ImageURL    string               `json:"image_url"`
 	IsActive    bool                 `json:"is_active" gorm:"default:true"`
 	Schedules   []PolyclinicSchedule `json:"schedules,omitempty" gorm:"foreignKey:PolyclinicID"`
+	Doctors     []Doctor             `json:"doctors,omitempty" gorm:"foreignKey:PolyclinicID"`
 }
 
 type PolyclinicSchedule struct {

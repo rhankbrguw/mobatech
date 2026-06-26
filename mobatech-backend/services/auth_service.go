@@ -18,6 +18,7 @@ type AuthService interface {
 	UpdateProfile(userID uint, fullName, phone, imagePath, bloodType string, height int, weight int, allergies, dob, gender string) (*models.User, error)
 	AddFamilyMember(member *models.FamilyMember) error
 	DeleteFamilyMember(id uint) error
+	GetAllUsers() ([]models.User, error)
 }
 
 type authService struct {
@@ -101,6 +102,10 @@ func (s *authService) AddFamilyMember(member *models.FamilyMember) error {
 
 func (s *authService) DeleteFamilyMember(id uint) error {
 	return s.repo.DeleteFamilyMember(id)
+}
+
+func (s *authService) GetAllUsers() ([]models.User, error) {
+	return s.repo.GetAllUsers()
 }
 
 func (s *authService) applyProfileUpdates(user *models.User, fullName, phone, imagePath, bloodType string, height int, weight int, allergies, dob, gender string) {

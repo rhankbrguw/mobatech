@@ -44,10 +44,7 @@ func SetupDoctorRoutes(router *gin.Engine, db *gorm.DB) {
 
 	// Admin Endpoints
 	admin := api.Group("/admin")
-	// If you have admin middleware, add it here. E.g. admin.Use(middleware.AdminMiddleware())
-	// For now using AuthMiddleware or just public if no specific admin auth is provided
-	// In production, should verify admin role
-	// admin.Use(middleware.AuthMiddleware())
+	admin.Use(middleware.AdminMiddleware())
 	{
 		// Doctor CRUD
 		admin.POST("/doctors", doctorController.CreateDoctor)
@@ -55,6 +52,7 @@ func SetupDoctorRoutes(router *gin.Engine, db *gorm.DB) {
 		admin.DELETE("/doctors/:id", doctorController.DeleteDoctor)
 
 		// Schedule CRUD
+		admin.GET("/schedules", scheduleController.GetAllSchedules)
 		admin.POST("/schedules", scheduleController.CreateSchedule)
 		admin.PUT("/schedules/:id", scheduleController.UpdateSchedule)
 		admin.DELETE("/schedules/:id", scheduleController.DeleteSchedule)
@@ -62,6 +60,7 @@ func SetupDoctorRoutes(router *gin.Engine, db *gorm.DB) {
 		// Appointment Management
 		admin.GET("/appointments", appointmentController.GetAllAppointments)
 		admin.POST("/appointments/:id/approve", appointmentController.ApproveAppointment)
+		admin.POST("/appointments/:id/complete", appointmentController.CompleteAppointment)
 		admin.POST("/appointments/:id/cancel", appointmentController.AdminCancelAppointment)
 	}
 }

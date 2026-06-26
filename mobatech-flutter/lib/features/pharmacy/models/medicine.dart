@@ -22,14 +22,19 @@ class Medicine {
   });
 
   factory Medicine.fromJson(Map<String, dynamic> json) {
+    String rawImageUrl = json['image_url'] as String? ?? '';
+    if (rawImageUrl.startsWith('http://127.0.0.1:8080')) {
+      rawImageUrl = rawImageUrl.replaceAll('http://127.0.0.1:8080', 'http://10.0.2.2:8080');
+    }
+
     return Medicine(
-      id: json['id'] as int,
+      id: json['ID'] ?? json['id'] as int,
       name: json['name'] as String,
       genericName: json['generic_name'] as String? ?? '',
       price: (json['price'] as num).toDouble(),
       stock: json['stock'] as int? ?? 0,
       requiresPrescription: json['requires_prescription'] as bool? ?? false,
-      imageUrl: json['image_url'] as String? ?? '',
+      imageUrl: rawImageUrl,
       category: json['category'] != null
           ? MedicineCategory.fromJson(json['category'] as Map<String, dynamic>)
           : null,

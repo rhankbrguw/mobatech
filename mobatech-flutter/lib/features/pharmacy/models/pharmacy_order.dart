@@ -49,7 +49,7 @@ class PharmacyOrder {
 
   factory PharmacyOrder.fromJson(Map<String, dynamic> json) {
     return PharmacyOrder(
-      id: json['id'] as int,
+      id: json['ID'] ?? json['id'] as int,
       orderNumber: json['order_number'] as String? ?? '',
       status: json['status'] as String? ?? '',
       totalPrice: (json['total_price'] as num?)?.toDouble() ?? 0.0,

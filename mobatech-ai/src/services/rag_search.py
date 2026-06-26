@@ -25,6 +25,8 @@ class VectorSearchEngine:
         embeddings = self.model.encode(texts)
         faiss.normalize_L2(embeddings)
         
+        # Reset the index before adding new ones
+        self.index = faiss.IndexFlatL2(self.dimension)
         self.index.add(embeddings)
         return True
         

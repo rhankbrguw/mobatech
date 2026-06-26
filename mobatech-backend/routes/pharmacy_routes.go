@@ -29,6 +29,8 @@ func SetupPharmacyRoutes(r *gin.Engine, db *gorm.DB) {
 	{
 		user.GET("/prescriptions", ctrl.GetMyPrescriptions)
 		user.GET("/prescriptions/:id", ctrl.GetPrescriptionDetail)
+		user.POST("/prescriptions", ctrl.CreatePrescription)
+		user.DELETE("/prescriptions/:id", ctrl.DeletePrescription)
 		user.POST("/orders", ctrl.CreateOrder)
 		user.GET("/orders", ctrl.GetMyOrders)
 		user.GET("/orders/:id", ctrl.GetOrderDetail)
@@ -42,6 +44,7 @@ func SetupPharmacyRoutes(r *gin.Engine, db *gorm.DB) {
 
 	// Admin routes
 	admin := r.Group("/api/admin/pharmacy")
+	admin.Use(middleware.AdminMiddleware())
 	{
 		admin.POST("/categories", ctrl.AdminCreateCategory)
 		admin.PUT("/categories/:id", ctrl.AdminUpdateCategory)
@@ -51,6 +54,8 @@ func SetupPharmacyRoutes(r *gin.Engine, db *gorm.DB) {
 		admin.DELETE("/medicines/:id", ctrl.AdminDeleteMedicine)
 		admin.POST("/prescriptions", ctrl.AdminCreatePrescription)
 		admin.GET("/prescriptions", ctrl.AdminGetAllPrescriptions)
+		admin.DELETE("/prescriptions/:id", ctrl.AdminDeletePrescription)
+		admin.PUT("/prescriptions/:id/status", ctrl.AdminUpdatePrescriptionStatus)
 		admin.GET("/orders", ctrl.AdminGetAllOrders)
 		admin.PUT("/orders/:id/status", ctrl.AdminUpdateOrderStatus)
 		admin.PUT("/orders/:id/payment", ctrl.AdminUpdateOrderPayment)

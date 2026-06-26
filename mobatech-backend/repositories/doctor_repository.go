@@ -7,7 +7,7 @@ import (
 )
 
 type DoctorRepository interface {
-	FindAll(specialization string, limit, offset int) ([]models.Doctor, error)
+	FindAll(specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, error)
 	FindByID(id uint) (*models.Doctor, error)
 	Create(doctor *models.Doctor) error
 	Update(doctor *models.Doctor) error
@@ -22,11 +22,14 @@ func NewDoctorRepository(db *gorm.DB) DoctorRepository {
 	return &doctorRepository{db}
 }
 
-func (r *doctorRepository) FindAll(specialization string, limit, offset int) ([]models.Doctor, error) {
+func (r *doctorRepository) FindAll(specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, error) {
 	var doctors []models.Doctor
-	query := r.db.Where("is_active = ?", true)
+	query := r.db.Preload("Polyclinic").Where("is_active = ?", true)
 	if specialization != "" {
 		query = query.Where("specialization = ?", specialization)
+	}
+	if polyclinicID > 0 {
+		query = query.Where("polyclinic_id = ?", polyclinicID)
 	}
 	if limit > 0 {
 		query = query.Limit(limit)
@@ -40,7 +43,7 @@ func (r *doctorRepository) FindAll(specialization string, limit, offset int) ([]
 
 func (r *doctorRepository) FindByID(id uint) (*models.Doctor, error) {
 	var doctor models.Doctor
-	err := r.db.First(&doctor, id).Error
+	err := r.db.Preload("Polyclinic").First(&doctor, id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +55,7 @@ func (r *doctorRepository) Create(doctor *models.Doctor) error {
 }
 
 func (r *doctorRepository) Update(doctor *models.Doctor) error {
-	return r.db.Save(doctor).Error
+	return r.db.Omit("created_at").Save(doctor).Error
 }
 
 func (r *doctorRepository) Delete(id uint) error {

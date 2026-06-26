@@ -59,7 +59,16 @@ class _CartItemWidget extends ConsumerWidget {
         color: AppColors.backgroundWave,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const Icon(Icons.medication, color: AppColors.backgroundWhite),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: item.medicine.imageUrl.isNotEmpty
+            ? Image.network(
+                item.medicine.imageUrl.replaceAll('127.0.0.1', '10.0.2.2').replaceAll('localhost', '10.0.2.2'),
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => const Icon(Icons.medication, color: AppColors.backgroundWhite),
+              )
+            : const Icon(Icons.medication, color: AppColors.backgroundWhite),
+      ),
     );
   }
 
