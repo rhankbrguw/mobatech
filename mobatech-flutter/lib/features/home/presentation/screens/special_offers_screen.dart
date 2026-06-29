@@ -13,12 +13,12 @@ class SpecialOffersScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final offers = ref.watch(specialOffersProvider);
+    final offersAsync = ref.watch(specialOffersProvider);
 
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
       appBar: _buildAppBar(),
-      body: _buildBody(offers),
+      body: _buildBody(offersAsync),
     );
   }
 
@@ -57,28 +57,37 @@ class SpecialOffersScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBody(List<SpecialOffer> offers) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: const Duration(milliseconds: 600),
-      curve: Curves.easeOutCubic,
-      builder: (context, value, child) {
-        return Opacity(
-          opacity: value,
-          child: Transform.translate(
-            offset: Offset(0, 30 * (1 - value)),
-            child: child,
+  Widget _buildBody(AsyncValue<List<SpecialOffer>> offersAsync) {
+    return offersAsync.when(
+      data: (offers) {
+        if (offers.isEmpty) {
+          return const Center(child: Text('Tidak ada penawaran spesial saat ini.'));
+        }
+        return TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeOutCubic,
+          builder: (context, value, child) {
+            return Opacity(
+              opacity: value,
+              child: Transform.translate(
+                offset: Offset(0, 30 * (1 - value)),
+                child: child,
+              ),
+            );
+          },
+          child: ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: offers.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 16),
+            itemBuilder: (context, index) {
+              return _PromoCard(offer: offers[index]);
+            },
           ),
         );
       },
-      child: ListView.separated(
-        padding: const EdgeInsets.all(16),
-        itemCount: offers.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 16),
-        itemBuilder: (context, index) {
-          return _PromoCard(offer: offers[index]);
-        },
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text('Gagal memuat promo: $err')),
     );
   }
 }

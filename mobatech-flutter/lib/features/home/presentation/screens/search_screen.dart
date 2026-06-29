@@ -94,7 +94,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                     autofocus: true,
                     style: const TextStyle(color: AppColors.backgroundWhite, fontSize: 14),
                     decoration: const InputDecoration(
-                      hintText: 'Cari Dokter, Layanan, Agenda...',
+                      hintText: AppStrings.searchGeneralHint,
                       hintStyle: TextStyle(color: AppColors.textWhite70, fontSize: 13),
                       border: InputBorder.none,
                       prefixIcon: Icon(

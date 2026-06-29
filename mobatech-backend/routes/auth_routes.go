@@ -36,5 +36,8 @@ func SetupAuthRoutes(r *gin.Engine, db *gorm.DB) {
 	adminGroup.Use(middleware.AdminMiddleware())
 	{
 		adminGroup.GET("/users", authController.GetAllUsers)
+		adminGroup.POST("/users", authController.AdminCreateUser)
+		adminGroup.PUT("/users/:id", authController.AdminUpdateUser)
+		adminGroup.DELETE("/users/:id", authController.AdminDeleteUser)
 	}
 }

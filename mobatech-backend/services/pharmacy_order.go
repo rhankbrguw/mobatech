@@ -79,7 +79,6 @@ func (s *pharmacyService) CreateOrder(order *models.PharmacyOrder) error {
 		s.repo.UpdateMedicineStock(item.MedicineID, -item.Quantity)
 	}
 
-	// Update prescription status if redeemed
 	if order.PrescriptionID != nil {
 		s.repo.UpdatePrescriptionStatus(*order.PrescriptionID, "Redeemed")
 	}
@@ -93,7 +92,6 @@ func (s *pharmacyService) UpdateOrderStatus(id uint, status string) error {
 		return err
 	}
 
-	// Handle stock restoration if order is cancelled
 	if status == "Cancelled" && order.Status != "Cancelled" {
 		for _, item := range order.Items {
 			// Increase stock back by item.Quantity

@@ -34,7 +34,7 @@ class SearchAndCategories extends StatelessWidget {
               controller: searchController,
               onChanged: onSearchChanged,
               decoration: InputDecoration(
-                hintText: 'Cari nama obat...',
+                hintText: AppStrings.searchMedicineHint,
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),

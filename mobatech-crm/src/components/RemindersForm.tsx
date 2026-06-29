@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Dispatch, SetStateAction } from "react";
+import { APP_STRINGS } from "@/lib/constants";
 
 interface User { id: number; full_name: string; email: string; phone_number: string; }
 type FormType = { user_id: number; appointment_id: number; title: string; message: string; reminder_date: string; type: string; };
@@ -57,7 +58,7 @@ export function RemindersForm({
             type="text"
             value={form.title}
             onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-            placeholder="Contoh: Jadwal Kontrol Rutin"
+            placeholder={APP_STRINGS.reminders.titlePlaceholder}
             className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground focus:border-primary"
           />
         </div>
@@ -69,7 +70,7 @@ export function RemindersForm({
             value={form.reminder_date}
             onChange={(e) => setForm((f) => ({ ...f, reminder_date: e.target.value }))}
             className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground focus:border-primary"
-            placeholder="Contoh: 2023-12-31T10:00"
+            placeholder={APP_STRINGS.reminders.datePlaceholder}
           />
         </div>
 
@@ -79,7 +80,7 @@ export function RemindersForm({
             value={form.message}
             onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
             rows={3}
-            placeholder="Contoh: Halo Bapak/Ibu, ini adalah pengingat..."
+            placeholder={APP_STRINGS.reminders.messagePlaceholder}
             className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground focus:border-primary resize-none"
           />
         </div>

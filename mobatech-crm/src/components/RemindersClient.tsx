@@ -1,8 +1,6 @@
 "use client";
-
 import { useAuthStore } from "@/store/useAuthStore";
 import { ForbiddenView } from "@/components/ui/ForbiddenView";
-
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
@@ -13,22 +11,17 @@ import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { RemindersForm } from "./RemindersForm";
 import { RemindersList } from "./RemindersList";
-
-interface User { id: number; full_name: string; email: string; phone_number: string; }
-interface Reminder { id: number; created_at: string; user_id: number; appointment_id: number; title: string; message: string; reminder_date: string; is_read: boolean; type: string; }
-
+import { ConfirmModal } from "@/components/ConfirmModal";
+import { User, Reminder } from "@/types/api";
+import { APP_STRINGS } from "@/lib/constants";
 const REMINDER_TYPES = ["Appointment", "Medication", "Checkup", "General"];
-
 const defaultForm = { user_id: 0, appointment_id: 0, title: "", message: "", reminder_date: "", type: "General" };
-
 export function RemindersClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
   const role = user?.role || "admin";
-
   if (!["admin"].includes(role)) {
     return <ForbiddenView />;
   }
-
   const [users, setUsers] = useState<User[]>([]);
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,17 +31,14 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
   const [searchQuery, setSearchQuery] = useState("");
   const [filterValue, setFilterValue] = useState("");
   const [toast, setToast] = useState<{ isOpen: boolean; message: string; type: "success" | "error" }>({ isOpen: false, message: "", type: "success" });
-
   const showToast = (message: string, type: "success" | "error") =>
     setToast({ isOpen: true, message, type });
-
   const loadUsers = async () => {
     try {
       const res = await api.get<User[]>("/api/admin/users");
       setUsers(res.data || []);
     } catch { /* non-blocking */ }
   };
-
   const loadReminders = async () => {
     setLoading(true);
     try {
@@ -61,10 +51,8 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
     } catch { showToast("Gagal memuat data reminder", "error"); }
     finally { setLoading(false); }
   };
-
   useEffect(() => { loadUsers(); }, []);
   useEffect(() => { loadReminders(); }, [searchQuery, filterValue]);
-
   const handleCreate = async () => {
     if (!form.user_id || !form.title || !form.reminder_date) {
       showToast("Pilih pasien, isi Judul, dan Tanggal", "error");
@@ -84,16 +72,15 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
     } catch { showToast("Gagal membuat reminder", "error"); }
     finally { setSaving(false); }
   };
-
-  const handleDelete = async (id: number) => {
-    if (!confirm("Hapus reminder ini?")) return;
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const executeDelete = async (id: number) => {
     try {
       await api.delete(`/api/admin/reminders/${id}`);
       showToast("Reminder dihapus", "success");
       loadReminders();
     } catch { showToast("Gagal menghapus reminder", "error"); }
+    finally { setDeleteConfirmId(null); }
   };
-
   return (
     <div className="space-y-6 animate-slide-in">
       <PageHeader
@@ -105,7 +92,6 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
           </Button>
         }
       />
-
       <div className="flex justify-end mb-4 gap-2">
         <FilterDropdown
           value={filterValue}
@@ -114,11 +100,10 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
             { label: 'Obat', value: 'medicine' },
             { label: 'Jadwal', value: 'schedule' },
           ]}
-          placeholder="Jenis..."
+          placeholder={APP_STRINGS.common.searchType}
         />
         <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
       </div>
-
       {showForm && (
         <RemindersForm
           form={form}
@@ -129,14 +114,21 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
           reminderTypes={REMINDER_TYPES}
         />
       )}
-
       <RemindersList
         loading={loading}
         reminders={reminders}
         users={users}
-        onDelete={handleDelete}
+        onDelete={setDeleteConfirmId}
       />
-
+      <ConfirmModal
+        isOpen={deleteConfirmId !== null}
+        onClose={() => setDeleteConfirmId(null)}
+        onConfirm={() => deleteConfirmId !== null && executeDelete(deleteConfirmId)}
+        title="Hapus Pengingat"
+        description="Apakah Anda yakin ingin menghapus pengingat ini? Aksi ini tidak dapat dikembalikan."
+        confirmText="Ya, Hapus"
+        variant="danger"
+      />
       <CustomSnackbar
         isOpen={toast.isOpen}
         message={toast.message}

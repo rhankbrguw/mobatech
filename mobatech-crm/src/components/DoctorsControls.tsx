@@ -1,6 +1,7 @@
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { DoctorsTabs } from "./DoctorsTabs";
+import { APP_STRINGS } from "@/lib/constants";
 
 export function DoctorsControls({
   activeTab,
@@ -30,7 +31,7 @@ export function DoctorsControls({
             { label: 'Gigi', value: 'Gigi' },
             { label: 'Umum', value: 'Umum' },
           ]}
-          placeholder="Poliklinik..."
+          placeholder={APP_STRINGS.common.searchPolyclinic}
         />
         <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
       </div>

@@ -4,6 +4,7 @@ import (
 	"backend/services"
 	"backend/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -76,10 +77,70 @@ func (c *AuthController) Me(ctx *gin.Context) {
 func (c *AuthController) GetAllUsers(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
-	users, err := c.service.GetAllUsers(search, filter)
+	roleFilter := ctx.Query("role")
+	users, err := c.service.GetAllUsers(search, filter, roleFilter)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", users))
+}
+
+func (c *AuthController) AdminCreateUser(ctx *gin.Context) {
+	var req struct {
+		FullName    string `json:"full_name" binding:"required"`
+		Email       string `json:"email" binding:"required,email"`
+		PhoneNumber string `json:"phone_number" binding:"required"`
+		Password    string `json:"password" binding:"required,min=6"`
+		Role        string `json:"role" binding:"required"`
+		ImageURL    string `json:"image_url"`
+	}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.Error(utils.NewValidationError(err.Error()))
+		return
+	}
+
+	user, err := c.service.AdminCreateUser(req.FullName, req.Email, req.PhoneNumber, req.Password, req.Role, req.ImageURL)
+	if err != nil {
+		ctx.Error(utils.NewAppError(utils.ErrConflict, http.StatusConflict, "Gagal membuat pengguna."))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", user))
+}
+
+func (c *AuthController) AdminUpdateUser(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, _ := strconv.ParseUint(idStr, 10, 32)
+
+	var req struct {
+		FullName    string `json:"full_name"`
+		Email       string `json:"email"`
+		PhoneNumber string `json:"phone_number"`
+		Role        string `json:"role"`
+		ImageURL    string `json:"image_url"`
+	}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.Error(utils.NewValidationError(err.Error()))
+		return
+	}
+
+	user, err := c.service.AdminUpdateUser(uint(id), req.FullName, req.Email, req.PhoneNumber, req.Role, req.ImageURL)
+	if err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", user))
+}
+
+func (c *AuthController) AdminDeleteUser(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, _ := strconv.ParseUint(idStr, 10, 32)
+
+	if err := c.service.DeleteUser(uint(id)); err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
 }

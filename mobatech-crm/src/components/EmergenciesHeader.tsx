@@ -1,5 +1,6 @@
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
+import { APP_STRINGS } from "@/lib/constants";
 
 export function EmergenciesHeader({
   filterValue,
@@ -30,7 +31,7 @@ export function EmergenciesHeader({
             { label: 'Direspon', value: 'responded' },
             { label: 'Selesai', value: 'resolved' },
           ]}
-          placeholder="Status..."
+          placeholder={APP_STRINGS.common.searchStatus}
         />
         <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
       </div>

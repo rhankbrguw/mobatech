@@ -36,7 +36,7 @@ class AppointmentSearchBar extends ConsumerWidget {
                 ref.read(searchQueryProvider.notifier).state = value,
             style: const TextStyle(color: AppColors.backgroundWhite),
             decoration: const InputDecoration(
-              hintText: 'Cari dokter atau spesialis...',
+              hintText: AppStrings.searchDoctorHint,
               hintStyle: TextStyle(color: AppColors.textWhite70, fontSize: 13),
               prefixIcon: Icon(Icons.search, color: AppColors.backgroundWhite, size: 20),
               border: InputBorder.none,

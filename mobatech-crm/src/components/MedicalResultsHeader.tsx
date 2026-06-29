@@ -3,6 +3,7 @@ import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { Plus } from "lucide-react";
+import { APP_STRINGS } from "@/lib/constants";
 
 export function MedicalResultsHeader({
   openCreate,
@@ -40,7 +41,7 @@ export function MedicalResultsHeader({
             { label: 'Terbaru', value: 'newest' },
             { label: 'Terlama', value: 'oldest' },
           ]}
-          placeholder="Urutkan..."
+          placeholder={APP_STRINGS.common.searchSort}
         />
         <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
       </div>

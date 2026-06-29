@@ -3,9 +3,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Trash2 } from "lucide-react";
 
-interface User { id: number; full_name: string; email: string; phone_number: string; }
-interface Reminder { id: number; created_at: string; user_id: number; appointment_id: number; title: string; message: string; reminder_date: string; is_read: boolean; type: string; }
-
+import { User, Reminder } from "@/types/api";
 export function RemindersList({
   loading,
   reminders,

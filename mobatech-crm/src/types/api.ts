@@ -4,7 +4,6 @@ export interface GormModel {
   updated_at: string;
   deleted_at?: string | null;
 }
-
 export interface User extends GormModel {
   full_name: string;
   email: string;
@@ -18,12 +17,10 @@ export interface User extends GormModel {
   date_of_birth?: string;
   gender?: string;
 }
-
 export interface LoginResponseData {
   token: string;
   user: User;
 }
-
 export interface Doctor extends GormModel {
   user_id?: number;
   polyclinic_id?: number;
@@ -35,7 +32,6 @@ export interface Doctor extends GormModel {
   image_url: string;
   is_active: boolean;
 }
-
 export interface DoctorSchedule extends GormModel {
   doctor_id: number;
   doctor?: Doctor;
@@ -46,7 +42,6 @@ export interface DoctorSchedule extends GormModel {
   booked: number;
   is_available: boolean;
 }
-
 export interface PolyclinicSchedule extends GormModel {
   polyclinic_id: number;
   day_of_week: string;
@@ -54,7 +49,6 @@ export interface PolyclinicSchedule extends GormModel {
   end_time: string;
   is_available: boolean;
 }
-
 export interface Polyclinic extends GormModel {
   name: string;
   description: string;
@@ -63,7 +57,6 @@ export interface Polyclinic extends GormModel {
   schedules?: PolyclinicSchedule[];
   doctors?: Doctor[];
 }
-
 export interface Branch extends GormModel {
   name: string;
   address: string;
@@ -72,7 +65,6 @@ export interface Branch extends GormModel {
   image_url: string;
   gmaps_link: string;
 }
-
 export interface Appointment extends GormModel {
   user_id: number;
   user?: User;
@@ -83,7 +75,6 @@ export interface Appointment extends GormModel {
   status: string; // pending, approved, cancelled, completed
   notes: string;
 }
-
 export interface EmergencyRequest extends GormModel {
   user_id: number;
   patient_name: string;
@@ -97,12 +88,10 @@ export interface EmergencyRequest extends GormModel {
   ambulance_lng: number;
   estimated_minutes: number;
 }
-
 export interface MedicineCategory extends GormModel {
   name: string;
   description?: string;
 }
-
 export interface Medicine extends GormModel {
   name: string;
   generic_name: string;
@@ -113,8 +102,8 @@ export interface Medicine extends GormModel {
   requires_prescription: boolean;
   category_id?: number;
   category?: MedicineCategory;
+  image_url?: string;
 }
-
 export interface PharmacyOrderItem extends GormModel {
   order_id: number;
   medicine_id: number;
@@ -122,7 +111,6 @@ export interface PharmacyOrderItem extends GormModel {
   quantity: number;
   subtotal: number;
 }
-
 export interface PharmacyOrder extends GormModel {
   order_number: string;
   user_id: number;
@@ -134,4 +122,33 @@ export interface PharmacyOrder extends GormModel {
   delivery_address?: string;
   notes?: string;
   items?: PharmacyOrderItem[];
+}
+export interface RagStatus {
+  status: string;
+  vector_count: number;
+  knowledge_base_size: number;
+}
+export interface ChatMessage {
+  id: number;
+  role: "user" | "model";
+  content: string;
+  created_at: string;
+}
+export interface ChatSession {
+  id: number;
+  user_id: string;
+  title: string;
+  updated_at: string;
+  Messages: ChatMessage[];
+}
+export interface Reminder {
+  id: number;
+  created_at: string;
+  user_id: number;
+  appointment_id?: number;
+  title: string;
+  message: string;
+  reminder_date: string;
+  is_read: boolean;
+  type: string;
 }

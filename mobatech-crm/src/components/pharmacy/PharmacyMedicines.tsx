@@ -11,6 +11,7 @@ import { Edit, Trash2, Package } from "lucide-react";
 import { DeleteModal } from "@/components/DeleteModal";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
+import { ImageUpload } from "@/components/ImageUpload";
 
 export function PharmacyMedicines({ initialMedicines, categories }: { initialMedicines: Medicine[], categories: MedicineCategory[] }) {
   const role = useAuthStore((state) => state.user)?.role || "admin";
@@ -83,9 +84,18 @@ export function PharmacyMedicines({ initialMedicines, categories }: { initialMed
           <tbody>
             {medicines.map((m) => (
               <tr key={m.id} className="border-b border-glass-border/50">
-                <td className="p-4">
-                  <div className="font-semibold">{m.name}</div>
-                  <div className="text-xs text-foreground/50">{m.generic_name} • {m.dosage} {m.unit}</div>
+                <td className="p-4 flex items-center gap-3">
+                  {m.image_url ? (
+                    <img src={m.image_url} alt={m.name} className="w-10 h-10 object-cover rounded-lg bg-glass-panel border border-glass-border" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-lg bg-black/5 dark:bg-white/5 flex items-center justify-center border border-glass-border shrink-0">
+                      <Package size={20} className="text-foreground/40" />
+                    </div>
+                  )}
+                  <div>
+                    <div className="font-semibold">{m.name}</div>
+                    <div className="text-xs text-foreground/50">{m.generic_name} • {m.dosage} {m.unit}</div>
+                  </div>
                 </td>
                 <td className="p-4">{m.category?.name ?? "-"}</td>
                 <td className="p-4 font-medium">Rp {m.price?.toLocaleString("id-ID")}</td>
@@ -114,6 +124,9 @@ export function PharmacyMedicines({ initialMedicines, categories }: { initialMed
               <div>
                 <label className="block mb-1 font-semibold">Harga (Rp)</label>
                 <input required type="number" value={editingMedicine?.price || ""} onChange={(e) => setEditingMedicine({ ...editingMedicine, price: parseFloat(e.target.value) })} className="w-full border rounded-lg px-3 py-2 bg-background glass-input outline-none focus:border-primary" />
+              </div>
+              <div className="sm:col-span-2">
+                <ImageUpload imageUrl={editingMedicine?.image_url || ""} setImageUrl={(url) => setEditingMedicine({ ...editingMedicine, image_url: url })} label="Foto Obat" />
               </div>
               <div className="sm:col-span-2 flex gap-2 mt-4">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 hover:bg-black/5 rounded-lg">Batal</button>

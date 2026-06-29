@@ -18,7 +18,6 @@ func NewReminderController(service services.ReminderService) *ReminderController
 	return &ReminderController{service}
 }
 
-// GET /api/admin/reminders
 func (c *ReminderController) GetAll(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
@@ -30,7 +29,6 @@ func (c *ReminderController) GetAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", reminders))
 }
 
-// GET /api/reminders
 func (c *ReminderController) GetUserReminders(ctx *gin.Context) {
 	userIDFloat, exists := ctx.Get("user_id")
 	if !exists {
@@ -47,7 +45,6 @@ func (c *ReminderController) GetUserReminders(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", reminders))
 }
 
-// GET /api/reminders/unread-count
 func (c *ReminderController) GetUnreadCount(ctx *gin.Context) {
 	userIDFloat, exists := ctx.Get("user_id")
 	if !exists {
@@ -64,7 +61,6 @@ func (c *ReminderController) GetUnreadCount(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", gin.H{"data": gin.H{"count": count}}))
 }
 
-// POST /api/admin/reminders
 func (c *ReminderController) Create(ctx *gin.Context) {
 	var req models.Reminder
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -81,7 +77,6 @@ func (c *ReminderController) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", reminder))
 }
 
-// PUT /api/reminders/:id/read
 func (c *ReminderController) MarkAsRead(ctx *gin.Context) {
 	userIDFloat, exists := ctx.Get("user_id")
 	if !exists {
@@ -100,7 +95,6 @@ func (c *ReminderController) MarkAsRead(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
 }
 
-// DELETE /api/admin/reminders/:id
 func (c *ReminderController) Delete(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	if err := c.service.DeleteReminder(uint(id)); err != nil {

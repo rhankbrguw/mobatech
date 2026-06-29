@@ -11,27 +11,8 @@ import { AiAuditChatHistory } from "./AiAuditChatHistory";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { PrivacyComplianceBadge } from "./PrivacyComplianceBadge";
 import { AiAuditHeader } from "./AiAuditHeader";
-
-export interface RagStatus {
-  status: string;
-  vector_count: number;
-  knowledge_base_size: number;
-}
-
-export interface ChatMessage {
-  id: number;
-  role: "user" | "model";
-  content: string;
-  created_at: string;
-}
-
-export interface ChatSession {
-  id: number;
-  user_id: string;
-  title: string;
-  updated_at: string;
-  Messages: ChatMessage[];
-}
+import { ConfirmModal } from "./ConfirmModal";
+import { RagStatus, ChatSession, ChatMessage } from "@/types/api";
 
 export function AiAuditClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
@@ -90,10 +71,9 @@ export function AiAuditClient({ initialData, searchParams }: { initialData?: unk
     loadChats();
   }, [searchQuery]);
 
-  const handleManualSync = async () => {
-    const confirmSync = confirm("Apakah Anda yakin ingin membangun ulang Vector DB? Ini mungkin membutuhkan waktu beberapa detik.");
-    if (!confirmSync) return;
+  const [showSyncConfirm, setShowSyncConfirm] = useState(false);
 
+  const executeManualSync = async () => {
     try {
       setIsSyncing(true);
       const res = await api.post<{ status: string; message: string }>("/api/admin/rag/sync", {});
@@ -109,7 +89,8 @@ export function AiAuditClient({ initialData, searchParams }: { initialData?: unk
       setIsSyncing(false);
     }
   };
-return (
+
+  return (
     <div className="space-y-6 animate-slide-in">
       <AiAuditHeader />
 
@@ -118,7 +99,7 @@ return (
           loadingStats={loadingStats}
           ragStatus={ragStatus}
           isSyncing={isSyncing}
-          handleManualSync={handleManualSync}
+          handleManualSync={() => setShowSyncConfirm(true)}
         />
 
         <PrivacyComplianceBadge />
@@ -133,6 +114,19 @@ return (
         loadingChats={loadingChats}
         expandedSession={expandedSession}
         setExpandedSession={setExpandedSession}
+      />
+
+      <ConfirmModal
+        isOpen={showSyncConfirm}
+        onClose={() => setShowSyncConfirm(false)}
+        onConfirm={() => {
+          setShowSyncConfirm(false);
+          executeManualSync();
+        }}
+        title="Bangun Ulang Knowledge Base"
+        description="Apakah Anda yakin ingin membangun ulang Vector DB? Ini mungkin membutuhkan waktu beberapa detik."
+        confirmText="Mulai Sinkronisasi"
+        variant="primary"
       />
 
       <CustomSnackbar

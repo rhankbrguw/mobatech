@@ -18,7 +18,6 @@ func NewMedicalResultController(service services.MedicalResultService) *MedicalR
 	return &MedicalResultController{service}
 }
 
-// GET /api/admin/medical-results
 func (c *MedicalResultController) GetAll(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
@@ -30,7 +29,6 @@ func (c *MedicalResultController) GetAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", results))
 }
 
-// GET /api/medical-results
 func (c *MedicalResultController) GetUserResults(ctx *gin.Context) {
 	userIDFloat, exists := ctx.Get("user_id")
 	if !exists {
@@ -47,7 +45,6 @@ func (c *MedicalResultController) GetUserResults(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", results))
 }
 
-// GET /api/medical-results/:id
 func (c *MedicalResultController) GetByID(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	result, err := c.service.GetMedicalResultByID(uint(id))
@@ -58,7 +55,6 @@ func (c *MedicalResultController) GetByID(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", result))
 }
 
-// POST /api/admin/medical-results
 func (c *MedicalResultController) Create(ctx *gin.Context) {
 	role, exists := ctx.Get("role")
 	if !exists || role != "doctor" {
@@ -81,7 +77,6 @@ func (c *MedicalResultController) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", result))
 }
 
-// PUT /api/admin/medical-results/:id
 func (c *MedicalResultController) Update(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 
@@ -101,7 +96,6 @@ func (c *MedicalResultController) Update(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", result))
 }
 
-// DELETE /api/admin/medical-results/:id
 func (c *MedicalResultController) Delete(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	if err := c.service.DeleteMedicalResult(uint(id)); err != nil {

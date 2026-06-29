@@ -69,7 +69,6 @@ class ChatMessagesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     try {
       await _streamResponse(sessionId, message);
     } catch (e) {
-      // Handle error
     } finally {
       isStreaming = false;
     }
@@ -122,7 +121,6 @@ class ChatMessagesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
         _appendChunkToLastMessage(dataStr);
       }
     } else if (line.startsWith('event: error')) {
-      // Handle SSE error event here
     }
   }
 

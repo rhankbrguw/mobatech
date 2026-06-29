@@ -1,5 +1,5 @@
 import React from "react";
-import { RagStatus } from "./AiAuditClient";
+import { RagStatus } from "@/types/api";
 
 export function AiAuditMonitor({
   loadingStats,

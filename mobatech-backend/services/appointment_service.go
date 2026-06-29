@@ -43,7 +43,6 @@ func (s *appointmentService) BookAppointment(userID uint, req *models.Appointmen
 		return nil, errors.New("schedule is full or not available")
 	}
 
-	// Update schedule booked count
 	schedule.Booked += 1
 	err = s.scheduleRepo.Update(schedule)
 	if err != nil {

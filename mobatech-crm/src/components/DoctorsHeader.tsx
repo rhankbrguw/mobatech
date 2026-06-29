@@ -46,7 +46,7 @@ export function DoctorsHeader({
               { label: 'Gigi', value: 'Gigi' },
               { label: 'Umum', value: 'Umum' },
             ]}
-            placeholder="Poliklinik..."
+            placeholder={APP_STRINGS.common.searchPolyclinic}
           />
           <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
         </div>

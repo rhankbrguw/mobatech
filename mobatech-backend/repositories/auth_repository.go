@@ -13,7 +13,8 @@ type AuthRepository interface {
 	UpdateUser(user *models.User) error
 	AddFamilyMember(member *models.FamilyMember) error
 	DeleteFamilyMember(id uint) error
-	GetAllUsers(search string, filter string) ([]models.User, error)
+	GetAllUsers(search string, filter string, roleFilter string) ([]models.User, error)
+	DeleteUser(id uint) error
 }
 
 type authRepository struct {
@@ -44,6 +45,10 @@ func (r *authRepository) UpdateUser(user *models.User) error {
 	return r.db.Omit("created_at").Save(user).Error
 }
 
+func (r *authRepository) DeleteUser(id uint) error {
+	return r.db.Delete(&models.User{}, id).Error
+}
+
 func (r *authRepository) AddFamilyMember(member *models.FamilyMember) error {
 	return r.db.Create(member).Error
 }
@@ -52,9 +57,12 @@ func (r *authRepository) DeleteFamilyMember(id uint) error {
 	return r.db.Delete(&models.FamilyMember{}, id).Error
 }
 
-func (r *authRepository) GetAllUsers(search string, filter string) ([]models.User, error) {
+func (r *authRepository) GetAllUsers(search string, filter string, roleFilter string) ([]models.User, error) {
 	var users []models.User
-	query := r.db.Preload("FamilyMembers").Where("role = ?", "patient")
+	query := r.db.Preload("FamilyMembers")
+	if roleFilter != "" {
+		query = query.Where("role = ?", roleFilter)
+	}
 	if search != "" {
 		searchTerm := "%" + search + "%"
 		query = query.Where("full_name LIKE ? OR email LIKE ? OR phone_number LIKE ?", searchTerm, searchTerm, searchTerm)

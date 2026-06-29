@@ -12,6 +12,7 @@ import { Card } from "@/components/ui/Card";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { useEffect } from "react";
+import { APP_STRINGS } from "@/lib/constants";
 
 function StatusBadge({ value, type }: { value: string; type: "order" | "payment" }) {
   let variant: BadgeVariant = "neutral";
@@ -77,7 +78,7 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
             { label: 'Pending', value: 'pending' },
             { label: 'Selesai', value: 'resolved' },
           ]}
-          placeholder="Status..."
+          placeholder={APP_STRINGS.common.searchStatus}
         />
         <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
       </div>

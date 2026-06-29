@@ -1,5 +1,5 @@
 import React from "react";
-import { ChatSession } from "./AiAuditClient";
+import { ChatSession } from "@/types/api";
 
 export function AiAuditChatHistory({
   sessions,

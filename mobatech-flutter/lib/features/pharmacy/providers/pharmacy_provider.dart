@@ -86,7 +86,6 @@ class CartNotifier extends StateNotifier<AsyncValue<Cart>> {
       await repository.addToCart(medicineId, quantity);
       await fetchCart();
     } catch (e) {
-      // Handle error
     }
   }
 
@@ -95,7 +94,6 @@ class CartNotifier extends StateNotifier<AsyncValue<Cart>> {
       await repository.updateCartItem(cartItemId, quantity);
       await fetchCart();
     } catch (e) {
-      // Handle error
     }
   }
 
@@ -104,7 +102,6 @@ class CartNotifier extends StateNotifier<AsyncValue<Cart>> {
       await repository.removeFromCart(cartItemId);
       await fetchCart();
     } catch (e) {
-      // Handle error
     }
   }
 }

@@ -41,6 +41,9 @@ class AppStrings {
   static const String homeGreetingPrefix = 'Selamat Pagi, ';
   static const String homeGreetingSubtitle =
       'Semoga harimu menyenangkan, salam sehat';
+  static const String searchDoctorHint = 'Cari dokter atau spesialis...';
+  static const String searchMedicineHint = 'Cari nama obat...';
+  static const String searchGeneralHint = 'Cari Dokter, Layanan, Agenda...';
   static const String searchHint = 'Cari layanan atau spesialis...';
   static const String menuAppointment = 'Buat Janji\nTemu';
   static const String menuOffers = 'Penawaran\nKhusus';

@@ -1,5 +1,6 @@
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
+import { APP_STRINGS } from "@/lib/constants";
 
 export function PolyclinicsControls({
   filterValue,
@@ -21,7 +22,7 @@ export function PolyclinicsControls({
           { label: 'Aktif', value: 'active' },
           { label: 'Nonaktif', value: 'inactive' },
         ]}
-        placeholder="Status..."
+        placeholder={APP_STRINGS.common.searchStatus}
       />
       <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
     </div>

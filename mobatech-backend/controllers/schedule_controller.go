@@ -18,7 +18,6 @@ func NewScheduleController(scheduleService services.ScheduleService) *ScheduleCo
 	return &ScheduleController{scheduleService}
 }
 
-// GET /api/doctors/:id/schedules
 func (c *ScheduleController) GetDoctorSchedules(ctx *gin.Context) {
 	doctorID, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	schedules, err := c.scheduleService.GetDoctorSchedules(uint(doctorID))
@@ -29,7 +28,6 @@ func (c *ScheduleController) GetDoctorSchedules(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", schedules))
 }
 
-// GET /api/admin/schedules
 func (c *ScheduleController) GetAllSchedules(ctx *gin.Context) {
 	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
 	schedules, err := c.scheduleService.GetUpcomingSchedules(limit)
@@ -40,7 +38,6 @@ func (c *ScheduleController) GetAllSchedules(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", schedules))
 }
 
-// POST /api/admin/schedules
 func (c *ScheduleController) CreateSchedule(ctx *gin.Context) {
 	var input models.DoctorSchedule
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -56,7 +53,6 @@ func (c *ScheduleController) CreateSchedule(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", input))
 }
 
-// PUT /api/admin/schedules/:id
 func (c *ScheduleController) UpdateSchedule(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	var input models.DoctorSchedule
@@ -74,7 +70,6 @@ func (c *ScheduleController) UpdateSchedule(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", schedule))
 }
 
-// DELETE /api/admin/schedules/:id
 func (c *ScheduleController) DeleteSchedule(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	if err := c.scheduleService.DeleteSchedule(uint(id)); err != nil {

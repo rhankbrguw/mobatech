@@ -13,6 +13,7 @@ import { Card } from "@/components/ui/Card";
 import { AppointmentsTable } from "@/components/AppointmentsTable";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 export function AppointmentsClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
@@ -62,8 +63,9 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
     }
   };
 
-  const handleCancel = async (id: number) => {
-    if (!confirm("Yakin ingin membatalkan antrean ini?")) return;
+  const [cancelConfirmId, setCancelConfirmId] = useState<number | null>(null);
+
+  const executeCancel = async (id: number) => {
     try {
       await api.post(`/api/admin/appointments/${id}/cancel`, {});
       setToast({ isOpen: true, message: "Antrean dibatalkan", type: "success" });
@@ -71,6 +73,8 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
     } catch (err) {
       const msg = err instanceof ApiError ? err.message : APP_STRINGS.login.networkError;
       setToast({ isOpen: true, message: msg, type: "error" });
+    } finally {
+      setCancelConfirmId(null);
     }
   };
 
@@ -100,20 +104,30 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
             { label: 'Hari Ini', value: 'today' },
             { label: 'Besok', value: 'tomorrow' },
           ]}
-          placeholder="Jadwal..."
+          placeholder={APP_STRINGS.common.searchSchedule}
         />
         <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
       </div>
 
-      <Card noPadding>
+      <Card noPadding className="overflow-x-auto">
         <AppointmentsTable 
           items={items}
           loading={loading}
           onApprove={handleApprove}
-          onCancel={handleCancel}
+          onCancel={setCancelConfirmId}
           onComplete={handleComplete}
         />
       </Card>
+
+      <ConfirmModal
+        isOpen={cancelConfirmId !== null}
+        onClose={() => setCancelConfirmId(null)}
+        onConfirm={() => cancelConfirmId !== null && executeCancel(cancelConfirmId)}
+        title="Batalkan Antrean"
+        description="Apakah Anda yakin ingin membatalkan antrean pasien ini? Aksi ini tidak dapat dikembalikan."
+        confirmText="Ya, Batalkan"
+        variant="danger"
+      />
 
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </div>

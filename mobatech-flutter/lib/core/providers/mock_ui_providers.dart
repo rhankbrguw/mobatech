@@ -72,18 +72,17 @@ class SpecialOffer {
   SpecialOffer(this.title, this.subtitle, this.themeColor);
 }
 
-final specialOffersProvider = Provider<List<SpecialOffer>>(
-  (ref) => [
-    SpecialOffer(
-      'Paket Persalinan',
-      'Gratis Konsultasi Laktasi',
-      AppColors.primary,
-    ),
-    SpecialOffer(
-      'Medical Checkup Keluarga',
-      'Potongan Harga Rp 500.000',
-      AppColors.agendaHeader,
-    ),
-    SpecialOffer('Vaksinasi Anak', 'Cashback 20%', AppColors.successGreen),
-  ],
-);
+final specialOffersProvider = FutureProvider.autoDispose<List<SpecialOffer>>((ref) async {
+  final dio = ref.read(dioProvider);
+  final response = await dio.get('/promos');
+  final dynamic responseData = response.data;
+  final List data = responseData is Map && responseData.containsKey('data') ? responseData['data'] : responseData as List;
+  return data.map((e) {
+    String colorStr = e['themeColor'] ?? '#113C2B';
+    Color c = AppColors.primary;
+    if (colorStr.startsWith('#')) {
+      c = Color(int.parse(colorStr.substring(1, 7), radix: 16) + 0xFF000000);
+    }
+    return SpecialOffer(e['title'] ?? '', e['subtitle'] ?? '', c);
+  }).toList();
+});

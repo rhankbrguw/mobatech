@@ -18,7 +18,6 @@ func NewDoctorController(doctorService services.DoctorService) *DoctorController
 	return &DoctorController{doctorService}
 }
 
-// GET /api/doctors?specialization=...&polyclinic_id=...
 func (c *DoctorController) GetDoctors(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
@@ -35,7 +34,6 @@ func (c *DoctorController) GetDoctors(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", doctors))
 }
 
-// GET /api/doctors/:id
 func (c *DoctorController) GetDoctorByID(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	doctor, err := c.doctorService.GetDoctorByID(uint(id))
@@ -46,7 +44,6 @@ func (c *DoctorController) GetDoctorByID(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", doctor))
 }
 
-// POST /api/admin/doctors
 func (c *DoctorController) CreateDoctor(ctx *gin.Context) {
 	var doctor models.Doctor
 	if err := ctx.ShouldBindJSON(&doctor); err != nil {
@@ -62,7 +59,6 @@ func (c *DoctorController) CreateDoctor(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", doctor))
 }
 
-// PUT /api/admin/doctors/:id
 func (c *DoctorController) UpdateDoctor(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	var input models.Doctor
@@ -80,7 +76,6 @@ func (c *DoctorController) UpdateDoctor(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", doctor))
 }
 
-// DELETE /api/admin/doctors/:id
 func (c *DoctorController) DeleteDoctor(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	if err := c.doctorService.DeleteDoctor(uint(id)); err != nil {

@@ -66,7 +66,7 @@ export function LoginForm({ showToast }: { showToast: (msg: string, type: "succe
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="contoh@herminahospitals.com"
+          placeholder={APP_STRINGS.login.emailPlaceholder}
           className="w-full h-11 px-4 rounded-xl border glass-input text-sm text-foreground"
           disabled={loading}
         />
@@ -81,7 +81,7 @@ export function LoginForm({ showToast }: { showToast: (msg: string, type: "succe
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Contoh: Password123!"
+            placeholder={APP_STRINGS.login.passwordPlaceholder}
             className="w-full h-11 pl-4 pr-10 rounded-xl border glass-input text-sm text-foreground"
             disabled={loading}
           />

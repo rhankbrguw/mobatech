@@ -1,5 +1,6 @@
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
+import { APP_STRINGS } from "@/lib/constants";
 
 export function MedicalResultsControls({
   filterValue,
@@ -21,7 +22,7 @@ export function MedicalResultsControls({
           { label: 'Terbaru', value: 'newest' },
           { label: 'Terlama', value: 'oldest' },
         ]}
-        placeholder="Urutkan..."
+        placeholder={APP_STRINGS.common.searchSort}
       />
       <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
     </div>

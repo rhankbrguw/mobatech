@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Sun, Moon } from "lucide-react";
+import { useUIStore } from "@/store/useUIStore";
+import { Sun, Moon, Menu } from "lucide-react";
 
 export function Header() {
   const user = useAuthStore((state) => state.user);
   const [dark, setDark] = useState(false);
+  const toggleSidebar = useUIStore((state) => state.toggleSidebar);
 
   useEffect(() => {
     const isDark = document.documentElement.classList.contains("dark");
@@ -29,12 +31,18 @@ export function Header() {
   };
 
   return (
-    <header className="h-16 border-b glass-panel flex items-center justify-between px-8 fixed top-0 right-0 left-64 z-10">
-      <div className="flex items-center">
-        {/* Placeholder for page title or breadcrumbs if needed in future */}
+    <header className="h-16 border-b glass-panel flex items-center justify-between px-4 md:px-8 fixed top-0 right-0 left-0 lg:left-64 z-10 transition-all duration-300">
+      <div className="flex items-center gap-3">
+        <button
+          onClick={toggleSidebar}
+          className="lg:hidden p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer text-foreground/70"
+          aria-label="Toggle Menu"
+        >
+          <Menu size={20} />
+        </button>
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-4 md:gap-6">
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}

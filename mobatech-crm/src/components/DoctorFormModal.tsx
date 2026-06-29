@@ -5,7 +5,7 @@ import { api } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { Doctor, Polyclinic } from "@/types/api";
 import { Modal } from "@/components/Modal";
-import { DoctorImageUpload } from "./DoctorImageUpload";
+import { ImageUpload } from "./ImageUpload";
 
 interface DoctorFormModalProps {
   isOpen: boolean;
@@ -87,7 +87,7 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.nameLabel}</label>
-            <input disabled={submitting} type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder="Contoh: dr. Budi Santoso, Sp.J" />
+            <input disabled={submitting} type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder={APP_STRINGS.doctors.namePlaceholder} />
           </div>
           <div>
             <label className="block text-xs font-semibold mb-2">Poliklinik</label>
@@ -101,18 +101,18 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.specLabel}</label>
-          <input disabled={submitting} type="text" required value={specialization} onChange={(e) => setSpecialization(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder="Contoh: Spesialis Jantung" />
+          <input disabled={submitting} type="text" required value={specialization} onChange={(e) => setSpecialization(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder={APP_STRINGS.doctors.specPlaceholder} />
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.contactLabel}</label>
-          <input disabled={submitting} type="text" required value={contactInfo} onChange={(e) => setContactInfo(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder="Contoh: 08123456789" />
+          <input disabled={submitting} type="text" required value={contactInfo} onChange={(e) => setContactInfo(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder={APP_STRINGS.doctors.contactPlaceholder} />
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.descLabel}</label>
-          <textarea disabled={submitting} required value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none" placeholder="Contoh: Berpengalaman 10 tahun di bidang kardiologi..." />
+          <textarea disabled={submitting} required value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none" placeholder={APP_STRINGS.doctors.descPlaceholder} />
         </div>
         
-        <DoctorImageUpload imageUrl={imageUrl} setImageUrl={setImageUrl} />
+        <ImageUpload imageUrl={imageUrl} setImageUrl={setImageUrl} label={APP_STRINGS.doctors.imgLabel} />
 
         <div className="flex items-center gap-2">
           <input disabled={submitting} type="checkbox" id="isActive" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="rounded border-glass-border text-primary focus:ring-primary w-4 h-4 cursor-pointer" />

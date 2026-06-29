@@ -50,11 +50,18 @@ func (r *pharmacyRepository) GetOrderByID(id uint) (*models.PharmacyOrder, error
 
 func (r *pharmacyRepository) GetAllOrders(search string, filter string) ([]models.PharmacyOrder, error) {
 	var orders []models.PharmacyOrder
-	query := r.db.Preload("Items").Preload("Items.Medicine")
-	if filter != "" {
-		query = query.Where("status = ?", filter)
+	query := r.db.Preload("Items").Preload("Items.Medicine").Joins("LEFT JOIN users ON pharmacy_orders.user_id = users.id")
+
+	if search != "" {
+		searchTerm := "%" + search + "%"
+		query = query.Where("users.full_name LIKE ? OR pharmacy_orders.delivery_address LIKE ?", searchTerm, searchTerm)
 	}
-	err := query.Order("created_at desc").Find(&orders).Error
+
+	if filter != "" {
+		query = query.Where("pharmacy_orders.status = ?", filter)
+	}
+
+	err := query.Order("pharmacy_orders.created_at desc").Find(&orders).Error
 	return orders, err
 }
 

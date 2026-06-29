@@ -40,6 +40,7 @@ export function PatientsClient({ initialData, searchParams }: { initialData?: un
     try {
       setLoading(true);
       const queryParams = new URLSearchParams();
+      queryParams.append("role", "patient");
       if (searchQuery) queryParams.append("search", searchQuery);
       if (filterValue) queryParams.append("filter", filterValue);
       const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
@@ -72,9 +73,9 @@ export function PatientsClient({ initialData, searchParams }: { initialData?: un
             { label: 'Terbaru', value: 'newest' },
             { label: 'Terlama', value: 'oldest' },
           ]}
-          placeholder="Filter..."
+          placeholder={APP_STRINGS.common.searchFilter}
         />
-        <SearchFilterBar value={searchQuery} onChange={setSearchQuery} placeholder="Cari nama, email, atau no HP pasien..." />
+        <SearchFilterBar value={searchQuery} onChange={setSearchQuery} placeholder={APP_STRINGS.common.searchPatient} />
       </div>
 
       <Card noPadding className="overflow-x-auto">

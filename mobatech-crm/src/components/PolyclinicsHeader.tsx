@@ -37,7 +37,7 @@ export function PolyclinicsHeader({
             { label: 'Aktif', value: 'active' },
             { label: 'Nonaktif', value: 'inactive' },
           ]}
-          placeholder="Status..."
+          placeholder={APP_STRINGS.common.searchStatus}
         />
         <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
       </div>

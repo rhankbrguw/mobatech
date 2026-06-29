@@ -99,7 +99,7 @@ export function BranchesClient({ initialData, searchParams }: { initialData?: un
             { label: 'A-Z', value: 'az' },
             { label: 'Z-A', value: 'za' },
           ]}
-          placeholder="Urutkan..."
+          placeholder={APP_STRINGS.common.searchSort}
         />
         <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
       </div>

@@ -38,6 +38,7 @@ func main() {
 		&models.Cart{},
 		&models.CartItem{},
 		&models.Branch{},
+		&models.Promo{},
 	)
 
 	// Initialize Gin Router
@@ -111,8 +112,24 @@ func main() {
 	routes.SetupPatientSupportRoutes(r, config.DB)
 	// Setup For You Routes
 	routes.SetupForYouRoutes(r, config.DB)
+	// Setup Promo Routes
+	routes.SetupPromoRoutes(r, config.DB)
 	// Setup RAG Routes
 	routes.SetupRAGRoutes(r)
+
+	// Start 00:00 Automated RAG Sync Cron Job
+	go func() {
+		for {
+			now := time.Now()
+			// Set next trigger to midnight
+			next := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, now.Location())
+			time.Sleep(time.Until(next))
+			
+			// Trigger automated refresh
+			fmt.Println("[CRON] Executing automated 00:00 Knowledge Base Sync...")
+			http.Post("http://localhost:8080/api/admin/rag/sync", "application/json", nil)
+		}
+	}()
 
 	// Start the server
 	r.Run(":8080")
