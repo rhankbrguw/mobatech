@@ -11,7 +11,7 @@ export function PharmacistDashboard() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Selamat Pagi" : hour < 18 ? "Selamat Siang" : "Selamat Malam";
 
-  const [stats, setStats] = useState({ totalMeds: 0, lowStock: 0, pendingPrescriptions: 0, loading: true });
+  const [stats, setStats] = useState({ totalMeds: 0, lowStock: 0, pendingPrescriptions: 0, completedPrescriptions: 0, totalPrescriptions: 0, loading: true });
 
   useEffect(() => {
     async function load() {
@@ -21,7 +21,7 @@ export function PharmacistDashboard() {
           api.get<Prescription[]>("/api/admin/pharmacy/prescriptions"),
         ]);
         
-        let totalMeds = 0, lowStock = 0, pendingPrescriptions = 0;
+        let totalMeds = 0, lowStock = 0, pendingPrescriptions = 0, completedPrescriptions = 0, totalPrescriptions = 0;
         if (medsRes.status === "fulfilled") {
           const meds = medsRes.value.data || [];
           totalMeds = meds.length;
@@ -30,8 +30,10 @@ export function PharmacistDashboard() {
         if (pRes.status === "fulfilled") {
           const pres = pRes.value.data || [];
           pendingPrescriptions = pres.filter(p => p.status === "pending").length;
+          completedPrescriptions = pres.filter(p => p.status === "completed").length;
+          totalPrescriptions = pendingPrescriptions + completedPrescriptions;
         }
-        setStats({ totalMeds, lowStock, pendingPrescriptions, loading: false });
+        setStats({ totalMeds, lowStock, pendingPrescriptions, completedPrescriptions, totalPrescriptions, loading: false });
       } catch {
         setStats(s => ({ ...s, loading: false }));
       }
@@ -51,10 +53,6 @@ export function PharmacistDashboard() {
           <p className="text-xs text-foreground/50 mt-1">
             {Formatters.date(new Date(), "weekday")}
           </p>
-        </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-600 rounded-xl text-sm font-semibold border border-emerald-500/20">
-          <Activity size={16} className="animate-pulse" />
-          Apotek Aktif
         </div>
       </div>
 

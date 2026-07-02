@@ -68,7 +68,6 @@ class ChatMessagesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
 
     try {
       await _streamResponse(sessionId, message);
-    } catch (e) {
     } finally {
       isStreaming = false;
     }

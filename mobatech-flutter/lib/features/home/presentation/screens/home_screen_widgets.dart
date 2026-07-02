@@ -113,7 +113,7 @@ class _HospitalsList extends ConsumerWidget {
         if (branches.isEmpty) return const Padding(padding: EdgeInsets.all(24.0), child: Text(AppStrings.extTidakadarumahsakitterdekat, style: TextStyle(color: AppColors.textGrey)));
         return Column(
           children: branches.map((branch) {
-            final dummyDistance = (branch.id * 1.5 + 2).toStringAsFixed(1) + ' KM';
+            final dummyDistance = '${(branch.id * 1.5 + 2).toStringAsFixed(1)} KM';
             return HospitalCard(
               name: branch.name,
               address: branch.address,
