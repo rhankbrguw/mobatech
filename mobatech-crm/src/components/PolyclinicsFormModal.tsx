@@ -21,7 +21,7 @@ export function PolyclinicsFormModal({
 }: {
   showModal: boolean;
   setShowModal: (show: boolean) => void;
-  selectedItem: any;
+  selectedItem: {id?: number, name?: string, description?: string, icon?: string} | null;
   name: string;
   setName: (v: string) => void;
   description: string;

@@ -58,14 +58,18 @@ cd mobatech
 
 ### 2. Core Backend (Go)
 
-Initialize the Go server and dependencies:
+Initialize the Go server and dependencies. Ensure you have created the `mobatech` database in MySQL beforehand:
 
 ```bash
 cd mobatech-backend
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS mobatech;"
 go mod tidy
 go run main.go
 ```
-*Note: The backend runs on `localhost:8080` by default. It utilizes `start.sh` to scaffold the Super Admin account.*
+*Note: The backend runs on `localhost:8080` by default. To scaffold the Super Admin account, open a new terminal in the backend directory and run:*
+```bash
+go run seed_admin.go
+```
 
 ### 3. CRM Portal (Next.js)
 

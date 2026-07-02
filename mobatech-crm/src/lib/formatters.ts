@@ -4,10 +4,10 @@ export const Formatters = {
     let val = raw.replace(/\D/g, "");
     if (val.startsWith("62")) {
       val = val.slice(2);
-    } else if (val.startsWith("0")) {
+    }
+    
+    if (val.startsWith("0")) {
       val = val.slice(1);
-    } else if (raw.startsWith("+62")) {
-      val = raw.slice(3).replace(/\D/g, "");
     }
     
     if (!val) return "-";

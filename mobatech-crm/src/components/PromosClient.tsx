@@ -10,21 +10,22 @@ import { DeleteModal } from "@/components/DeleteModal";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { PromosFormModal } from "./PromosFormModal";
 import { APP_STRINGS } from "@/lib/constants";
+import { Promo } from "@/types/api";
 
 export function PromosClient() {
-  const [promos, setPromos] = useState<any[]>([]);
+  const [promos, setPromos] = useState<Promo[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState<{ id: number; title: string } | null>(null);
   const [toast, setToast] = useState<{ isOpen: boolean; message: string; type: "success" | "error" }>({ isOpen: false, message: "", type: "success" });
   
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [editingPromo, setEditingPromo] = useState<any>(null);
+  const [editingPromo, setEditingPromo] = useState<Promo | null>(null);
 
   const loadPromos = async () => {
     try {
       setLoading(true);
-      const res = await api.get<any[]>("/api/admin/promos");
+      const res = await api.get<Promo[]>("/api/admin/promos");
       let data = res.data || [];
       if (searchQuery) {
         data = data.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.subtitle.toLowerCase().includes(searchQuery.toLowerCase()));

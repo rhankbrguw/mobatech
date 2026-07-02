@@ -64,13 +64,13 @@ def get_rag_status():
 @app.post("/api/rag/context", response_model=RAGResponse)
 def get_rag_context(req: PromptRequest):
     safe_query = anonymizer.anonymize(req.query)
-    context_chunks = vector_search.search(safe_query, top_k=3)
+    context_chunks = vector_search.search(safe_query, top_k=10)
     return RAGResponse(anonymized_query=safe_query, context=context_chunks)
 
 @app.post("/api/rag/chat", response_model=ChatResponse)
 def get_rag_chat(req: PromptRequest):
     safe_query = anonymizer.anonymize(req.query)
-    context_chunks = vector_search.search(safe_query, top_k=3)
+    context_chunks = vector_search.search(safe_query, top_k=10)
     
     answer = llm_engine.generate_response(safe_query, context_chunks)
     

@@ -46,22 +46,12 @@ class EditProfileSubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 54,
-      child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.backgroundWhite,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          elevation: 5,
-          shadowColor: AppColors.primary.withValues(alpha: 0.4),
-        ),
-        child: isLoading
-            ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: AppColors.backgroundWhite, strokeWidth: 3))
-            : const Text(AppStrings.extSimpanperubahan, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-      ),
+    return AppButton(
+      text: AppStrings.extSimpanperubahan,
+      onPressed: onPressed,
+      isLoading: isLoading,
+      isFullWidth: true,
+      size: AppButtonSize.large,
     );
   }
 }

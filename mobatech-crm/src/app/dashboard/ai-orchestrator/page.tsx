@@ -16,7 +16,7 @@ export default function AIOrchestratorPage() {
 
   const fetchStatus = async () => {
     try {
-      const res = await api.get<any>("/api/admin/rag/status");
+      const res = await api.get<{vector_count: number, status: string, knowledge_base_size: number}>("/api/admin/rag/status");
       if (res.data && typeof res.data.vector_count === "number") {
         setVectorCount(res.data.vector_count);
       }

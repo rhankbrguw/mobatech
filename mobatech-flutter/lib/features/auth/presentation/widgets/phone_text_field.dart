@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/widgets/app_text_field.dart';
 
 class PhoneTextField extends StatelessWidget {
   final TextEditingController? controller;
@@ -10,48 +11,36 @@ class PhoneTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.borderGrey),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            decoration: const BoxDecoration(
-              color: AppColors.backgroundLightGrey,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24),
-                bottomLeft: Radius.circular(24),
-              ),
-            ),
-            child: const Text(
+    return AppTextField(
+      label: "", // No floating label for auth fields initially
+      controller: controller,
+      keyboardType: TextInputType.phone,
+      validator: validator,
+      inputFormatters: [PhonePrefixFormatter()],
+      prefixIcon: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
               '+62',
               style: TextStyle(
-                color: AppColors.textGrey,
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? AppColors.textLightGrey 
+                    : AppColors.textGrey,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
             ),
-          ),
-          Expanded(
-            child: TextFormField(
-              controller: controller,
-              keyboardType: TextInputType.phone,
-              validator: validator,
-              inputFormatters: [PhonePrefixFormatter()],
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
-              ),
+            const SizedBox(width: 8),
+            Container(
+              width: 1,
+              height: 24,
+              color: AppColors.getGlassBorder(Theme.of(context).brightness == Brightness.dark),
             ),
-          ),
-        ],
+            const SizedBox(width: 8),
+          ],
+        ),
       ),
     );
   }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Card } from "./ui/Card";
+import { Button } from "./ui/Button";
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -42,30 +42,30 @@ export function DeleteModal({
 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div 
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm" 
+      <div
+        className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm transition-opacity duration-300"
         onClick={onClose}
       />
-      <Card className="w-full max-w-sm shadow-2xl p-6 relative z-[101] animate-slide-in">
-        <h3 className="text-base font-bold mb-2">{title}</h3>
-        <p className="text-sm text-foreground/70 mb-6">{description}</p>
+      <div className="w-full max-w-sm glass-card rounded-2xl shadow-2xl p-6 relative z-[101] animate-slide-in">
+        <h3 className="text-lg font-bold mb-2 text-foreground">{title}</h3>
+        <p className="text-sm text-foreground/70 mb-6 leading-relaxed">{description}</p>
         <div className="flex justify-end gap-2">
-          <button 
-            onClick={onClose} 
+          <Button
+            onClick={onClose}
             disabled={isLoading}
-            className="px-4 py-2 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5 rounded-lg transition-colors disabled:opacity-50"
+            variant="ghost"
           >
             Batal
-          </button>
-          <button 
-            onClick={onConfirm} 
+          </Button>
+          <Button
+            onClick={onConfirm}
             disabled={isLoading}
-            className="px-4 py-2 text-sm font-medium bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-colors flex items-center justify-center disabled:opacity-50"
+            variant="danger"
           >
             {isLoading ? "Menghapus..." : "Hapus"}
-          </button>
+          </Button>
         </div>
-      </Card>
+      </div>
     </div>,
     document.body
   );

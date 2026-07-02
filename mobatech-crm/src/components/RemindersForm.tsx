@@ -35,7 +35,7 @@ export function RemindersForm({
             <option value="">— Pilih Pasien —</option>
             {users.map((u) => (
               <option key={u.id} value={u.id}>
-                {u.full_name || u.email} {u.phone_number ? `(${u.phone_number})` : ""}
+                {u.full_name || u.email}
               </option>
             ))}
           </select>

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Primary
-  static const Color primary = Color(0xFF388E3C);
-  static const Color primaryDark = Color(0xFF2E7D32);
+  static const Color primary = Color(0xFF1E5E44); // Hermina green
+  static const Color primaryGreen = Color(0xFF1E5E44); // Alias
+  static const Color primaryDark = Color(0xFF113C2B);
   static const Color primaryLight = Color(0xFFE8F5E9);
   static const Color backgroundWave = Color(0xFFBAC8EE);
 
@@ -78,4 +79,10 @@ class AppColors {
   // Warning
   static const Color warningOrange = Colors.orange;
   static Color warningLight = Colors.orange.withValues(alpha: 0.1);
+
+  // Unified Dark Mode Helpers
+  static Color getGlassBackground(bool isDark) => isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.7);
+  static Color getGlassBorder(bool isDark) => isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1);
+  static Color getTextPrimary(bool isDark) => isDark ? Colors.white : textDark;
+  static Color getTextSecondary(bool isDark) => isDark ? Colors.white70 : textGrey;
 }

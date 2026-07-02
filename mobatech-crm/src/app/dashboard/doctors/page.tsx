@@ -8,7 +8,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
   const search = (await searchParams).search || "";
   
   // Example fetch, customize per page
-  let initialData: any = [];
+  let initialData: unknown = [];
   try {
     initialData = await serverFetch(`/api/doctors?page=${page}&search=${search}`);
   } catch (e) {

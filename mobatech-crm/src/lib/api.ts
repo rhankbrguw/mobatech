@@ -4,7 +4,7 @@ import { encryptData, decryptData } from "./crypto";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   code: string;
   message: string;
@@ -14,8 +14,8 @@ export interface ApiResponse<T = any> {
 export class ApiError extends Error {
   code: string;
   status: number;
-  errors?: any;
-  constructor(code: string, status: number, message: string, errors?: any) {
+  errors?: unknown;
+  constructor(code: string, status: number, message: string, errors?: unknown) {
     super(message);
     this.code = code;
     this.status = status;
@@ -81,10 +81,10 @@ axiosInstance.interceptors.response.use(
       }
     }
     
-    const normalizeKeys = (obj: any): any => {
+    const normalizeKeys = (obj: unknown): unknown => {
       if (Array.isArray(obj)) return obj.map(normalizeKeys);
       else if (obj !== null && typeof obj === "object") {
-        const newObj: any = {};
+        const newObj: Record<string, unknown> = {};
         for (const key in obj) {
           if (Object.prototype.hasOwnProperty.call(obj, key)) {
             let newKey = key;
@@ -92,7 +92,7 @@ axiosInstance.interceptors.response.use(
             else if (key === "CreatedAt") newKey = "created_at";
             else if (key === "UpdatedAt") newKey = "updated_at";
             else if (key === "DeletedAt") newKey = "deleted_at";
-            newObj[newKey] = normalizeKeys(obj[key]);
+            newObj[newKey] = normalizeKeys((obj as Record<string, unknown>)[key]);
           }
         }
         return newObj;
@@ -103,11 +103,11 @@ axiosInstance.interceptors.response.use(
     response.data = normalizeKeys(response.data);
     return response;
   },
-  (error: AxiosError<any>) => {
+  (error: AxiosError<unknown>) => {
     const status = error.response?.status || 500;
-    const responseData = error.response?.data || {};
+    const responseData = (error.response?.data || {}) as Record<string, unknown>;
     
-    let errorCode = responseData.code || "INTERNAL_ERROR";
+    let errorCode = (responseData.code as string) || "INTERNAL_ERROR";
     if (!responseData.code) {
       switch (status) {
         case 401: errorCode = "UNAUTHENTICATED"; break;
@@ -117,7 +117,7 @@ axiosInstance.interceptors.response.use(
         case 422: errorCode = "VALIDATION_ERROR"; break;
       }
     }
-    const errorMessage = responseData.message || error.message || "Terjadi kesalahan koneksi.";
+    const errorMessage = (responseData.message as string) || error.message || "Terjadi kesalahan koneksi.";
     
     return Promise.reject(new ApiError(errorCode, status, errorMessage, responseData.errors));
   }
@@ -128,11 +128,11 @@ export const api = {
     const res = await axiosInstance.get<ApiResponse<T>>(path, options);
     return res.data;
   },
-  post: async <T>(path: string, body: any, options?: CustomRequestConfig): Promise<ApiResponse<T>> => {
+  post: async <T>(path: string, body: unknown, options?: CustomRequestConfig): Promise<ApiResponse<T>> => {
     const res = await axiosInstance.post<ApiResponse<T>>(path, body, options);
     return res.data;
   },
-  put: async <T>(path: string, body: any, options?: CustomRequestConfig): Promise<ApiResponse<T>> => {
+  put: async <T>(path: string, body: unknown, options?: CustomRequestConfig): Promise<ApiResponse<T>> => {
     const res = await axiosInstance.put<ApiResponse<T>>(path, body, options);
     return res.data;
   },

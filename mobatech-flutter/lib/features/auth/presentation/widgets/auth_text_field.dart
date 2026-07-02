@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_text_field.dart';
 
 class AuthTextField extends StatelessWidget {
   final String hint;
@@ -25,58 +26,26 @@ class AuthTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: TextFormField(
-        controller: controller,
-        onChanged: onChanged,
-        obscureText: obscureText,
-        validator: validator,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: const TextStyle(
-            color: AppColors.textLightGrey,
-            fontSize: 14,
-          ),
-          filled: true,
-          fillColor: AppColors.backgroundWhite,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 16,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(24),
-            borderSide: const BorderSide(color: AppColors.borderGrey),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(24),
-            borderSide: const BorderSide(color: AppColors.borderGrey),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(24),
-            borderSide: const BorderSide(color: AppColors.primary),
-          ),
-          suffixIcon: isPassword
-              ? Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: IconButton(
-                    icon: Icon(
-                      obscureText
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                      color: AppColors.textDark,
-                      size: 22,
-                    ),
-                    onPressed: onTogglePassword,
-                  ),
-                )
-              : null,
-        ),
-      ),
+    return AppTextField(
+      label: "", // No floating label for auth fields initially
+      hint: hint,
+      controller: controller,
+      isPassword: obscureText, // Using the current toggled state
+      keyboardType: keyboardType ?? TextInputType.text,
+      validator: validator,
+      onChanged: onChanged,
+      suffixIcon: isPassword
+          ? IconButton(
+              icon: Icon(
+                obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? AppColors.textLightGrey 
+                    : AppColors.textDark,
+                size: 22,
+              ),
+              onPressed: onTogglePassword,
+            )
+          : null,
     );
   }
 }

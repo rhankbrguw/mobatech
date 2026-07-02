@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { api, ApiError } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
+import { Promo } from "@/types/api";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/ui/Button";
 
@@ -14,7 +15,7 @@ export function PromosFormModal({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  promo?: any | null;
+  promo?: Promo | null;
   onSuccess: () => void;
   setToast: (toast: { isOpen: boolean; message: string; type: "success" | "error" }) => void;
 }) {
@@ -36,8 +37,8 @@ export function PromosFormModal({
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      if (promo?.ID) {
-        await api.put(`/api/admin/promos/${promo.ID}`, formData);
+      if (promo?.id) {
+        await api.put(`/api/admin/promos/${promo.id}`, formData);
       } else {
         await api.post("/api/admin/promos", formData);
       }

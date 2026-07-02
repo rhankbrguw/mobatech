@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Card } from "./ui/Card";
 import { Button } from "./ui/Button";
 
 interface ConfirmModalProps {
@@ -47,38 +46,34 @@ export function ConfirmModal({
 
   if (!isOpen || !mounted) return null;
 
-  const btnVariant = variant === "danger" ? "outline" : variant === "warning" ? "secondary" : "primary";
-  const btnClass = variant === "danger" 
-    ? "bg-rose-500 text-white hover:bg-rose-600 border-none" 
-    : "";
+  const btnVariant = variant === "danger" ? "danger" : variant === "warning" ? "secondary" : "primary";
 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div 
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity" 
+      <div
+        className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm transition-opacity duration-300"
         onClick={onClose}
       />
-      <Card className="w-full max-w-sm shadow-2xl p-6 relative z-[101] animate-slide-in">
-        <h3 className="text-lg font-bold mb-2">{title}</h3>
+      <div className="w-full max-w-sm glass-card rounded-2xl shadow-2xl p-6 relative z-[101] animate-slide-in">
+        <h3 className="text-lg font-bold mb-2 text-foreground">{title}</h3>
         <p className="text-sm text-foreground/70 mb-6 leading-relaxed">{description}</p>
         <div className="flex justify-end gap-3">
-          <Button 
-            onClick={onClose} 
+          <Button
+            onClick={onClose}
             disabled={isLoading}
             variant="ghost"
           >
             {cancelText}
           </Button>
-          <Button 
-            onClick={onConfirm} 
+          <Button
+            onClick={onConfirm}
             disabled={isLoading}
             variant={btnVariant}
-            className={btnClass}
           >
             {isLoading ? "Memproses..." : confirmText}
           </Button>
         </div>
-      </Card>
+      </div>
     </div>,
     document.body
   );

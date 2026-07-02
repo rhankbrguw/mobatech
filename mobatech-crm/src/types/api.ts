@@ -100,3 +100,7 @@ export interface Reminder {
   reminder_date: string; is_read: boolean;
   type: string;
 }
+export interface Promo extends GormModel {
+  title: string; subtitle: string;
+  themeColor: string; is_active: boolean;
+}

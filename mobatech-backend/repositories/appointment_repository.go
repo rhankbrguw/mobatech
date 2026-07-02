@@ -29,7 +29,7 @@ func (r *appointmentRepository) FindAll(search string, filter string) ([]models.
 		
 	if search != "" {
 		searchTerm := "%" + search + "%"
-		query = query.Where("appointments.complaint LIKE ? OR users.full_name LIKE ?", searchTerm, searchTerm)
+		query = query.Where("appointments.notes LIKE ? OR users.full_name LIKE ?", searchTerm, searchTerm)
 	}
 	if filter == "today" {
 		query = query.Where("DATE(schedule_date) = CURDATE()")

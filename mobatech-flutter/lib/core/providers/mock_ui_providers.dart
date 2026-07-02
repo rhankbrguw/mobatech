@@ -78,10 +78,12 @@ final specialOffersProvider = FutureProvider<List<SpecialOffer>>((ref) async {
   final dynamic responseData = response.data;
   final List data = responseData is Map && responseData.containsKey('data') ? responseData['data'] : responseData as List;
   return data.map((e) {
-    String colorStr = e['themeColor'] ?? '#113C2B';
+    String colorStr = e['themeColor'] as String? ?? '';
     Color c = AppColors.primary;
-    if (colorStr.startsWith('#')) {
-      c = Color(int.parse(colorStr.substring(1, 7), radix: 16) + 0xFF000000);
+    if (colorStr.isNotEmpty) {
+      try {
+        c = Color(int.parse(colorStr.replaceAll('#', '0xFF')));
+      } catch (_) {}
     }
     return SpecialOffer(e['title'] ?? '', e['subtitle'] ?? '', c);
   }).toList();

@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/iterator"
@@ -20,8 +21,12 @@ func (s *chatService) setupGemini(ctx context.Context) (*genai.GenerativeModel, 
 	}
 
 	model := client.GenerativeModel("gemini-2.5-flash")
+	
+	currentDate := time.Now().Format("2006-01-02")
+	formattedPrompt := fmt.Sprintf(constants.GeminiSystemPrompt, currentDate)
+	
 	model.SystemInstruction = &genai.Content{
-		Parts: []genai.Part{genai.Text(constants.GeminiSystemPrompt)},
+		Parts: []genai.Part{genai.Text(formattedPrompt)},
 	}
 	return model, client, nil
 }

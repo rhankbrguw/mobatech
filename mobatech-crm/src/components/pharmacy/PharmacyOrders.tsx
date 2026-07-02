@@ -52,17 +52,17 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
   const handleUpdateStatus = async (id: number, status: string) => {
     try {
       await api.put(`/api/admin/pharmacy/orders/${id}/status`, { status });
-      showToast("Status order diperbarui", "success");
+      showToast(APP_STRINGS.common.updateSuccess, "success");
       setOrders(orders.map(o => o.id === id ? { ...o, status } : o));
-    } catch { showToast("Gagal memperbarui status", "error"); }
+    } catch { showToast(APP_STRINGS.common.saveError, "error"); }
   };
 
   const handleUpdatePayment = async (id: number, payment_status: string) => {
     try {
       await api.put(`/api/admin/pharmacy/orders/${id}/payment`, { payment_status });
-      showToast("Status pembayaran diperbarui", "success");
+      showToast(APP_STRINGS.common.updateSuccess, "success");
       setOrders(orders.map(o => o.id === id ? { ...o, payment_status } : o));
-    } catch { showToast("Gagal memperbarui pembayaran", "error"); }
+    } catch { showToast(APP_STRINGS.common.saveError, "error"); }
   };
 
   if (orders.length === 0) {
@@ -120,14 +120,14 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
                   <div className="flex flex-col gap-1.5" title={role === "admin" ? "Aksi klinis hanya untuk Dokter/Apoteker" : undefined}>
                     <span className="text-xs font-semibold text-foreground/70">Status Order</span>
                     <select value={order.status} onChange={(e) => handleUpdateStatus(order.id, e.target.value)} disabled={role === "admin"}
-                      className="text-sm border border-glass-border rounded-lg px-3 py-1.5 bg-background glass-input cursor-pointer outline-none focus:border-primary disabled:opacity-50">
+                      className="text-sm border border-glass-border rounded-xl px-3 py-1.5 bg-background glass-input cursor-pointer outline-none focus:border-primary disabled:opacity-50 transition-all">
                       {ORDER_STATUSES.map((s) => <option key={s}>{s}</option>)}
                     </select>
                   </div>
                   <div className="flex flex-col gap-1.5" title={role === "admin" ? "Aksi klinis hanya untuk Dokter/Apoteker" : undefined}>
                     <span className="text-xs font-semibold text-foreground/70">Status Pembayaran</span>
                     <select value={order.payment_status} onChange={(e) => handleUpdatePayment(order.id, e.target.value)} disabled={role === "admin"}
-                      className="text-sm border border-glass-border rounded-lg px-3 py-1.5 bg-background glass-input cursor-pointer outline-none focus:border-primary disabled:opacity-50">
+                      className="text-sm border border-glass-border rounded-xl px-3 py-1.5 bg-background glass-input cursor-pointer outline-none focus:border-primary disabled:opacity-50 transition-all">
                       {PAYMENT_STATUSES.map((s) => <option key={s}>{s}</option>)}
                     </select>
                   </div>

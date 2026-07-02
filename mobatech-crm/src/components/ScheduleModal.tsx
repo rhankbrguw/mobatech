@@ -4,6 +4,7 @@ import { api, ApiError } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { Doctor, DoctorSchedule } from "@/types/api";
 import { Modal } from "@/components/Modal";
+import { Button } from "@/components/ui/Button";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ScheduleForm } from "./ScheduleForm";
@@ -105,13 +106,13 @@ export function ScheduleModal({ isOpen, onClose, doctor, onChange }: ScheduleMod
               <div key={sched.id} className="flex items-center justify-between p-3 rounded-xl border border-glass-border glass-card">
                 <div>
                   <p className="text-xs font-bold text-foreground">{Formatters.date(sched.date, "weekday")}</p>
-                  <p className="text-[10px] text-foreground/60 mt-0.5">
-                    ⏰ {sched.start_time} - {sched.end_time} | 👥 Kuota: {sched.quota} (Terisi: {sched.booked})
+                  <p className="text-xs text-foreground/60 mt-0.5">
+                    {sched.start_time} - {sched.end_time} | Kuota: {sched.quota} (Terisi: {sched.booked})
                   </p>
                 </div>
-                <button type="button" onClick={() => setDeleteConfirmId(sched.id)} className="p-1.5 rounded-lg border border-rose-500/20 hover:bg-rose-500/10 text-rose-600 transition-colors cursor-pointer text-xs">
+                <Button size="sm" variant="danger" onClick={() => setDeleteConfirmId(sched.id)}>
                   Hapus
-                </button>
+                </Button>
               </div>
             ))
           )}

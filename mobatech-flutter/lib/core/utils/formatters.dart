@@ -27,14 +27,17 @@ class Formatters {
     // Clean all non-digit characters except the leading plus
     String cleanPhone = phone.replaceAll(RegExp(r'[^\d+]'), '');
 
-    // If it doesn't start with +62, but starts with 0 or 62, normalize it to +62
-    if (!cleanPhone.startsWith('+62')) {
-      if (cleanPhone.startsWith('62')) {
-        cleanPhone = '+62${cleanPhone.substring(2)}';
-      } else if (cleanPhone.startsWith('0')) {
-        cleanPhone = '+62${cleanPhone.substring(1)}';
-      }
+    if (cleanPhone.startsWith('+62')) {
+      cleanPhone = cleanPhone.substring(3);
+    } else if (cleanPhone.startsWith('62')) {
+      cleanPhone = cleanPhone.substring(2);
     }
+    
+    if (cleanPhone.startsWith('0')) {
+      cleanPhone = cleanPhone.substring(1);
+    }
+
+    cleanPhone = '+62$cleanPhone';
 
     // Now format: +62 812-3456-7890
     if (cleanPhone.startsWith('+62')) {
@@ -70,7 +73,9 @@ class PhonePrefixFormatter extends TextInputFormatter {
       text = text.substring(3);
     } else if (text.startsWith('62')) {
       text = text.substring(2);
-    } else if (text.startsWith('0')) {
+    }
+    
+    if (text.startsWith('0')) {
       text = text.substring(1);
     }
 

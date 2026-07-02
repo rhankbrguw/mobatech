@@ -1,5 +1,6 @@
 import { serverFetch } from "@/lib/serverApi";
 import { PharmacyClient } from "@/components/pharmacy/PharmacyClient";
+import { PharmacyOrder, Medicine, MedicineCategory } from "@/types/api";
 
 export const revalidate = 60; // Cache for 60 seconds (ISR)
 
@@ -8,9 +9,9 @@ export default async function PharmacyPage({ searchParams }: { searchParams: Pro
   const page = typeof (await searchParams).page === "string" ? (await searchParams).page : "1";
   const search = typeof (await searchParams).search === "string" ? (await searchParams).search : "";
 
-  let orders: any = [];
-  let medicines: any = [];
-  let categories: any = [];
+  let orders: PharmacyOrder[] = [];
+  let medicines: Medicine[] = [];
+  let categories: MedicineCategory[] = [];
 
   try {
     if (tab === "orders") {

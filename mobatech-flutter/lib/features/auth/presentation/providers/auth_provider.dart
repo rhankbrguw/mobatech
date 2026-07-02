@@ -39,12 +39,8 @@ class AuthNotifier extends StateNotifier<bool> {
     state = true;
     try {
       await _repository.register(fullName, email, phone, password);
-      // Wait, let's login right after register!
-      final loginRes = await _repository.login(email, password);
-      globalAuthToken = loginRes['token'];
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('jwt_token', globalAuthToken!);
-      await prefs.setString('user_data', jsonEncode(loginRes['user']));
+      // Automatically login after successful registration
+      await login(email, password);
     } finally {
       state = false;
     }

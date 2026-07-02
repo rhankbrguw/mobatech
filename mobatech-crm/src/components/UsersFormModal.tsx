@@ -11,7 +11,7 @@ import { PhoneInput } from "@/components/ui/PhoneInput";
 import { ImageUpload } from "@/components/ImageUpload";
 import { Eye, EyeOff } from "lucide-react";
 
-export function UsersFormModal({ isOpen, onClose, user, onSuccess, setToast }: { isOpen: boolean; onClose: () => void; user: Partial<User> | null; onSuccess: () => void; setToast: (t: any) => void; }) {
+export function UsersFormModal({ isOpen, onClose, user, onSuccess, setToast }: { isOpen: boolean; onClose: () => void; user: Partial<User> | null; onSuccess: () => void; setToast: (t: {isOpen: boolean, message: string, type: 'success' | 'error'}) => void; }) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("+62");

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/doctor.dart';
+import '../../../../core/utils/formatters.dart';
 import 'doctor_card_parts.dart';
 
 class DoctorCard extends StatelessWidget {
@@ -80,7 +81,7 @@ class DoctorCard extends StatelessWidget {
                           const SizedBox(height: 4),
                           _buildInfoRow(
                             Icons.phone_outlined,
-                            doctor.contactInfo,
+                            Formatters.formatPhoneNumber(doctor.contactInfo),
                           ),
                           const SizedBox(height: 6),
                           DoctorStatusBadge(isActive: doctor.isActive),

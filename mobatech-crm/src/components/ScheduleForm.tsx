@@ -1,4 +1,5 @@
 import { APP_STRINGS } from "@/lib/constants";
+import { Button } from "@/components/ui/Button";
 
 interface ScheduleFormProps {
   loading: boolean;
@@ -21,25 +22,25 @@ export function ScheduleForm({
       <p className="text-xs font-bold text-foreground/80 uppercase tracking-wider">{APP_STRINGS.schedules.addBtn}</p>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-[10px] font-bold mb-1 uppercase text-foreground/75">{APP_STRINGS.schedules.dateLabel}</label>
-          <input disabled={loading} type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" placeholder={APP_STRINGS.schedules.datePlaceholder} />
+          <label className="block text-xs font-semibold mb-2">{APP_STRINGS.schedules.dateLabel}</label>
+          <input disabled={loading} type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none transition-all" placeholder={APP_STRINGS.schedules.datePlaceholder} />
         </div>
         <div>
-          <label className="block text-[10px] font-bold mb-1 uppercase text-foreground/75">{APP_STRINGS.schedules.quotaLabel}</label>
-          <input disabled={loading} type="number" required value={quota} onChange={(e) => setQuota(Number(e.target.value))} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" placeholder={APP_STRINGS.schedules.quotaPlaceholder} />
+          <label className="block text-xs font-semibold mb-2">{APP_STRINGS.schedules.quotaLabel}</label>
+          <input disabled={loading} type="number" required value={quota} onChange={(e) => setQuota(Number(e.target.value))} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none transition-all" placeholder={APP_STRINGS.schedules.quotaPlaceholder} />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-[10px] font-bold mb-1 uppercase text-foreground/75">{APP_STRINGS.schedules.startLabel}</label>
-          <input disabled={loading} type="text" required placeholder={APP_STRINGS.schedules.startPlaceholder} value={startTime} onChange={(e) => setStartTime(e.target.value)} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" />
+          <label className="block text-xs font-semibold mb-2">{APP_STRINGS.schedules.startLabel}</label>
+          <input disabled={loading} type="text" required placeholder={APP_STRINGS.schedules.startPlaceholder} value={startTime} onChange={(e) => setStartTime(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none transition-all" />
         </div>
         <div>
-          <label className="block text-[10px] font-bold mb-1 uppercase text-foreground/75">{APP_STRINGS.schedules.endLabel}</label>
-          <input disabled={loading} type="text" required placeholder={APP_STRINGS.schedules.endPlaceholder} value={endTime} onChange={(e) => setEndTime(e.target.value)} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" />
+          <label className="block text-xs font-semibold mb-2">{APP_STRINGS.schedules.endLabel}</label>
+          <input disabled={loading} type="text" required placeholder={APP_STRINGS.schedules.endPlaceholder} value={endTime} onChange={(e) => setEndTime(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none transition-all" />
         </div>
       </div>
-      <button type="submit" disabled={loading} className="w-full h-9 bg-primary hover:bg-primary-hover text-primary-foreground text-xs font-semibold rounded-lg transition-colors cursor-pointer">{APP_STRINGS.schedules.saveBtn}</button>
+      <Button type="submit" disabled={loading} size="sm" className="w-full">{APP_STRINGS.schedules.saveBtn}</Button>
     </form>
   );
 }

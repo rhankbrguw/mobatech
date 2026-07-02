@@ -6,6 +6,7 @@ import { APP_STRINGS } from "@/lib/constants";
 import { FormValidators } from "@/lib/validators";
 import { Doctor, Polyclinic } from "@/types/api";
 import { Modal } from "@/components/Modal";
+import { Button } from "@/components/ui/Button";
 import { ImageUpload } from "./ImageUpload";
 import { PhoneInput } from "@/components/ui/PhoneInput";
 
@@ -86,8 +87,8 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
         is_active: isActive,
       });
       onClose();
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // Error handled by parent via onSave rejection
     } finally {
       setSubmitting(false);
     }
@@ -104,7 +105,7 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
           </div>
           <div>
             <label className="block text-xs font-semibold mb-2">Poliklinik</label>
-            <select disabled={submitting} required value={polyclinicId ?? ""} onChange={(e) => handlePolyChange(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer">
+            <select disabled={submitting} required value={polyclinicId ?? ""} onChange={(e) => handlePolyChange(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer focus:border-primary outline-none transition-all">
               <option value="">Pilih Poliklinik</option>
               {polyclinics.filter((p) => p.is_active).map((p) => (
                 <option key={p.id} value={p.id}>{p.name}</option>
@@ -114,7 +115,7 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.specLabel}</label>
-          <input disabled={submitting} type="text" required value={specialization} onChange={(e) => setSpecialization(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder={APP_STRINGS.doctors.specPlaceholder} />
+          <input disabled={submitting} type="text" required value={specialization} onChange={(e) => setSpecialization(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none transition-all" placeholder={APP_STRINGS.doctors.specPlaceholder} />
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.contactLabel}</label>
@@ -123,7 +124,7 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.descLabel}</label>
-          <textarea disabled={submitting} required value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none" placeholder={APP_STRINGS.doctors.descPlaceholder} />
+          <textarea disabled={submitting} required value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none focus:border-primary outline-none transition-all" placeholder={APP_STRINGS.doctors.descPlaceholder} />
         </div>
         
         <ImageUpload imageUrl={imageUrl} setImageUrl={setImageUrl} label={APP_STRINGS.doctors.imgLabel} />
@@ -133,8 +134,8 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
           <label htmlFor="isActive" className="text-xs font-semibold cursor-pointer">{APP_STRINGS.doctors.activeLabel}</label>
         </div>
         <div className="flex justify-end gap-2 pt-2">
-          <button type="button" disabled={submitting} onClick={onClose} className="h-10 px-4 border border-glass-border hover:bg-black/5 rounded-xl text-sm font-medium transition-colors cursor-pointer">{APP_STRINGS.doctors.cancelBtn}</button>
-          <button type="submit" disabled={submitting} className="h-10 px-4 bg-primary hover:bg-primary-hover text-primary-foreground text-sm font-medium rounded-xl transition-colors cursor-pointer disabled:opacity-50">{APP_STRINGS.doctors.saveBtn}</button>
+          <Button type="button" variant="ghost" disabled={submitting} onClick={onClose}>{APP_STRINGS.doctors.cancelBtn}</Button>
+          <Button type="submit" isLoading={submitting}>{APP_STRINGS.doctors.saveBtn}</Button>
         </div>
       </form>
     </Modal>

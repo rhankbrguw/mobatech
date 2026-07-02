@@ -17,7 +17,7 @@ export function BranchFormModal({
   onClose: () => void;
   branch: Branch | null;
   onSuccess: () => void;
-  setToast: (toast: any) => void;
+  setToast: (toast: {isOpen: boolean, message: string, type: 'success' | 'error'}) => void;
 }) {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
