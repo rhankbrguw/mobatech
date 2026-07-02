@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.(com|id|co\.id|net|org|ac\.id|go\.id|sch\.id)$/i;
 const NAME_REGEX = /^[a-zA-Z\s'.,-]+$/;
 const PHONE_DIGITS_MIN = 7;

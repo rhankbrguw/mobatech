@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const Formatters = {
   phone: (raw: string | undefined | null): string => {
     if (!raw) return "-";

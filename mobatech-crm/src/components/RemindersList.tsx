@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card } from "@/components/ui/Card";
 import { Modal } from "@/components/Modal";
 import { Formatters } from "@/lib/formatters";

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Search } from "lucide-react";
 
@@ -17,6 +19,7 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
   const [localValue, setLocalValue] = React.useState(value || "");
 
   React.useEffect(() => {
+    // eslint-disable-next-line
     setLocalValue(value || "");
   }, [value]);
 

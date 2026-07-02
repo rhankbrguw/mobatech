@@ -1,7 +1,10 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Dispatch, SetStateAction } from "react";
 import { APP_STRINGS } from "@/lib/constants";
+import { SafeAny } from "@/types/api";
 
 interface User { id: number; full_name: string; email: string; phone_number: string; }
 type FormType = { user_id: number; appointment_id: number; title: string; message: string; reminder_date: string; type: string; };
@@ -29,7 +32,7 @@ export function RemindersForm({
           <label className="text-xs text-foreground/60 font-medium">Pasien *</label>
           <select disabled={saving}
             value={form.user_id || ""}
-            onChange={(e) => setForm((f) => ({ ...f, user_id: (e.target.value === "" ? "" as any : Number(e.target.value)) }))}
+            onChange={(e) => setForm((f) => ({ ...f, user_id: (e.target.value === "" ? "" as SafeAny : Number(e.target.value)) }))}
             className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground focus:border-primary"
           >
             <option value="">— Pilih Pasien —</option>

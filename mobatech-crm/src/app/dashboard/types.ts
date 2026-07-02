@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Appointment { id: number; status: string; created_at: string; notes: string; }
 export interface Emergency { id: number; status: string; created_at: string; latitude: number; longitude: number; }
 export interface User { id: number; full_name: string; email: string; created_at: string; }

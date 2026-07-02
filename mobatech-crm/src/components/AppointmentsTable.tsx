@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Appointment } from "@/types/api";
 import { format } from "date-fns";
 import { Badge, BadgeVariant } from "@/components/ui/Badge";

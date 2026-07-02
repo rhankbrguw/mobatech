@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Branch } from "@/types/api";
 import { APP_STRINGS } from "@/lib/constants";

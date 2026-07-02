@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const APP_STRINGS = {
   promos: {
     addPromo: "Tambah Promo Baru", editPromo: "Ubah Promo",

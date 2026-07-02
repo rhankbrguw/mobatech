@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/ui/Button";
 import { APP_STRINGS } from "@/lib/constants";

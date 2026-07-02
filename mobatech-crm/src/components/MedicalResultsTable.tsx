@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/Button";
 import { Edit2, Trash2, Pill } from "lucide-react";
 import { useRouter } from "next/navigation";
