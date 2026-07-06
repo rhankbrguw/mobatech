@@ -1,3 +1,4 @@
+import 'package:mobatech_app/core/utils/formatters.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import 'package:flutter/material.dart';
@@ -20,12 +21,12 @@ class CheckoutOrderSummary extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColors.shadowColor.withOpacity(0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -33,17 +34,17 @@ class CheckoutOrderSummary extends StatelessWidget {
         children: [
           ...cart.items.map(
             (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
+              padding: const EdgeInsets.only(bottom: 12.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     '${item.medicine.name} (${item.quantity})',
-                    style: const TextStyle(color: AppColors.textDark),
+                    style: const TextStyle(color: AppColors.textDark, fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    'Rp ${(item.medicine.price * item.quantity).toInt()}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    Formatters.formatCurrency(item.medicine.price * item.quantity),
+                    style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.primary),
                   ),
                 ],
               ),
@@ -58,7 +59,7 @@ class CheckoutOrderSummary extends StatelessWidget {
                 style: TextStyle(color: AppColors.textGrey),
               ),
               Text(
-                'Rp ${cart.totalPrice.toInt()}',
+                Formatters.formatCurrency(cart.totalPrice),
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
@@ -72,7 +73,7 @@ class CheckoutOrderSummary extends StatelessWidget {
                 style: TextStyle(color: AppColors.textGrey),
               ),
               Text(
-                pickupMethod == 'Delivery' ? 'Rp 10.000' : 'Rp 0',
+                pickupMethod == 'Delivery' ? Formatters.formatCurrency(10000) : Formatters.formatCurrency(0),
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],

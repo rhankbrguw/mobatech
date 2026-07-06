@@ -1,4 +1,6 @@
 import 'package:mobatech_app/core/constants/strings/error_strings.dart';
+import 'package:mobatech_app/core/utils/formatters.dart';
+
 import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

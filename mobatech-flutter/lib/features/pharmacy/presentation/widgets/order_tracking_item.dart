@@ -19,9 +19,11 @@ class _TimelineItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_buildIndicator(), const SizedBox(width: 16), _buildDetails()],
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [_buildIndicator(), const SizedBox(width: 16), _buildDetails()],
+      ),
     );
   }
 
@@ -29,37 +31,38 @@ class _TimelineItem extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 24,
-          height: 24,
+          width: 22,
+          height: 22,
           decoration: BoxDecoration(
             color: isError
                 ? AppColors.errorRed
                 : (isCompleted
                       ? AppColors.primary
-                      : AppColors.backgroundLightGrey),
+                      : AppColors.backgroundWhite),
             shape: BoxShape.circle,
             border: Border.all(
               color: isError
                   ? AppColors.errorRed
-                  : (isCompleted ? AppColors.primary : AppColors.borderGrey),
-              width: 2,
+                  : (isCompleted ? AppColors.primary : AppColors.dividerGrey),
+              width: 1.5,
             ),
           ),
           child: isError
-              ? const Icon(Icons.close, size: 16, color: AppColors.textWhite)
+              ? const Icon(Icons.close, size: 14, color: AppColors.textWhite)
               : (isCompleted
                     ? const Icon(
                         Icons.check,
-                        size: 16,
+                        size: 14,
                         color: AppColors.textWhite,
                       )
                     : null),
         ),
         if (!isLast)
-          Container(
-            width: 2,
-            height: 50,
-            color: isCompleted ? AppColors.primary : AppColors.dividerGrey,
+          Expanded(
+            child: Container(
+              width: 1.5,
+              color: isCompleted ? AppColors.primary : AppColors.dividerGrey,
+            ),
           ),
       ],
     );
@@ -70,29 +73,26 @@ class _TimelineItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: isError
-                      ? AppColors.errorRed
-                      : (isCompleted ? AppColors.textDark : AppColors.textGrey),
-                ),
-              ),
-              Text(
-                time,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isCompleted
-                      ? AppColors.textGrey
-                      : AppColors.textLightGrey,
-                ),
-              ),
-            ],
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: isError
+                  ? AppColors.errorRed
+                  : (isCompleted ? AppColors.textDark : AppColors.textGrey),
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            time,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: isCompleted
+                  ? AppColors.primary
+                  : AppColors.textLightGrey,
+            ),
           ),
           const SizedBox(height: 4),
           Text(

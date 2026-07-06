@@ -54,13 +54,13 @@ class OrderTrackingHeader extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryLight,
+                  color: AppColors.getStatusBgColor(status),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   status,
-                  style: const TextStyle(
-                    color: AppColors.primary,
+                  style: TextStyle(
+                    color: AppColors.getStatusColor(status),
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),

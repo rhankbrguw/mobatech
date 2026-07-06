@@ -66,11 +66,25 @@ class MedicineCardDetails extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 4),
-        Text(
-          medicine.genericName,
-          style: const TextStyle(fontSize: 12, color: AppColors.textGrey),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              medicine.genericName,
+              style: const TextStyle(fontSize: 12, color: AppColors.textGrey),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              medicine.stock > 0 ? '${medicine.stock} Tersedia' : 'Stok Habis',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: medicine.stock > 0 ? AppColors.textLightGrey : AppColors.errorRed,
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -81,7 +95,7 @@ class MedicineCardDetails extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          '${PharmacyStrings.extRp} ${medicine.price.toInt()}',
+          Formatters.formatCurrency(medicine.price),
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: AppColors.primary,

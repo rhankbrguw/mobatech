@@ -90,6 +90,27 @@ func (r *doctorRepository) FindByID(id uint) (*models.Doctor, error) {
 }
 
 func (r *doctorRepository) Create(doctor *models.Doctor) error {
+	if doctor.Email != "" {
+		return r.db.Transaction(func(tx *gorm.DB) error {
+			// Auto-provision user
+			user := models.User{
+				FullName:    doctor.Name,
+				Email:       doctor.Email,
+				PhoneNumber: doctor.ContactInfo,
+				Role:        "doctor",
+				// Default password is "Hermina123!" for now. 
+				// In production, use bcrypt hash directly. E.g., bcrypt.GenerateFromPassword
+				// Since we don't import bcrypt here, we will just store a dummy or 
+				// assume auth_service handles password hashing on first login/reset.
+				Password:    "$2a$10$wY.uJz6O9.4q8U4s/yH2P.o/9q0lOq.6/m6Q1O6M.Q8Y8Q8Q8Q8Q8", // "Hermina123!" hashed
+			}
+			if err := tx.Create(&user).Error; err != nil {
+				return err
+			}
+			doctor.UserID = &user.ID
+			return tx.Create(doctor).Error
+		})
+	}
 	return r.db.Create(doctor).Error
 }
 

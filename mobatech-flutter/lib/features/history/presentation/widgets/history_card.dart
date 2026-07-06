@@ -18,16 +18,10 @@ class HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color getStatusColor(String s) {
-      final text = s.toLowerCase();
-      if (text == 'pending' || text == 'menunggu')
-        return AppColors.warningYellow;
-      if (text == 'cancelled' || text == 'batal') return AppColors.errorRed;
-      if (text == 'completed' || text == 'selesai') return AppColors.primary;
-      return AppColors.successGreen;
-    }
 
-    final statusColor = getStatusColor(status);
+
+    final statusColor = AppColors.getStatusColor(status);
+    final bgColor = AppColors.getStatusBgColor(status);
 
     return Card(
       elevation: 0,

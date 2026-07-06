@@ -32,8 +32,8 @@ export function PharmacyMedicinesTable({ medicines, role, onView, onEdit, onDele
           <tbody>
             {medicines.map((m) => (
               <tr key={m.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                  <div className="flex items-center justify-center gap-3">
+                <td className="text-left align-middle whitespace-nowrap py-2 px-4 text-sm">
+                  <div className="flex items-center justify-start gap-3">
                     {m.image_url ? (
                       <img src={m.image_url} alt={m.name} className="w-10 h-10 object-cover rounded-lg bg-glass-panel border border-glass-border shrink-0" />
                     ) : (

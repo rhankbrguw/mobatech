@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'package:mobatech_app/core/utils/formatters.dart';
+
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../models/medicine.dart';

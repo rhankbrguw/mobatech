@@ -13,13 +13,16 @@ import { Pagination } from "@/components/ui/Pagination";
 import { APP_STRINGS } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 import { MedicineFormModal } from "./MedicineFormModal";
+import { CategoryFormModal } from "./CategoryFormModal";
 import { MedicineDetailView } from "./MedicineDetailView";
 import { PharmacyMedicinesTable } from "./PharmacyMedicinesTable";
 
 export function PharmacyMedicines({ initialMedicines, categories }: { initialMedicines: Medicine[], categories: MedicineCategory[] }) {
   const role = useAuthStore((state) => state.user)?.role || "admin";
   const [medicines, setMedicines] = useState<Medicine[]>(initialMedicines);
+  const [localCategories, setLocalCategories] = useState<MedicineCategory[]>(categories);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [editingMedicine, setEditingMedicine] = useState<Partial<Medicine> | null>(null);
   const [viewingMedicine, setViewingMedicine] = useState<Medicine | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -47,6 +50,14 @@ export function PharmacyMedicines({ initialMedicines, categories }: { initialMed
     } catch { showToast(APP_STRINGS.common.loadError, "error"); }
   };
 
+  const loadCategories = async () => {
+    try {
+      const res = await api.get<MedicineCategory[]>("/api/pharmacy/categories");
+      setLocalCategories(res.data || []);
+    } catch { }
+  };
+
+  useEffect(() => { loadCategories(); }, []);
   useEffect(() => { setCurrentPage(1); }, [searchQuery, selectedCategory]);
   useEffect(() => { loadMedicines(); }, [searchQuery, selectedCategory, currentPage]);
 
@@ -64,6 +75,15 @@ export function PharmacyMedicines({ initialMedicines, categories }: { initialMed
     } catch { showToast(APP_STRINGS.common.saveError, "error"); }
   };
 
+  const handleSaveCategory = async (payload: { name: string; description: string }) => {
+    try {
+      await api.post(`/api/admin/pharmacy/categories`, payload);
+      showToast("Kategori berhasil ditambahkan", "success");
+      setIsCategoryModalOpen(false);
+      loadCategories();
+    } catch { showToast("Gagal menambahkan kategori", "error"); }
+  };
+
   const confirmDelete = (id: number, name: string) => {
     setDeleteConfirm({ isOpen: true, id, title: `Hapus obat "${name}"?` });
   };
@@ -78,7 +98,7 @@ export function PharmacyMedicines({ initialMedicines, categories }: { initialMed
     finally { setDeleteConfirm(null); }
   };
 
-  const categoryOptions = categories.map((c) => ({ label: c.name, value: String(c.id) }));
+  const categoryOptions = localCategories.map((c) => ({ label: c.name, value: String(c.id) }));
 
   return (
     <>
@@ -87,7 +107,10 @@ export function PharmacyMedicines({ initialMedicines, categories }: { initialMed
           <FilterDropdown value={selectedCategory} onChange={setSelectedCategory} options={categoryOptions} placeholder={APP_STRINGS.common.searchFilter} className="w-full sm:w-48 h-11" />
           <SearchFilterBar value={searchQuery} onChange={setSearchQuery} className="w-full sm:max-w-xs h-11" />
         </div>
-        <div title={role === "admin" ? APP_STRINGS.common.clinicalOnly : undefined}>
+        <div className="flex gap-2" title={role === "admin" ? APP_STRINGS.common.clinicalOnly : undefined}>
+          <Button variant="outline" onClick={() => setIsCategoryModalOpen(true)} disabled={role === "admin"} icon={<Plus size={16} />}>
+            Kategori
+          </Button>
           <Button onClick={() => { setEditingMedicine({ requires_prescription: false }); setIsModalOpen(true); }} disabled={role === "admin"} icon={<Plus size={16} />}>
             {APP_STRINGS.pharmacy.addMedicine}
           </Button>
@@ -107,8 +130,13 @@ export function PharmacyMedicines({ initialMedicines, categories }: { initialMed
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         medicine={editingMedicine}
-        categories={categories}
+        categories={localCategories}
         onSave={handleSaveMedicine}
+      />
+      <CategoryFormModal
+        isOpen={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
+        onSave={handleSaveCategory}
       />
       <DeleteModal isOpen={deleteConfirm?.isOpen || false} onClose={() => setDeleteConfirm(null)} onConfirm={executeDelete} description={deleteConfirm?.title} />
       <MedicineDetailView isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} medicine={viewingMedicine} />

@@ -14,4 +14,6 @@ type Doctor struct {
 	ImageURL       string      `json:"image_url"`
 	IsActive       bool        `json:"is_active" gorm:"default:true"`
 	IsAvailableToday bool      `json:"is_available_today" gorm:"-"`
+	Email          string      `json:"email,omitempty" gorm:"-"` // Transient field for auto-provisioning
 }
+

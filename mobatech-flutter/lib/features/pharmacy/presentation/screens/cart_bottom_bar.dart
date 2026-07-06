@@ -37,7 +37,7 @@ class _CartBottomBar extends StatelessWidget {
           style: TextStyle(color: AppColors.textGrey, fontSize: 12),
         ),
         Text(
-          'Rp ${cart.totalPrice.toInt()}',
+          Formatters.formatCurrency(cart.totalPrice),
           style: const TextStyle(
             color: AppColors.primary,
             fontSize: 18,

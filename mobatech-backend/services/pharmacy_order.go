@@ -62,26 +62,9 @@ func (s *pharmacyService) CreateOrder(order *models.PharmacyOrder) error {
 	order.Status = "Pending"
 	order.PaymentStatus = "Unpaid"
 
-	total, err := s.processOrderItems(order)
-	if err != nil {
-		return err
-	}
-	order.TotalPrice = total
-
-	if err := s.repo.CreateOrder(order); err != nil {
-		return err
-	}
-
-	// Deduct stock
-	for _, item := range order.Items {
-		s.repo.UpdateMedicineStock(item.MedicineID, -item.Quantity)
-	}
-
-	if order.PrescriptionID != nil {
-		s.repo.UpdatePrescriptionStatus(*order.PrescriptionID, "Redeemed")
-	}
-
-	return nil
+	// All stock check, lock, price calculation, and order creation 
+	// is now safely inside repo's atomic transaction to prevent race conditions.
+	return s.repo.CreateOrder(order)
 }
 
 func (s *pharmacyService) UpdateOrderStatus(id uint, status string) error {
@@ -109,19 +92,3 @@ func (s *pharmacyService) UpdateOrderPayment(id uint, paymentStatus string) erro
 	return s.repo.UpdateOrderPayment(id, paymentStatus)
 }
 
-func (s *pharmacyService) processOrderItems(order *models.PharmacyOrder) (float64, error) {
-	var total float64
-	for i, item := range order.Items {
-		med, err := s.repo.GetMedicineByID(item.MedicineID)
-		if err != nil {
-			return 0, fmt.Errorf("medicine %d not found", item.MedicineID)
-		}
-		if med.Stock < item.Quantity {
-			return 0, fmt.Errorf("insufficient stock for %s", med.Name)
-		}
-		order.Items[i].Price = med.Price
-		order.Items[i].Subtotal = med.Price * float64(item.Quantity)
-		total += order.Items[i].Subtotal
-	}
-	return total, nil
-}

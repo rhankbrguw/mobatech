@@ -1,3 +1,5 @@
+import 'dart:ui';
+import 'package:mobatech_app/core/utils/formatters.dart';
 import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -24,40 +26,46 @@ class CheckoutBottomSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor,
-            blurRadius: 10,
-            offset: const Offset(0, -4),
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 16.0, sigmaY: 16.0),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+          decoration: BoxDecoration(
+            color: AppColors.backgroundWhite.withOpacity(0.85),
+            border: Border(
+              top: BorderSide(
+                color: Colors.grey.withOpacity(0.1),
+                width: 1,
+              ),
+            ),
           ),
-        ],
-      ),
-      child: SafeArea(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+          child: SafeArea(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Total Pembayaran',
-                  style: TextStyle(color: AppColors.textGrey, fontSize: 12),
-                ),
-                Text(
-                  'Rp ${grandTotal.toInt()}',
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Total Pembayaran',
+                        style: TextStyle(color: AppColors.textGrey, fontSize: 13, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        Formatters.formatCurrency(grandTotal),
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
             ElevatedButton(
               onPressed: () async {
                 try {
@@ -123,6 +131,6 @@ class CheckoutBottomSheet extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    )));
   }
 }

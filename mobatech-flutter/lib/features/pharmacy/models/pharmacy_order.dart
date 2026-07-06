@@ -35,6 +35,7 @@ class PharmacyOrder {
   final double totalPrice;
   final String paymentMethod;
   final String pickupMethod;
+  final DateTime? createdAt;
   final List<OrderItem> items;
 
   PharmacyOrder({
@@ -44,6 +45,7 @@ class PharmacyOrder {
     required this.totalPrice,
     required this.paymentMethod,
     required this.pickupMethod,
+    this.createdAt,
     required this.items,
   });
 
@@ -55,6 +57,9 @@ class PharmacyOrder {
       totalPrice: (json['total_price'] as num?)?.toDouble() ?? 0.0,
       paymentMethod: json['payment_method'] as String? ?? '',
       pickupMethod: json['pickup_method'] as String? ?? '',
+      createdAt: json['CreatedAt'] != null || json['created_at'] != null 
+          ? DateTime.tryParse((json['CreatedAt'] ?? json['created_at']).toString())
+          : null,
       items:
           (json['items'] as List<dynamic>?)
               ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))

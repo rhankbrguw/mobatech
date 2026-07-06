@@ -30,13 +30,36 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         title: const Text(
           'Checkout',
           style: TextStyle(
-            color: AppColors.textDark,
+            color: AppColors.textWhite,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: AppColors.backgroundWhite,
+        backgroundColor: AppColors.primary,
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.textDark),
+        iconTheme: const IconThemeData(color: AppColors.textWhite),
+        centerTitle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(24),
+          ),
+        ),
+        flexibleSpace: SafeArea(
+          child: Stack(
+            children: [
+              Positioned(
+                right: -20,
+                top: -10,
+                child: Opacity(
+                  opacity: 0.2,
+                  child: Image.asset(
+                    'assets/header_logo.png',
+                    width: 150,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: cartAsync.when(
         data: (cart) {

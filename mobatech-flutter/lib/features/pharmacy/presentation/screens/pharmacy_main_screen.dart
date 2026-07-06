@@ -39,8 +39,7 @@ class _PharmacyMainScreenState extends ConsumerState<PharmacyMainScreen>
   Widget build(BuildContext context) {
     final cartAsync = ref.watch(cartProvider);
     final cartItemCount = cartAsync.when(
-      data: (cart) =>
-          cart.items.fold<int>(0, (sum, item) => sum + item.quantity),
+      data: (cart) => cart.items.length,
       loading: () => 0,
       error: (_, __) => 0,
     );

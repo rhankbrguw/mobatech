@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../../../../core/utils/error_handler.dart';
-import '../../../../core/providers/mock_ui_providers.dart';
+import 'package:mobatech_app/features/pharmacy/providers/pharmacy_provider.dart';
 import 'history_card.dart';
 
 class PharmacyTab extends ConsumerWidget {
@@ -13,7 +13,7 @@ class PharmacyTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ordersAsync = ref.watch(pharmacyHistoryProvider);
+    final ordersAsync = ref.watch(ordersProvider);
     return ordersAsync.when(
       data: (orders) {
         if (orders.isEmpty) {
@@ -30,10 +30,11 @@ class PharmacyTab extends ConsumerWidget {
           separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             final order = orders[index];
+            final date = order.createdAt?.toLocal() ?? DateTime.now();
             return HistoryCard(
-              title: order.title,
+              title: 'Pesanan #${order.orderNumber}',
               status: order.status,
-              date: order.date,
+              date: '${date.day}-${date.month}-${date.year}',
               onTap: () => context.push('/pharmacy/tracking', extra: order),
             );
           },

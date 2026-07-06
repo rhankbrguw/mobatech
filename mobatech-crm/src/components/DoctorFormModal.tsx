@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { FormValidators } from "@/lib/validators";
-import { Doctor, Polyclinic, User } from "@/types/api";
+import { Doctor, Polyclinic } from "@/types/api";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/ui/Button";
 import { ImageUpload } from "./ImageUpload";
@@ -11,7 +11,7 @@ import { PhoneInput } from "@/components/ui/PhoneInput";
 
 interface DoctorFormModalProps {
   isOpen: boolean; onClose: () => void; doctor: Doctor | null;
-  onSave: (payload: { name: string; specialization: string; polyclinic_id?: number; contact_info: string; description: string; image_url: string; is_active: boolean; user_id?: number }) => Promise<void>;
+  onSave: (payload: { name: string; specialization: string; polyclinic_id?: number; contact_info: string; description: string; image_url: string; is_active: boolean; email?: string }) => Promise<void>;
 }
 
 export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormModalProps) {
@@ -20,15 +20,13 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
   const [description, setDescription] = useState(""); const [imageUrl, setImageUrl] = useState("");
   const [isActive, setIsActive] = useState(true); const [submitting, setSubmitting] = useState(false);
   const [polyclinics, setPolyclinics] = useState<Polyclinic[]>([]);
-  const [users, setUsers] = useState<User[]>([]); const [userId, setUserId] = useState<number | undefined>();
+  const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<{name?: string, phone?: string}>({});
 
   useEffect(() => {
     if (isOpen) {
-      Promise.all([
-        api.get<Polyclinic[]>("/api/polyclinics"),
-        api.get<User[]>("/api/admin/users?role=doctor")
-      ]).then(([p, u]) => { setPolyclinics(p.data || []); setUsers(u.data || []); });
+      api.get<Polyclinic[]>("/api/polyclinics")
+        .then((p) => setPolyclinics(p.data || []));
     }
   }, [isOpen]);
 
@@ -36,7 +34,7 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
     setName(doctor?.name || ""); setPolyclinicId(doctor?.polyclinic_id ?? undefined);
     setSpecialization(doctor?.specialization || ""); setContactInfo(doctor?.contact_info || "+62");
     setDescription(doctor?.description || ""); setImageUrl(doctor?.image_url || "");
-    setIsActive(doctor?.is_active ?? true); setUserId(doctor?.user_id ?? undefined);
+    setIsActive(doctor?.is_active ?? true); setEmail("");
   }, [doctor, isOpen]);
 
   const handlePolyChange = (val: string) => {
@@ -51,7 +49,8 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
     if (nameErr || phoneErr) return setErrors({ name: nameErr || undefined, phone: phoneErr || undefined });
     setSubmitting(true);
     try {
-      await onSave({ name, specialization, polyclinic_id: polyclinicId, contact_info: contactInfo, description, image_url: imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${name || "Doctor"}`, is_active: isActive, user_id: userId });
+      const payload = { name, specialization, polyclinic_id: polyclinicId, contact_info: contactInfo, description, image_url: imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${name || "Doctor"}`, is_active: isActive, ...(email ? { email } : {}) };
+      await onSave(payload);
       onClose();
     } catch { } finally { setSubmitting(false); }
   };
@@ -65,7 +64,9 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div><label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.specLabel}</label><input disabled={submitting} type="text" required value={specialization} onChange={(e) => setSpecialization(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder={APP_STRINGS.doctors.specPlaceholder} /></div>
-          <div><label className="block text-xs font-semibold mb-2">Tautkan Akun (User ID)</label><select disabled={submitting} value={userId ?? ""} onChange={(e) => setUserId((e.target.value === "" ? "" as unknown as number : Number(e.target.value)) || undefined)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer focus:border-primary outline-none"><option value="">Kosongkan (Belum Ada Akun)</option>{users.map((u) => (<option key={u.id} value={u.id}>{u.full_name} ({u.email})</option>))}</select></div>
+          {!doctor && (
+            <div><label className="block text-xs font-semibold mb-2">Email Korporat (Auto-Create Akun)</label><input disabled={submitting} type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="opsional: dr.nama@hermina.com" /></div>
+          )}
         </div>
         <div><label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.contactLabel}</label><PhoneInput disabled={submitting} value={contactInfo} onChange={setContactInfo} className={errors.phone ? "border-error focus-within:border-error" : ""} />{errors.phone && <p className="text-xs text-error mt-1">{errors.phone}</p>}</div>
         <div><label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.descLabel}</label><textarea disabled={submitting} required value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none focus:border-primary outline-none" placeholder={APP_STRINGS.doctors.descPlaceholder} /></div>
@@ -76,3 +77,4 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
     </Modal>
   );
 }
+

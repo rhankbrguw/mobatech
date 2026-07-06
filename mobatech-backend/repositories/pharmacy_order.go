@@ -2,6 +2,9 @@ package repositories
 
 import (
 	"backend/models"
+	"fmt"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func (r *pharmacyRepository) GetPrescriptionsByUserID(userID uint) ([]models.Prescription, error) {
@@ -75,7 +78,43 @@ func (r *pharmacyRepository) GetAllOrders(search string, filter string, limit in
 }
 
 func (r *pharmacyRepository) CreateOrder(order *models.PharmacyOrder) error {
-	return r.db.Create(order).Error
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		var total float64
+		for i, item := range order.Items {
+			var med models.Medicine
+			// Lock row for update to prevent race conditions during checkout
+			if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&med, item.MedicineID).Error; err != nil {
+				return fmt.Errorf("medicine %d not found", item.MedicineID)
+			}
+			if med.Stock < item.Quantity {
+				return fmt.Errorf("insufficient stock for %s", med.Name)
+			}
+			
+			// Deduct stock atomically
+			med.Stock -= item.Quantity
+			if err := tx.Save(&med).Error; err != nil {
+				return err
+			}
+			
+			order.Items[i].Price = med.Price
+			order.Items[i].Subtotal = med.Price * float64(item.Quantity)
+			total += order.Items[i].Subtotal
+		}
+		
+		order.TotalPrice = total
+
+		if err := tx.Create(order).Error; err != nil {
+			return err
+		}
+
+		if order.PrescriptionID != nil {
+			if err := tx.Model(&models.Prescription{}).Where("id = ?", *order.PrescriptionID).Update("status", "Redeemed").Error; err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 }
 
 func (r *pharmacyRepository) UpdateOrderStatus(id uint, status string) error {

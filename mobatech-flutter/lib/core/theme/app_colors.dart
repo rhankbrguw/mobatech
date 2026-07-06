@@ -92,4 +92,25 @@ class AppColors {
       isDark ? AppColors.backgroundWhite : textDark;
   static Color getTextSecondary(bool isDark) =>
       isDark ? Colors.white70 : textGrey;
+
+  static Color getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return warningYellow;
+      case 'processing':
+        return ambulanceBlue;
+      case 'ready':
+        return Colors.purple;
+      case 'completed':
+        return successGreen;
+      case 'cancelled':
+        return errorRed;
+      default:
+        return textGrey;
+    }
+  }
+
+  static Color getStatusBgColor(String status) {
+    return getStatusColor(status).withValues(alpha: 0.1);
+  }
 }

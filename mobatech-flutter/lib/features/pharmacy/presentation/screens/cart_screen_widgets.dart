@@ -94,7 +94,7 @@ class _CartItemWidget extends ConsumerWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Rp ${item.medicine.price.toInt()}',
+            Formatters.formatCurrency(item.medicine.price),
             style: const TextStyle(
               color: AppColors.primary,
               fontWeight: FontWeight.bold,

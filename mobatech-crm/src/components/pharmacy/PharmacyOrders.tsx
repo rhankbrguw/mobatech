@@ -21,7 +21,7 @@ function StatusBadge({ value, type }: { value: string; type: "order" | "payment"
   else if (value === "Processing" || value === "Verifying" || value === "Ready") variant = "info";
   return <Badge variant={variant}>{value}</Badge>;
 }
-const ORDER_STATUSES = ["Pending", "Verifying", "Processing", "Ready", "Completed", "Cancelled"];
+const ORDER_STATUSES = ["Pending", "Processing", "Ready", "Completed", "Cancelled"];
 const PAYMENT_STATUSES = ["Unpaid", "Paid", "Refunded"];
 export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder[] }) {
   const role = useAuthStore((state) => state.user)?.role || "admin";
@@ -64,9 +64,7 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
       setOrders(orders.map(o => o.id === id ? { ...o, payment_status } : o));
     } catch { showToast(APP_STRINGS.common.saveError, "error"); }
   };
-  if (orders.length === 0) {
-    return <Card noPadding><div className="p-10 text-center text-foreground/50 text-sm">Belum ada order masuk.</div></Card>;
-  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2">
@@ -75,8 +73,12 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
             value={filterValue}
             onChange={setFilterValue}
             options={[
-              { label: 'Pending', value: 'pending' },
-              { label: 'Selesai', value: 'resolved' },
+              { label: 'Semua Status', value: '' },
+              { label: 'Pending', value: 'Pending' },
+              { label: 'Diproses', value: 'Processing' },
+              { label: 'Siap', value: 'Ready' },
+              { label: 'Selesai', value: 'Completed' },
+              { label: 'Dibatalkan', value: 'Cancelled' },
             ]}
             placeholder={APP_STRINGS.common.searchStatus}
             className="w-full sm:w-48 h-11"
@@ -85,19 +87,23 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
         </div>
       </div>
       <Card noPadding>
-        <div className="divide-y divide-glass-border">
-        {orders.map((order) => (
-          <div key={order.id}>
-            <div className="p-4 flex flex-col sm:flex-row sm:items-center gap-3 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-              onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}>
-              <div className="flex-1">
-                <div className="font-semibold text-sm">{order.order_number}</div>
-                <div className="text-xs text-foreground/50 mt-0.5">
-                  User #{order.user_id} • {Formatters.date(order.created_at)} • {order.pickup_method}
+        {orders.length === 0 ? (
+          <div className="p-10 text-center text-foreground/50 text-sm">Belum ada order masuk.</div>
+        ) : (
+          <div className="divide-y divide-glass-border">
+          {orders.map((order) => (
+            <div key={order.order_number || order.id}>
+              <div className="p-4 flex flex-col sm:flex-row sm:items-center gap-3 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}>
+                <div className="flex-1">
+                  <div className="font-semibold text-sm">{order.order_number}</div>
+                  <div className="text-xs text-foreground/50 mt-0.5">
+                    User #{order.user_id} • {Formatters.date(order.created_at)} • {order.pickup_method}
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <StatusBadge value={order.status} type="order" />
+                <div className="flex items-center gap-2 flex-wrap">
+                  <StatusBadge value={order.status} type="order" />
+
                 <StatusBadge value={order.payment_status} type="payment" />
                 <span className="text-sm font-semibold">{Formatters.currency(order.total_price)}</span>
               </div>
@@ -134,8 +140,9 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
             )}
           </div>
         ))}
-      </div>
-    </Card>
+          </div>
+        )}
+      </Card>
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </div>

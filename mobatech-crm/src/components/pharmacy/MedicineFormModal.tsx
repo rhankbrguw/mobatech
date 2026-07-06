@@ -74,11 +74,11 @@ export function MedicineFormModal({ isOpen, onClose, medicine, categories, onSav
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-semibold mb-2">{APP_STRINGS.pharmacy.price}</label>
-            <input disabled={saving} type="number" required min={0} value={formData.price ?? ""} onChange={(e) => update("price", parseFloat(e.target.value))} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none transition-all" placeholder="15000" />
+            <input disabled={saving} type="number" required min={0} value={formData.price ?? ""} onChange={(e) => update("price", e.target.value === "" ? "" : parseFloat(e.target.value))} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none transition-all" placeholder="15000" />
           </div>
           <div>
             <label className="block text-xs font-semibold mb-2">{APP_STRINGS.pharmacy.stock}</label>
-            <input disabled={saving} type="number" min={0} value={formData.stock ?? ""} onChange={(e) => update("stock", parseInt(e.target.value, 10))} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none transition-all" placeholder="100" />
+            <input disabled={saving} type="number" min={0} value={formData.stock ?? ""} onChange={(e) => update("stock", e.target.value === "" ? "" : parseInt(e.target.value, 10))} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none transition-all" placeholder="100" />
           </div>
         </div>
         <ImageUpload imageUrl={formData.image_url || ""} setImageUrl={(url) => update("image_url", url)} label={APP_STRINGS.pharmacy.medicinePhoto} />
