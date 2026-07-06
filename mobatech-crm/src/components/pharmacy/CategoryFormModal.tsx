@@ -53,7 +53,7 @@ export function CategoryFormModal({ isOpen, onClose, onSave }: CategoryFormModal
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none focus:border-primary outline-none"
-            placeholder="Deskripsi singkat kategori obat..."
+            placeholder="Tulis Deskripsi Singkat Kategori"
           />
         </div>
         <div className="flex justify-end gap-2 pt-2">

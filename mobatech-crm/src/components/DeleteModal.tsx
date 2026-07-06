@@ -62,7 +62,7 @@ export function DeleteModal({
             disabled={isLoading}
             variant="danger"
           >
-            {isLoading ? "Menghapus..." : "Hapus"}
+            {isLoading ? "Sedang Menghapus" : "Hapus"}
           </Button>
         </div>
       </div>

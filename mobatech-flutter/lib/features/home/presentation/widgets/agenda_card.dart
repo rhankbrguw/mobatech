@@ -2,11 +2,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/formatters.dart';
-import '../../../../core/widgets/glass_status_chip.dart';
 import '../../../appointment/data/models/appointment.dart';
+import 'agenda_schedule_info.dart';
 
-part 'agenda_card_components.dart';
+import 'agenda_card_components.dart';
 
 class AgendaCard extends StatelessWidget {
   final Appointment appointment;
@@ -27,8 +26,8 @@ class AgendaCard extends StatelessWidget {
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Column(
               children: [
-                _DoctorInfo(appointment: appointment),
-                _ScheduleInfo(appointment: appointment),
+                AgendaDoctorInfo(appointment: appointment),
+                AgendaScheduleInfo(appointment: appointment),
               ],
             ),
           ),

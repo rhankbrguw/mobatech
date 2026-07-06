@@ -50,7 +50,7 @@ export function AiAuditMonitor({
           disabled={isSyncing}
           className="w-full bg-primary hover:bg-primary-hover text-primary-foreground py-3 rounded-xl font-medium transition-colors disabled:opacity-50 flex justify-center items-center gap-2"
         >
-          {isSyncing ? "Menyinkronkan..." : "Sinkronisasi Manual (Rebuild DB)"}
+          {isSyncing ? "Proses Sinkronisasi" : "Sinkronisasi Manual (Rebuild DB)"}
         </button>
         <p className="text-xs text-foreground/50 mt-2 text-center">
           Gunakan jika Anda baru saja menambah Jadwal/Poli baru agar AI mengetahuinya.

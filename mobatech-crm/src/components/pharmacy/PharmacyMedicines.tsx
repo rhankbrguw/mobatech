@@ -104,8 +104,8 @@ export function PharmacyMedicines({ initialMedicines, categories }: { initialMed
     <>
       <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
         <div className="flex flex-col sm:flex-row flex-1 gap-2">
-          <FilterDropdown value={selectedCategory} onChange={setSelectedCategory} options={categoryOptions} placeholder={APP_STRINGS.common.searchFilter} className="w-full sm:w-48 h-11" />
-          <SearchFilterBar value={searchQuery} onChange={setSearchQuery} className="w-full sm:max-w-xs h-11" />
+          <FilterDropdown value={selectedCategory} onChange={setSelectedCategory} options={categoryOptions} placeholder={APP_STRINGS.common.searchFilter} className="w-full sm:w-64 h-11" />
+          <SearchFilterBar value={searchQuery} onChange={setSearchQuery} className="w-full sm:max-w-sm h-11" />
         </div>
         <div className="flex gap-2" title={role === "admin" ? APP_STRINGS.common.clinicalOnly : undefined}>
           <Button variant="outline" onClick={() => setIsCategoryModalOpen(true)} disabled={role === "admin"} icon={<Plus size={16} />}>

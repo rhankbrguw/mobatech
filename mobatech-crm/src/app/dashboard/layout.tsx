@@ -18,3 +18,4 @@ export default function DashboardLayout({
     </div>
   );
 }
+export const metadata = { title: "Dashboard | Mobatech CRM", description: "Mobatech CRM Dashboard Management" };

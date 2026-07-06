@@ -21,7 +21,6 @@ class HistoryCard extends StatelessWidget {
 
 
     final statusColor = AppColors.getStatusColor(status);
-    final bgColor = AppColors.getStatusBgColor(status);
 
     return Card(
       elevation: 0,

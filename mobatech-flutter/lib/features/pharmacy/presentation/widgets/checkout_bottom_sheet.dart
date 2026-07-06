@@ -32,10 +32,10 @@ class CheckoutBottomSheet extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
           decoration: BoxDecoration(
-            color: AppColors.backgroundWhite.withOpacity(0.85),
+            color: AppColors.backgroundWhite.withValues(alpha: 0.85),
             border: Border(
               top: BorderSide(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),

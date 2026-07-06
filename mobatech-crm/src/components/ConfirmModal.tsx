@@ -70,7 +70,7 @@ export function ConfirmModal({
             disabled={isLoading}
             variant={btnVariant}
           >
-            {isLoading ? "Memproses..." : confirmText}
+            {isLoading ? "Sedang Memproses" : confirmText}
           </Button>
         </div>
       </div>

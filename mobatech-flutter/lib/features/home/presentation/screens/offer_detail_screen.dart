@@ -1,12 +1,10 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../../../core/utils/custom_snackbar.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/providers/mock_ui_providers.dart';
 
-import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
-import 'package:mobatech_app/core/constants/strings/home_strings.dart';
-part 'offer_detail_screen_components.dart';
+import '../widgets/offer_detail_app_bar.dart';
+import '../widgets/offer_card.dart';
+import '../widgets/offer_claim_button.dart';
 
 class OfferDetailScreen extends StatelessWidget {
   final SpecialOffer offer;
@@ -17,12 +15,12 @@ class OfferDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
-      appBar: const _OfferDetailAppBar(),
+      appBar: const OfferDetailAppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            _OfferCard(offer: offer),
+            OfferCard(offer: offer),
             const SizedBox(height: 32),
             const Text(
               'Syarat & Ketentuan',
@@ -42,7 +40,7 @@ class OfferDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            _ClaimButton(offer: offer),
+            OfferClaimButton(offer: offer),
           ],
         ),
       ),

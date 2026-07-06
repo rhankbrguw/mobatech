@@ -81,9 +81,9 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
               { label: 'Dibatalkan', value: 'Cancelled' },
             ]}
             placeholder={APP_STRINGS.common.searchStatus}
-            className="w-full sm:w-48 h-11"
+            className="w-full sm:w-64 h-11"
           />
-          <SearchFilterBar value={searchQuery} onChange={setSearchQuery} className="w-full sm:max-w-xs h-11" />
+          <SearchFilterBar value={searchQuery} onChange={setSearchQuery} className="w-full sm:max-w-sm h-11" />
         </div>
       </div>
       <Card noPadding>

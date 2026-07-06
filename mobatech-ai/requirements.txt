@@ -8,5 +8,5 @@ torch
 pydantic
 pymysql
 python-dotenv
-google-generativeai
+google-genai
 apscheduler

@@ -9,6 +9,7 @@ import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/profile_provider.dart';
 import '../widgets/edit_profile_widgets.dart';
 import '../widgets/edit_profile_form.dart';
+import '../widgets/edit_profile_animated_body.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
@@ -96,26 +97,22 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             gender: _selectedGender,
           );
       ref.invalidate(userProfileProvider);
-      if (mounted) _onSaveSuccess();
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        CustomSnackbar.showSuccess(
+          context,
+          ProfileStrings.extProfilberhasildiperbarui,
+        );
+        Navigator.pop(context);
+      }
     } catch (e) {
-      if (mounted) _onSaveError(e);
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        CustomSnackbar.showError(context, ErrorHandler.getMessage(e));
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
-  }
-
-  void _onSaveSuccess() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    CustomSnackbar.showSuccess(
-      context,
-      ProfileStrings.extProfilberhasildiperbarui,
-    );
-    Navigator.pop(context);
-  }
-
-  void _onSaveError(dynamic e) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    CustomSnackbar.showError(context, ErrorHandler.getMessage(e));
   }
 
   @override
@@ -123,16 +120,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
       appBar: const EditProfileAppBar(),
-      body: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0.0, end: 1.0),
-        duration: const Duration(milliseconds: 400),
-        builder: (context, value, child) => Opacity(
-          opacity: value,
-          child: Transform.translate(
-            offset: Offset(0, 15 * (1 - value)),
-            child: child,
-          ),
-        ),
+      body: EditProfileAnimatedBody(
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 800),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/pharmacy_provider.dart';
 import 'catalog_tab_view_components.dart';
+import 'medicines_list.dart';
 
 class CatalogTabView extends ConsumerStatefulWidget {
   const CatalogTabView({super.key});

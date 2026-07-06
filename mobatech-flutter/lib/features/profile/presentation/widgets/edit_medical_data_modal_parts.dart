@@ -1,10 +1,13 @@
-part of 'edit_medical_data_modal.dart';
+import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/theme/app_colors.dart';
 
-class _BloodTypeDropdown extends StatelessWidget {
+class BloodTypeDropdown extends StatelessWidget {
   final String value;
   final ValueChanged<String?> onChanged;
 
-  const _BloodTypeDropdown({required this.value, required this.onChanged});
+  const BloodTypeDropdown({super.key, required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +67,11 @@ class _BloodTypeDropdown extends StatelessWidget {
   }
 }
 
-class _SaveButton extends StatelessWidget {
+class SaveMedicalDataButton extends StatelessWidget {
   final bool isSaving;
   final VoidCallback onPressed;
 
-  const _SaveButton({required this.isSaving, required this.onPressed});
+  const SaveMedicalDataButton({super.key, required this.isSaving, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

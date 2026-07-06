@@ -8,6 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../models/prescription.dart';
 import '../../providers/pharmacy_provider.dart';
+import 'prescription_items_list.dart';
+import 'prescription_card_components.dart';
+
+part 'prescription_card_header.dart';
 
 class PrescriptionCard extends ConsumerWidget {
   final Prescription prescription;
@@ -35,7 +39,7 @@ class PrescriptionCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context, ref),
+            PrescriptionCardHeader(prescription: prescription),
             if (prescription.doctorName.isNotEmpty) ...[
               const SizedBox(height: 8),
               Row(
@@ -64,243 +68,18 @@ class PrescriptionCard extends ConsumerWidget {
             const SizedBox(height: 8),
             _buildDate(),
             const Divider(height: 24, color: AppColors.dividerGrey),
-            if (prescription.items.isNotEmpty) _buildItems(),
-            if (prescription.imageUrl.isNotEmpty) _buildImage(),
-            if (prescription.notes.isNotEmpty) _buildNotes(),
-            _buildRedeemButton(context),
+            if (prescription.items.isNotEmpty) PrescriptionItemsList(prescription: prescription),
+            if (prescription.imageUrl.isNotEmpty) PrescriptionImage(prescription: prescription),
+            if (prescription.notes.isNotEmpty) PrescriptionNotes(prescription: prescription),
+            PrescriptionRedeemButton(prescription: prescription),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, WidgetRef ref) {
-    return Row(
-      children: [
-        Text(
-          'Resep #${prescription.id}',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: AppColors.textDark,
-          ),
-        ),
-        const Spacer(),
-        _buildStatusBadge(),
-        const SizedBox(width: 8),
-        _buildDeleteButton(context, ref),
-      ],
-    );
-  }
-
-  Widget _buildStatusBadge() {
-    final isPending = prescription.status == 'Pending';
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: isPending
-            ? AppColors.iconOrange.withValues(alpha: 0.1)
-            : AppColors.primaryLight,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        prescription.status,
-        style: TextStyle(
-          color: isPending ? AppColors.iconOrange : AppColors.primary,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDeleteButton(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      onTap: () => _confirmDelete(context, ref),
-      child: const Icon(
-        Icons.delete_outline,
-        color: AppColors.errorRed,
-        size: 24,
-      ),
-    );
-  }
-
-  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(PharmacyStrings.extHapuseresep),
-        content: Text(
-          PharmacyStrings.extApakahandayakininginmenghapuseresepini,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(
-              CoreStrings.extBatal,
-              style: TextStyle(color: AppColors.textGrey),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(
-              CoreStrings.extHapus,
-              style: TextStyle(color: AppColors.errorRed),
-            ),
-          ),
-        ],
-      ),
-    );
-    if (confirm == true) {
-      if (!context.mounted) return;
-      _deletePrescription(context, ref);
-    }
-  }
-
-  Future<void> _deletePrescription(BuildContext context, WidgetRef ref) async {
-    try {
-      await ref
-          .read(prescriptionRepositoryProvider)
-          .deletePrescription(prescription.id);
-      ref.invalidate(prescriptionsProvider);
-      if (!context.mounted) return;
-      CustomSnackbar.showSuccess(
-        context,
-        PharmacyStrings.extEresepberhasildihapus,
-      );
-    } catch (e) {
-      if (!context.mounted) return;
-      CustomSnackbar.showError(context, ErrorStrings.extGagalmenghapuseresep);
-    }
-  }
-
   Widget _buildDate() => Text(
     '${CoreStrings.extTanggal} ${Formatters.formatDateID(prescription.createdAt.toLocal())}',
     style: const TextStyle(color: AppColors.textGrey, fontSize: 14),
-  );
-  Widget _buildItems() {
-    if (prescription.items.isEmpty) return const SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 12),
-        const Text(
-          'Daftar Obat Resep',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-            color: AppColors.textDark,
-          ),
-        ),
-        const SizedBox(height: 8),
-        ...prescription.items.map(
-          (item) => Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(
-                  Icons.medication,
-                  size: 16,
-                  color: AppColors.primary,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item.medicineName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        '${item.dosageInstruction} • ${item.duration}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textGrey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  '${item.quantity}x',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRedeemButton(BuildContext context) {
-    if (prescription.status != 'Pending') return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child: SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () {
-            CustomSnackbar.showSuccess(
-              context,
-              'Obat berhasil ditambahkan ke keranjang!',
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.textWhite,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-          child: const Text(
-            'Tebus Obat',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImage() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Image.network(
-        prescription.imageUrl,
-        height: 150,
-        width: double.infinity,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const SizedBox(),
-      ),
-    );
-  }
-
-  Widget _buildNotes() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const SizedBox(height: 12),
-      Text(
-        CoreStrings.extCatatan,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 14,
-          color: AppColors.textDark,
-        ),
-      ),
-      const SizedBox(height: 4),
-      Text(
-        prescription.notes,
-        style: const TextStyle(color: AppColors.textGrey, fontSize: 14),
-      ),
-    ],
   );
 }

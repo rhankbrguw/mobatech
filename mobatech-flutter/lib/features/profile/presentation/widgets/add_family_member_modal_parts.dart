@@ -1,16 +1,24 @@
-part of 'add_family_member_modal.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
+import 'package:mobatech_app/core/theme/app_colors.dart';
+import 'package:mobatech_app/core/utils/custom_snackbar.dart';
+import 'package:mobatech_app/core/utils/error_handler.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
+import '../providers/profile_provider.dart';
+import 'add_family_member_form_fields.dart';
 
-class _AddFamilyMemberModalContent extends StatefulWidget {
+class AddFamilyMemberModalContent extends StatefulWidget {
   final WidgetRef ref;
-  const _AddFamilyMemberModalContent({required this.ref});
+  const AddFamilyMemberModalContent({super.key, required this.ref});
 
   @override
-  State<_AddFamilyMemberModalContent> createState() =>
+  State<AddFamilyMemberModalContent> createState() =>
       _AddFamilyMemberModalContentState();
 }
 
 class _AddFamilyMemberModalContentState
-    extends State<_AddFamilyMemberModalContent> {
+    extends State<AddFamilyMemberModalContent> {
   final _nameController = TextEditingController();
   final _relationController = TextEditingController();
   final _dobController = TextEditingController();
@@ -104,89 +112,20 @@ class _AddFamilyMemberModalContentState
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         child: Container(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: _buildFormContent(),
+          child: AddFamilyMemberFormFields(
+            nameController: _nameController,
+            relationController: _relationController,
+            dobController: _dobController,
+            selectedGender: _selectedGender,
+            onGenderChanged: (gender) {
+              setState(() => _selectedGender = gender);
+            },
+            onPickDate: _pickDate,
+            isSaving: _isSaving,
+            onSave: _handleSave,
           ),
         ),
       ),
     );
-  }
-
-  List<Widget> _buildFormContent() {
-    return [
-      Center(
-        child: Container(
-          width: 40,
-          height: 4,
-          decoration: BoxDecoration(
-            color: AppColors.textGrey.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-      ),
-      const SizedBox(height: 24),
-      const Text(
-        ProfileStrings.extTambahanggotakeluarga,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: AppColors.textDark,
-        ),
-      ),
-      const SizedBox(height: 24),
-      ModalTextField(
-        label: 'Nama Lengkap',
-        controller: _nameController,
-        icon: Icons.person_outline,
-        type: TextInputType.name,
-      ),
-      const SizedBox(height: 16),
-      ModalTextField(
-        label: 'Hubungan (Anak, Istri, Suami, dll)',
-        controller: _relationController,
-        icon: Icons.family_restroom,
-        type: TextInputType.text,
-      ),
-      const SizedBox(height: 16),
-      ModalTextField(
-        label: 'Tanggal Lahir (YYYY-MM-DD)',
-        controller: _dobController,
-        icon: Icons.cake_outlined,
-        type: TextInputType.datetime,
-        readOnly: true,
-        onTap: _pickDate,
-      ),
-      const SizedBox(height: 16),
-      const Text(
-        CoreStrings.extJeniskelamin,
-        style: TextStyle(color: AppColors.textGrey, fontSize: 12),
-      ),
-      const SizedBox(height: 8),
-      Row(
-        children: [
-          Expanded(
-            child: GenderOptionButton(
-              text: 'Laki-laki',
-              icon: Icons.male,
-              isSelected: _selectedGender == 'Laki-laki',
-              onTap: () => setState(() => _selectedGender = 'Laki-laki'),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: GenderOptionButton(
-              text: 'Perempuan',
-              icon: Icons.female,
-              isSelected: _selectedGender == 'Perempuan',
-              onTap: () => setState(() => _selectedGender = 'Perempuan'),
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 32),
-      SaveFamilyMemberButton(isSaving: _isSaving, onPressed: _handleSave),
-    ];
   }
 }

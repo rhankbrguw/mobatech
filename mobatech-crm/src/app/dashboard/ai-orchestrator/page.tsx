@@ -5,6 +5,8 @@ import { api } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 
+
+
 export default function AIOrchestratorPage() {
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{
@@ -67,7 +69,7 @@ export default function AIOrchestratorPage() {
             {APP_STRINGS.aiOrchestrator.knowledgeBaseSize}
           </p>
           <p className="text-4xl font-extrabold text-foreground mt-2">
-            {vectorCount !== null ? `${vectorCount} Vectors` : "Memuat..."}
+            {vectorCount !== null ? `${vectorCount} Vectors` : "Sedang Memuat"}
           </p>
           <p className="text-xs text-foreground/60 mt-2">{APP_STRINGS.aiOrchestrator.knowledgeBaseDesc}</p>
         </div>

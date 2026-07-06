@@ -75,7 +75,7 @@ export function PharmacyPrescriptions() {
           value={searchQuery} 
           onChange={setSearchQuery} 
           className="w-full sm:max-w-xs h-10"
-          placeholder="Cari dokter atau ID..."
+          placeholder="Pencarian Dokter atau ID"
         />
       </div>
 

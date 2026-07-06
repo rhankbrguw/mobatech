@@ -11,7 +11,7 @@ export interface SearchFilterBarProps {
 export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
   value,
   onChange,
-  placeholder = "Ketik untuk mencari...",
+  placeholder = "Pencarian Data",
   className = "",
 }) => {
   const [localValue, setLocalValue] = React.useState(value || "");

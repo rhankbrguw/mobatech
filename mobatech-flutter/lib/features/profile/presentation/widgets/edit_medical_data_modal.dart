@@ -6,10 +6,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/error_handler.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/profile_provider.dart';
-import 'edit_medical_fields.dart';
 
-import 'package:mobatech_app/core/constants/strings/core_strings.dart';
-part 'edit_medical_data_modal_parts.dart';
+import 'edit_medical_data_form_fields.dart';
 
 void showEditMedicalDataModal(
   BuildContext context,
@@ -130,74 +128,19 @@ class _EditMedicalDataModalContentState
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         child: Container(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: _buildContent(),
+          child: EditMedicalDataFormFields(
+            selectedBloodType: _selectedBloodType,
+            onBloodTypeChanged: (val) {
+              if (val != null) setState(() => _selectedBloodType = val);
+            },
+            heightController: _heightController,
+            weightController: _weightController,
+            allergiesController: _allergiesController,
+            isSaving: _isSaving,
+            onSave: _handleSave,
           ),
         ),
       ),
     );
-  }
-
-  List<Widget> _buildContent() {
-    return [
-      Center(
-        child: Container(
-          width: 40,
-          height: 4,
-          decoration: BoxDecoration(
-            color: AppColors.textGrey.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-      ),
-      const SizedBox(height: 24),
-      const Text(
-        ProfileStrings.extPerbaruidatafisik,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: AppColors.textDark,
-        ),
-      ),
-      const SizedBox(height: 24),
-      _BloodTypeDropdown(
-        value: _selectedBloodType,
-        onChanged: (val) =>
-            val != null ? setState(() => _selectedBloodType = val) : null,
-      ),
-      const SizedBox(height: 16),
-      Row(
-        children: [
-          Expanded(
-            child: MedicalTextField(
-              label: 'Tinggi (cm)',
-              controller: _heightController,
-              icon: Icons.height,
-              type: TextInputType.number,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: MedicalTextField(
-              label: 'Berat (kg)',
-              controller: _weightController,
-              icon: Icons.monitor_weight_outlined,
-              type: TextInputType.number,
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 16),
-      MedicalTextField(
-        label: 'Alergi (Opsional)',
-        controller: _allergiesController,
-        icon: Icons.warning_amber_rounded,
-        type: TextInputType.text,
-      ),
-      const SizedBox(height: 32),
-      _SaveButton(isSaving: _isSaving, onPressed: _handleSave),
-    ];
   }
 }

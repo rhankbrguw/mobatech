@@ -1,28 +1,20 @@
 import 'dart:async';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
-import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/dio_client.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../providers/emergency_provider.dart';
 import 'emergency_state.dart';
 import 'location_helper.dart';
+import 'emergency_ws_mixin.dart';
 
-class EmergencyController extends AutoDisposeNotifier<EmergencyScreenState> {
-  WebSocketChannel? _channel;
-  StreamSubscription? _wsSubscription;
-  Timer? _simulationTimer;
-
+class EmergencyController extends AutoDisposeNotifier<EmergencyScreenState>
+    with EmergencyWsMixin {
   @override
   EmergencyScreenState build() {
     ref.onDispose(() {
-      _wsSubscription?.cancel();
-      _channel?.sink.close();
-      _simulationTimer?.cancel();
+      disposeWs();
     });
     return EmergencyScreenState();
   }
@@ -77,84 +69,13 @@ class EmergencyController extends AutoDisposeNotifier<EmergencyScreenState> {
             "latitude": state.userLat,
             "longitude": state.userLng,
           });
-      _connectWebSocket(
+      connectWebSocket(
         (response['id'] ?? response['emergency_id'] ?? '1').toString(),
       );
     } catch (e) {
       state = state.copyWith(isLoading: false, status: EmergencyStatus.form);
       rethrow;
     }
-  }
-
-  void _connectWebSocket(String emergencyId) {
-    try {
-      String baseWsUrl = baseUrl.replaceFirst('http', 'ws');
-
-      _channel = WebSocketChannel.connect(
-        Uri.parse('$baseWsUrl/emergencies/$emergencyId/track'),
-      );
-      _wsSubscription = _channel!.stream.listen(
-        _onWsMessage,
-        onError: (_) => _simulateTracking(),
-      );
-      Future.delayed(const Duration(seconds: 3), () {
-        if (state.status == EmergencyStatus.dispatching) _simulateTracking();
-      });
-    } catch (e) {
-      _simulateTracking();
-    }
-  }
-
-  void _onWsMessage(dynamic message) {
-    final data = jsonDecode(message as String) as Map<String, dynamic>;
-    if (data['type'] == 'location_update') {
-      state = state.copyWith(
-        status: EmergencyStatus.tracking,
-        isLoading: false,
-        ambulanceLat: (data['ambulance_lat'] as num).toDouble(),
-        ambulanceLng: (data['ambulance_lng'] as num).toDouble(),
-        estimatedMinutes: (data['estimated_minutes'] as num).toInt(),
-      );
-    } else if (data['type'] == 'status_update' && data['status'] == 'Arrived') {
-      state = state.copyWith(status: EmergencyStatus.arrived);
-    }
-  }
-
-  void _simulateTracking() {
-    final bLat = state.userLat ?? -6.2088;
-    final bLng = state.userLng ?? 106.8456;
-    double aLat = bLat + 0.015 + Random().nextDouble() * 0.005;
-    double aLng = bLng + 0.015 + Random().nextDouble() * 0.005;
-    int mins = 8;
-
-    state = state.copyWith(
-      status: EmergencyStatus.tracking,
-      ambulanceLat: aLat,
-      ambulanceLng: aLng,
-      estimatedMinutes: mins,
-      isLoading: false,
-    );
-    _simulationTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      aLat += (bLat - aLat) * 0.15;
-      aLng += (bLng - aLng) * 0.15;
-      mins = max(1, mins - 1);
-
-      if (sqrt(pow(bLat - aLat, 2) + pow(bLng - aLng, 2)) < 0.001) {
-        timer.cancel();
-        state = state.copyWith(
-          ambulanceLat: bLat,
-          ambulanceLng: bLng,
-          estimatedMinutes: 0,
-          status: EmergencyStatus.arrived,
-        );
-        return;
-      }
-      state = state.copyWith(
-        ambulanceLat: aLat,
-        ambulanceLng: aLng,
-        estimatedMinutes: mins,
-      );
-    });
   }
 }
 

@@ -1,7 +1,19 @@
-part of 'home_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/theme/app_colors.dart';
 
-class _HomeBody extends ConsumerWidget {
-  const _HomeBody();
+import '../providers/branch_provider.dart';
+import '../../../appointment/providers/appointment_provider.dart';
+import '../widgets/home_header.dart';
+import '../widgets/quick_access_grid.dart';
+import '../widgets/promo_banner_carousel.dart';
+import '../widgets/assistant_card.dart';
+import '../widgets/agenda_list_widget.dart';
+import '../widgets/hospitals_list_widget.dart';
+
+class HomeBody extends ConsumerWidget {
+  const HomeBody({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +53,7 @@ class _HomeBody extends ConsumerWidget {
                   const SizedBox(height: 20),
                   _buildSectionTitle(CoreStrings.sectionAgenda),
                   const SizedBox(height: 12),
-                  const _AgendaList(),
+                  const AgendaListWidget(),
                   const SizedBox(height: 20),
                   _buildSectionTitle(CoreStrings.sectionAssistant),
                   const SizedBox(height: 12),
@@ -49,7 +61,7 @@ class _HomeBody extends ConsumerWidget {
                   const SizedBox(height: 20),
                   _buildSectionTitle(CoreStrings.sectionHospitals),
                   const SizedBox(height: 12),
-                  const _HospitalsList(),
+                  const HospitalsListWidget(),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -71,89 +83,4 @@ class _HomeBody extends ConsumerWidget {
       ),
     ),
   );
-}
-
-class _AgendaList extends ConsumerWidget {
-  const _AgendaList();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final appointmentsAsync = ref.watch(userAppointmentsProvider);
-
-    return appointmentsAsync.when(
-      data: (appointments) {
-        if (appointments.isEmpty) {
-          return const Padding(
-            padding: EdgeInsets.all(24.0),
-            child: Center(
-              child: Text(
-                CoreStrings.emptyAgenda,
-                style: TextStyle(color: AppColors.textGrey),
-              ),
-            ),
-          );
-        }
-
-        return ListView.builder(
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: appointments.length > 2 ? 2 : appointments.length,
-          itemBuilder: (context, index) =>
-              AgendaCard(appointment: appointments[index]),
-        );
-      },
-      loading: () => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: CardSkeletonLoader(count: 1),
-      ),
-      error: (err, stack) => Center(child: Text(ErrorHandler.getMessage(err))),
-    );
-  }
-}
-
-class _HospitalsList extends ConsumerWidget {
-  const _HospitalsList();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final branchesAsync = ref.watch(branchProvider);
-
-    return branchesAsync.when(
-      data: (branches) {
-        if (branches.isEmpty)
-          return const Padding(
-            padding: EdgeInsets.all(24.0),
-            child: Text(
-              AppointmentStrings.extTidakadarumahsakitterdekat,
-              style: TextStyle(color: AppColors.textGrey),
-            ),
-          );
-        return Column(
-          children: branches.map((branch) {
-            final dummyDistance =
-                '${(branch.id * 1.5 + 2).toStringAsFixed(1)} KM';
-            return HospitalCard(
-              name: branch.name,
-              address: branch.address,
-              distance: dummyDistance,
-              imageUrl: branch.imageUrl,
-              gmapsLink: branch.gmapsLink,
-            );
-          }).toList(),
-        );
-      },
-      loading: () => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: CardSkeletonLoader(count: 2),
-      ),
-      error: (err, stack) => const Padding(
-        padding: EdgeInsets.all(24.0),
-        child: Text(
-          ErrorStrings.extGagalmemuatrumahsakit,
-          style: TextStyle(color: AppColors.errorRed),
-        ),
-      ),
-    );
-  }
 }
