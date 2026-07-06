@@ -1,4 +1,5 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +18,7 @@ class MedicalResultsScreen extends ConsumerWidget {
       backgroundColor: AppColors.backgroundScreen,
       appBar: AppBar(
         title: Text(
-          AppStrings.extDatarekammedis,
+          ProfileStrings.extDatarekammedis,
           style: TextStyle(
             color: AppColors.textWhite,
             fontWeight: FontWeight.bold,
@@ -78,8 +79,9 @@ class MedicalResultsScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) =>
-            Center(child: Text('${AppStrings.extGagalmemuathasilmedis} $err')),
+        error: (err, stack) => Center(
+          child: Text('${ErrorStrings.extGagalmemuathasilmedis} $err'),
+        ),
       ),
     );
   }

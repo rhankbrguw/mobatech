@@ -1,4 +1,5 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
+import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/checkout_order_summary.dart';
@@ -40,7 +41,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       body: cartAsync.when(
         data: (cart) {
           if (cart.items.isEmpty) {
-            return const Center(child: Text(AppStrings.extKeranjangandakosong));
+            return const Center(
+              child: Text(PharmacyStrings.extKeranjangandakosong),
+            );
           }
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -68,7 +71,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, s) =>
-            const Center(child: Text(AppStrings.extGagalmemuatpesanan)),
+            const Center(child: Text(ErrorStrings.extGagalmemuatpesanan)),
       ),
       bottomSheet: cartAsync.whenOrNull(
         data: (cart) {

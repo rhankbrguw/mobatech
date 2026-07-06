@@ -12,7 +12,9 @@ class AuthRepository {
         data: {'email': email, 'password': password},
       );
       return response.data;
-    } on DioException { rethrow; }
+    } on DioException {
+      rethrow;
+    }
   }
 
   Future<Map<String, dynamic>> register(
@@ -32,7 +34,9 @@ class AuthRepository {
         },
       );
       return response.data;
-    } on DioException { rethrow; }
+    } on DioException {
+      rethrow;
+    }
   }
 
   Future<Map<String, dynamic>> updateProfile(
@@ -68,14 +72,18 @@ class AuthRepository {
 
       final response = await _dio.put('/users/profile', data: formData);
       return response.data;
-    } on DioException { rethrow; }
+    } on DioException {
+      rethrow;
+    }
   }
 
   Future<Map<String, dynamic>> getProfile() async {
     try {
       final response = await _dio.get('/auth/me');
       return response.data;
-    } on DioException { rethrow; }
+    } on DioException {
+      rethrow;
+    }
   }
 
   Future<Map<String, dynamic>> addFamilyMember(
@@ -84,12 +92,16 @@ class AuthRepository {
     try {
       final response = await _dio.post('/users/family-members', data: payload);
       return response.data;
-    } on DioException { rethrow; }
+    } on DioException {
+      rethrow;
+    }
   }
 
   Future<void> deleteFamilyMember(int id) async {
     try {
       await _dio.delete('/users/family-members/$id');
-    } on DioException { rethrow; }
+    } on DioException {
+      rethrow;
+    }
   }
 }

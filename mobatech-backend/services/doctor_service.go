@@ -45,6 +45,18 @@ func (s *doctorService) UpdateDoctor(id uint, input *models.Doctor) (*models.Doc
 		return nil, err
 	}
 
+	s.applyDoctorUpdates(doctor, input)
+
+	err = s.doctorRepo.Update(doctor)
+	if err != nil {
+		return nil, err
+	}
+
+	utils.TriggerAsyncRAGSync()
+	return doctor, nil
+}
+
+func (s *doctorService) applyDoctorUpdates(doctor, input *models.Doctor) {
 	if input.Name != "" {
 		doctor.Name = input.Name
 	}
@@ -61,14 +73,6 @@ func (s *doctorService) UpdateDoctor(id uint, input *models.Doctor) (*models.Doc
 		doctor.ImageURL = input.ImageURL
 	}
 	doctor.PolyclinicID = input.PolyclinicID
-
-	err = s.doctorRepo.Update(doctor)
-	if err != nil {
-		return nil, err
-	}
-
-	utils.TriggerAsyncRAGSync()
-	return doctor, nil
 }
 
 func (s *doctorService) DeleteDoctor(id uint) error {

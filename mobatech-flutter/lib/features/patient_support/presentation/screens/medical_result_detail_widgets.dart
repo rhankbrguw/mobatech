@@ -1,8 +1,8 @@
 import 'dart:ui';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/medical_result.dart';
-import '../../../../core/constants/app_strings.dart';
 import 'detail_row_widget.dart';
 
 class MedicalResultHeader extends StatelessWidget {
@@ -17,7 +17,9 @@ class MedicalResultHeader extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.backgroundWhite.withValues(alpha: 0.2)),
+        border: Border.all(
+          color: AppColors.backgroundWhite.withValues(alpha: 0.2),
+        ),
         boxShadow: [
           BoxShadow(
             color: AppColors.textDark.withValues(alpha: 0.1),
@@ -66,7 +68,7 @@ class MedicalResultDetailsBox extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          AppStrings.extHasilpemeriksaan,
+          ProfileStrings.extHasilpemeriksaan,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -112,4 +114,3 @@ class MedicalResultDetailsBox extends StatelessWidget {
     );
   }
 }
-

@@ -28,26 +28,11 @@ func (ctrl *BranchController) GetBranches(c *gin.Context) {
 
 	var branches []models.Branch
 	var totalCount int64
-	query := ctrl.DB.Model(&models.Branch{})
-
-	if search != "" {
-		searchTerm := "%" + search + "%"
-		query = query.Where("name LIKE ? OR address LIKE ?", searchTerm, searchTerm)
-	}
-
-	if filter == "za" {
-		query = query.Order("name DESC")
-	} else if filter == "az" {
-		query = query.Order("name ASC")
-	} else {
-		query = query.Order("id DESC")
-	}
-	
+	query := buildBranchQuery(ctrl.DB, search, filter)
 	if err := query.Count(&totalCount).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, utils.BuildError(utils.ErrInternal, "Failed to count branches", nil))
 		return
 	}
-	
 	if limit > 0 {
 		query = query.Limit(limit).Offset(offset)
 	}

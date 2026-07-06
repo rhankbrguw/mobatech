@@ -64,9 +64,7 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
           controller: _scrollController,
           physics: const BouncingScrollPhysics(),
           slivers: [
-            AppointmentSliverHeader(
-              searchController: _searchController,
-            ),
+            AppointmentSliverHeader(searchController: _searchController),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               sliver: doctorsAsync.when(
@@ -81,31 +79,36 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
                       ),
                     );
                   }
-                  final isFetchingNextPage = ref.read(doctorsProvider.notifier).isFetchingNextPage;
+                  final isFetchingNextPage = ref
+                      .read(doctorsProvider.notifier)
+                      .isFetchingNextPage;
                   return SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      if (index == doctors.length) {
-                        return const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Center(
-                            child: CupertinoActivityIndicator(radius: 14),
-                          ),
-                        );
-                      }
-                      final doctor = doctors[index];
-                      return DoctorCard(
-                        doctor: doctor,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DoctorDetailScreen(doctorId: doctor.id),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        if (index == doctors.length) {
+                          return const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Center(
+                              child: CupertinoActivityIndicator(radius: 14),
                             ),
                           );
-                        },
-                      );
-                    }, childCount: doctors.length + (isFetchingNextPage ? 1 : 0)),
+                        }
+                        final doctor = doctors[index];
+                        return DoctorCard(
+                          doctor: doctor,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    DoctorDetailScreen(doctorId: doctor.id),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      childCount: doctors.length + (isFetchingNextPage ? 1 : 0),
+                    ),
                   );
                 },
                 loading: () => const SliverToBoxAdapter(

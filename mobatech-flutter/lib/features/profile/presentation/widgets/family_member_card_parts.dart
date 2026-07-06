@@ -22,17 +22,28 @@ class _FamilyMemberHeader extends StatelessWidget {
             Expanded(
               child: Text(
                 name,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             if (isPrimary)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: const Text(
-                  AppStrings.extUtama,
-                  style: TextStyle(color: AppColors.backgroundWhite, fontSize: 10, fontWeight: FontWeight.bold),
+                  CoreStrings.extUtama,
+                  style: TextStyle(
+                    color: AppColors.backgroundWhite,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
           ],
@@ -41,7 +52,9 @@ class _FamilyMemberHeader extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: isPrimary ? AppColors.primary : AppColors.primaryLight.withValues(alpha: 0.5),
+            color: isPrimary
+                ? AppColors.primary
+                : AppColors.primaryLight.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
@@ -61,17 +74,22 @@ class _FamilyMemberHeader extends StatelessWidget {
 class _FamilyMemberDetails extends StatelessWidget {
   final String? dob;
   final String? gender;
-  
+
   const _FamilyMemberDetails({this.dob, this.gender});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _DetailRow(icon: Icons.cake_outlined, text: Formatters.parseAndFormatDateID(dob ?? '-')),
+        _DetailRow(
+          icon: Icons.cake_outlined,
+          text: Formatters.parseAndFormatDateID(dob ?? '-'),
+        ),
         const SizedBox(height: 6),
         _DetailRow(
-          icon: gender?.toLowerCase() == 'perempuan' ? Icons.female : Icons.male,
+          icon: gender?.toLowerCase() == 'perempuan'
+              ? Icons.female
+              : Icons.male,
           text: gender ?? '-',
         ),
       ],
@@ -94,7 +112,11 @@ class _DetailRow extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(color: AppColors.textGrey, fontSize: 13, fontWeight: FontWeight.w500),
+            style: const TextStyle(
+              color: AppColors.textGrey,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

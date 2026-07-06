@@ -38,7 +38,9 @@ class ScheduleItemCard extends StatelessWidget {
     }
 
     final isAvailable =
-        !isExpired && schedule.isAvailable && (schedule.quota - schedule.booked > 0);
+        !isExpired &&
+        schedule.isAvailable &&
+        (schedule.quota - schedule.booked > 0);
     final localDate = schedule.date?.toLocal();
     final dateStr = localDate != null
         ? '${localDate.day}/${localDate.month}/${localDate.year}'
@@ -70,7 +72,9 @@ class ScheduleItemCard extends StatelessWidget {
               ),
               child: Icon(
                 Icons.calendar_month,
-                color: isSelected ? AppColors.backgroundWhite : AppColors.textGrey,
+                color: isSelected
+                    ? AppColors.backgroundWhite
+                    : AppColors.textGrey,
                 size: 20,
               ),
             ),

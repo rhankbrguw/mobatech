@@ -1,10 +1,10 @@
 import 'dart:ui';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import 'location_card_map_preview.dart';
 
 class LocationCard extends StatelessWidget {
@@ -90,10 +90,10 @@ class LocationCard extends StatelessWidget {
                           children: [
                             Text(
                               isLocating
-                                  ? AppStrings.detectingLocation
+                                  ? CoreStrings.detectingLocation
                                   : locationError != null
-                                  ? AppStrings.detectFailed
-                                  : AppStrings.locationDetected,
+                                  ? CoreStrings.detectFailed
+                                  : CoreStrings.locationDetected,
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -105,7 +105,7 @@ class LocationCard extends StatelessWidget {
                             const SizedBox(height: 2),
                             Text(
                               isLocating
-                                  ? AppStrings.usingGps
+                                  ? CoreStrings.usingGps
                                   : locationError ??
                                         '${userLat?.toStringAsFixed(6)}, ${userLng?.toStringAsFixed(6)}',
                               style: TextStyle(

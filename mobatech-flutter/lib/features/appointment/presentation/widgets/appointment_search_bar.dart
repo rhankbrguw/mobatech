@@ -36,9 +36,13 @@ class AppointmentSearchBar extends ConsumerWidget {
                 ref.read(searchQueryProvider.notifier).state = value,
             style: const TextStyle(color: AppColors.backgroundWhite),
             decoration: const InputDecoration(
-              hintText: AppStrings.searchDoctorHint,
+              hintText: AppointmentStrings.searchDoctorHint,
               hintStyle: TextStyle(color: AppColors.textWhite70, fontSize: 13),
-              prefixIcon: Icon(Icons.search, color: AppColors.backgroundWhite, size: 20),
+              prefixIcon: Icon(
+                Icons.search,
+                color: AppColors.backgroundWhite,
+                size: 20,
+              ),
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(vertical: 14),
             ),
@@ -64,7 +68,11 @@ class AppointmentSearchBar extends ConsumerWidget {
               color: AppColors.backgroundWhite.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.tune, color: AppColors.backgroundWhite, size: 20),
+            child: const Icon(
+              Icons.tune,
+              color: AppColors.backgroundWhite,
+              size: 20,
+            ),
           ),
         ),
       ),

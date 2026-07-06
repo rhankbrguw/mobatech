@@ -63,7 +63,10 @@ class SchedulesCard extends StatelessWidget {
                       );
                     }
                     return StreamBuilder<int>(
-                      stream: Stream.periodic(const Duration(minutes: 1), (i) => i),
+                      stream: Stream.periodic(
+                        const Duration(minutes: 1),
+                        (i) => i,
+                      ),
                       builder: (context, snapshot) {
                         final now = DateTime.now();
                         // Hanya tampilkan jadwal untuk HARI INI
@@ -72,8 +75,8 @@ class SchedulesCard extends StatelessWidget {
                           // Pastikan date di-parse ke local untuk perbandingan
                           final localDate = s.date!.toLocal();
                           return localDate.year == now.year &&
-                                 localDate.month == now.month &&
-                                 localDate.day == now.day;
+                              localDate.month == now.month &&
+                              localDate.day == now.day;
                         }).toList();
 
                         if (todaySchedules.isEmpty) {
@@ -89,10 +92,12 @@ class SchedulesCard extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: todaySchedules.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 12),
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final schedule = todaySchedules[index];
-                            final isSelected = selectedScheduleId == schedule.id;
+                            final isSelected =
+                                selectedScheduleId == schedule.id;
                             return ScheduleItemCard(
                               schedule: schedule,
                               isSelected: isSelected,
@@ -106,7 +111,7 @@ class SchedulesCard extends StatelessWidget {
                             );
                           },
                         );
-                      }
+                      },
                     );
                   },
                   loading: () => const CardSkeletonLoader(count: 3),

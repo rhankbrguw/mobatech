@@ -3,7 +3,6 @@ import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/utils/error_handler.dart';
 import 'auth_label.dart';
@@ -15,6 +14,8 @@ import '../../../services/presentation/providers/service_provider.dart';
 import '../../../chatbot/presentation/providers/chat_provider.dart';
 import 'login_form_widgets.dart';
 
+import 'package:mobatech_app/core/constants/strings/auth_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 part 'login_form_parts.dart';
 
 class LoginForm extends ConsumerStatefulWidget {

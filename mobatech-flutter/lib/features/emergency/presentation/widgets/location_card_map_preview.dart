@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import 'pulsing_location_dot.dart';
 
@@ -48,7 +48,7 @@ class LocationCardMapPreview extends StatelessWidget {
               ),
               SizedBox(height: 8),
               Text(
-                AppStrings.locationUnavailable,
+                CoreStrings.locationUnavailable,
                 style: TextStyle(color: AppColors.textGrey, fontSize: 13),
               ),
             ],

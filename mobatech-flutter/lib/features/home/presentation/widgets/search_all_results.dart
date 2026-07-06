@@ -1,4 +1,5 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,7 +33,7 @@ class SearchAllResults extends ConsumerWidget {
             if (filtered.isEmpty) {
               return const Padding(
                 padding: EdgeInsets.only(bottom: 16),
-                child: Text(AppStrings.extTidakditemukan),
+                child: Text(CoreStrings.extTidakditemukan),
               );
             }
             return Column(
@@ -49,7 +50,7 @@ class SearchAllResults extends ConsumerWidget {
             );
           },
           loading: () => const LinearProgressIndicator(),
-          error: (_, __) => Text(AppStrings.extErrormemuatdokter),
+          error: (_, __) => Text(ErrorStrings.extErrormemuatdokter),
         ),
         const SizedBox(height: 16),
         const SearchSectionHeader(title: 'Layanan / Poliklinik'),
@@ -62,7 +63,7 @@ class SearchAllResults extends ConsumerWidget {
             if (filtered.isEmpty) {
               return const Padding(
                 padding: EdgeInsets.only(bottom: 16),
-                child: Text(AppStrings.extTidakditemukan),
+                child: Text(CoreStrings.extTidakditemukan),
               );
             }
             return Column(
@@ -79,7 +80,7 @@ class SearchAllResults extends ConsumerWidget {
             );
           },
           loading: () => const LinearProgressIndicator(),
-          error: (_, __) => Text(AppStrings.extErrormemuatlayanan),
+          error: (_, __) => Text(ErrorStrings.extErrormemuatlayanan),
         ),
       ],
     );

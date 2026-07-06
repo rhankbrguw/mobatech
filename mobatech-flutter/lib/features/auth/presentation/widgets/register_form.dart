@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/utils/error_handler.dart';
 import 'auth_label.dart';
@@ -12,6 +12,8 @@ import '../providers/auth_provider.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import 'register_form_widgets.dart';
 
+import 'package:mobatech_app/core/constants/strings/auth_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 part 'register_form_parts.dart';
 
 class RegisterForm extends ConsumerStatefulWidget {
@@ -45,7 +47,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   void _handleRegister() async {
     if (!_formKey.currentState!.validate()) return;
     if (_phoneController.text.length < 8) {
-      _showError(AppStrings.phoneMinError);
+      _showError(ErrorStrings.phoneMinError);
       return;
     }
     final confirmError = Validators.validateConfirmPassword(
@@ -111,7 +113,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         controller: _passwordController,
         obscurePassword: _obscurePassword,
         onChanged: () => setState(() {}),
-        onTogglePassword: () => setState(() => _obscurePassword = !_obscurePassword),
+        onTogglePassword: () =>
+            setState(() => _obscurePassword = !_obscurePassword),
       ),
       const SizedBox(height: 12),
       PasswordValidationRules(password: _passwordController.text),
@@ -121,7 +124,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         passwordController: _passwordController,
         obscureConfirm: _obscureConfirm,
         onChanged: () => setState(() {}),
-        onTogglePassword: () => setState(() => _obscureConfirm = !_obscureConfirm),
+        onTogglePassword: () =>
+            setState(() => _obscureConfirm = !_obscureConfirm),
       ),
       const SizedBox(height: 40),
       RegisterSubmitButton(

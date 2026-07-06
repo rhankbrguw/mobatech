@@ -14,15 +14,15 @@ export function EmergenciesHeader({
   setSearchQuery: (val: string) => void;
 }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div>
+    <>
+      <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-500 flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
           Gawat Darurat
         </h1>
-        <p className="text-foreground/60 text-xs mt-1">Live tracking panggilan darurat dan pengerahan ambulans.</p>
+        <p className="text-foreground/60 text-sm mt-1">Live tracking panggilan darurat dan pengerahan ambulans.</p>
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row justify-end gap-2 mb-4">
         <FilterDropdown
           value={filterValue}
           onChange={setFilterValue}
@@ -32,9 +32,10 @@ export function EmergenciesHeader({
             { label: 'Selesai', value: 'resolved' },
           ]}
           placeholder={APP_STRINGS.common.searchStatus}
+          className="w-full sm:w-48 h-11"
         />
-        <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
+        <SearchFilterBar value={searchQuery} onChange={setSearchQuery} className="w-full sm:max-w-xs h-11" />
       </div>
-    </div>
+    </>
   );
 }

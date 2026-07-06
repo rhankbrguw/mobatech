@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../../../../core/utils/error_handler.dart';
 import '../../../../core/providers/mock_ui_providers.dart';
@@ -19,7 +19,7 @@ class PharmacyTab extends ConsumerWidget {
         if (orders.isEmpty) {
           return const Center(
             child: Text(
-              AppStrings.noPharmacyHistory,
+              PharmacyStrings.noPharmacyHistory,
               style: TextStyle(color: AppColors.textGrey),
             ),
           );

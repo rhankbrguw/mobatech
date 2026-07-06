@@ -15,21 +15,17 @@ class AppointmentRepository {
     int limit = 10,
   }) async {
     try {
-      final Map<String, dynamic> params = {
-        'page': page,
-        'limit': limit,
-      };
-      if (specialization != null && specialization.isNotEmpty && specialization != 'All') {
+      final Map<String, dynamic> params = {'page': page, 'limit': limit};
+      if (specialization != null &&
+          specialization.isNotEmpty &&
+          specialization != 'All') {
         params['specialization'] = specialization;
       }
       if (polyclinicId != null && polyclinicId > 0) {
         params['polyclinic_id'] = polyclinicId.toString();
       }
-      final response = await _dio.get(
-        '/doctors',
-        queryParameters: params,
-      );
-      
+      final response = await _dio.get('/doctors', queryParameters: params);
+
       final dynamic responseData = response.data;
       final dataList = responseData is Map && responseData.containsKey('data')
           ? responseData['data'] as List<dynamic>? ?? []
@@ -37,11 +33,11 @@ class AppointmentRepository {
       final meta = responseData is Map && responseData.containsKey('meta')
           ? responseData['meta'] as Map<String, dynamic>?
           : response.extra['meta'] as Map<String, dynamic>?;
-      
+
       final doctors = dataList.map((json) => Doctor.fromJson(json)).toList();
       final currentPage = meta?['current_page'] as int? ?? 1;
       final totalPages = meta?['total_pages'] as int? ?? 1;
-      
+
       return (doctors, currentPage < totalPages);
     } catch (e) {
       rethrow;
@@ -76,7 +72,7 @@ class AppointmentRepository {
         '/appointments',
         queryParameters: {'page': page, 'limit': limit},
       );
-      
+
       final dynamic responseData = response.data;
       final dataList = responseData is Map && responseData.containsKey('data')
           ? responseData['data'] as List<dynamic>? ?? []
@@ -84,11 +80,13 @@ class AppointmentRepository {
       final meta = responseData is Map && responseData.containsKey('meta')
           ? responseData['meta'] as Map<String, dynamic>?
           : response.extra['meta'] as Map<String, dynamic>?;
-      
-      final appointments = dataList.map((json) => Appointment.fromJson(json)).toList();
+
+      final appointments = dataList
+          .map((json) => Appointment.fromJson(json))
+          .toList();
       final currentPage = meta?['current_page'] as int? ?? 1;
       final totalPages = meta?['total_pages'] as int? ?? 1;
-      
+
       return (appointments, currentPage < totalPages);
     } catch (e) {
       rethrow;

@@ -1,4 +1,5 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +25,10 @@ class FamilyMemberMenu extends ConsumerWidget {
             ref.invalidate(userProfileProvider);
             if (context.mounted) {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              CustomSnackbar.showSuccess(context, AppStrings.extAnggotakeluargaberhasildihapus);
+              CustomSnackbar.showSuccess(
+                context,
+                ProfileStrings.extAnggotakeluargaberhasildihapus,
+              );
             }
           } catch (e) {
             if (context.mounted) {
@@ -41,7 +45,10 @@ class FamilyMemberMenu extends ConsumerWidget {
             children: [
               Icon(Icons.delete_outline, color: AppColors.errorRed, size: 20),
               SizedBox(width: 8),
-              Text(AppStrings.extHapus, style: TextStyle(color: AppColors.errorRed)),
+              Text(
+                CoreStrings.extHapus,
+                style: TextStyle(color: AppColors.errorRed),
+              ),
             ],
           ),
         ),

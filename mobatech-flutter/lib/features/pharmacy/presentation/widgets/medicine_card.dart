@@ -17,7 +17,9 @@ class MedicineCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.backgroundWhite.withValues(alpha: 0.2)),
+        border: Border.all(
+          color: AppColors.backgroundWhite.withValues(alpha: 0.2),
+        ),
         boxShadow: [
           BoxShadow(
             color: AppColors.textDark.withValues(alpha: 0.1),
@@ -34,7 +36,13 @@ class MedicineCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(flex: 3, child: MedicineCardImage(medicine: medicine)),
-              Expanded(flex: 7, child: MedicineCardDetails(medicine: medicine, onAddToCart: onAddToCart)),
+              Expanded(
+                flex: 7,
+                child: MedicineCardDetails(
+                  medicine: medicine,
+                  onAddToCart: onAddToCart,
+                ),
+              ),
             ],
           ),
         ),

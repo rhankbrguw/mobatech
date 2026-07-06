@@ -37,12 +37,12 @@ class DoctorDetailContent extends StatelessWidget {
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 800),
-              child: onRefresh == null 
-                ? _buildScrollableContent()
-                : RefreshIndicator(
-                    onRefresh: onRefresh!,
-                    child: _buildScrollableContent(),
-                  ),
+              child: onRefresh == null
+                  ? _buildScrollableContent()
+                  : RefreshIndicator(
+                      onRefresh: onRefresh!,
+                      child: _buildScrollableContent(),
+                    ),
             ),
           ),
         ),
@@ -53,7 +53,9 @@ class DoctorDetailContent extends StatelessWidget {
 
   Widget _buildScrollableContent() {
     return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+      physics: const AlwaysScrollableScrollPhysics(
+        parent: BouncingScrollPhysics(),
+      ),
       padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

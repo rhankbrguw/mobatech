@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/auth_strings.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../widgets/register_form.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -18,7 +18,7 @@ class RegisterScreen extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         title: const Text(
-          AppStrings.registerTitle,
+          AuthStrings.registerTitle,
           style: TextStyle(
             color: AppColors.textWhite,
             fontSize: 18,

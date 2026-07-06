@@ -1,4 +1,4 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,7 +58,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     if (pickedFile != null) {
       setState(() => _imagePath = pickedFile.path);
     }
@@ -75,15 +77,23 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     try {
       final userAsync = ref.read(userProfileProvider);
       final user = userAsync.value;
-      String? pathForUpload = (_imagePath != null && _imagePath!.startsWith('http')) ? null : _imagePath;
+      String? pathForUpload =
+          (_imagePath != null && _imagePath!.startsWith('http'))
+          ? null
+          : _imagePath;
 
-      await ref.read(authStateProvider.notifier).updateProfile(
+      await ref
+          .read(authStateProvider.notifier)
+          .updateProfile(
             _fullNameController.text.trim(),
             '+62${_phoneController.text.trim()}',
             pathForUpload,
-            bloodType: user?.bloodType, height: user?.height,
-            weight: user?.weight, allergies: user?.allergies,
-            dob: _dobController.text.trim(), gender: _selectedGender,
+            bloodType: user?.bloodType,
+            height: user?.height,
+            weight: user?.weight,
+            allergies: user?.allergies,
+            dob: _dobController.text.trim(),
+            gender: _selectedGender,
           );
       ref.invalidate(userProfileProvider);
       if (mounted) _onSaveSuccess();
@@ -96,7 +106,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   void _onSaveSuccess() {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    CustomSnackbar.showSuccess(context, AppStrings.extProfilberhasildiperbarui);
+    CustomSnackbar.showSuccess(
+      context,
+      ProfileStrings.extProfilberhasildiperbarui,
+    );
     Navigator.pop(context);
   }
 
@@ -115,7 +128,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         duration: const Duration(milliseconds: 400),
         builder: (context, value, child) => Opacity(
           opacity: value,
-          child: Transform.translate(offset: Offset(0, 15 * (1 - value)), child: child),
+          child: Transform.translate(
+            offset: Offset(0, 15 * (1 - value)),
+            child: child,
+          ),
         ),
         child: Center(
           child: ConstrainedBox(
@@ -129,7 +145,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               phoneController: _phoneController,
               dobController: _dobController,
               selectedGender: _selectedGender,
-              onGenderChanged: (gender) => setState(() => _selectedGender = gender),
+              onGenderChanged: (gender) =>
+                  setState(() => _selectedGender = gender),
               parentContext: context,
               onDateSelected: () => setState(() {}),
               isLoading: _isLoading,

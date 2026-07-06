@@ -39,15 +39,15 @@ class _HomeBody extends ConsumerWidget {
                   const SizedBox(height: 16),
                   const PromoBannerCarousel(),
                   const SizedBox(height: 20),
-                  _buildSectionTitle(AppStrings.sectionAgenda),
+                  _buildSectionTitle(CoreStrings.sectionAgenda),
                   const SizedBox(height: 12),
                   const _AgendaList(),
                   const SizedBox(height: 20),
-                  _buildSectionTitle(AppStrings.sectionAssistant),
+                  _buildSectionTitle(CoreStrings.sectionAssistant),
                   const SizedBox(height: 12),
                   const AssistantCard(),
                   const SizedBox(height: 20),
-                  _buildSectionTitle(AppStrings.sectionHospitals),
+                  _buildSectionTitle(CoreStrings.sectionHospitals),
                   const SizedBox(height: 12),
                   const _HospitalsList(),
                   const SizedBox(height: 24),
@@ -62,7 +62,14 @@ class _HomeBody extends ConsumerWidget {
 
   Widget _buildSectionTitle(String title) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 24),
-    child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+    child: Text(
+      title,
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: AppColors.textDark,
+      ),
+    ),
   );
 }
 
@@ -79,7 +86,10 @@ class _AgendaList extends ConsumerWidget {
           return const Padding(
             padding: EdgeInsets.all(24.0),
             child: Center(
-              child: Text(AppStrings.emptyAgenda, style: TextStyle(color: AppColors.textGrey)),
+              child: Text(
+                CoreStrings.emptyAgenda,
+                style: TextStyle(color: AppColors.textGrey),
+              ),
             ),
           );
         }
@@ -89,7 +99,8 @@ class _AgendaList extends ConsumerWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: appointments.length > 2 ? 2 : appointments.length,
-          itemBuilder: (context, index) => AgendaCard(appointment: appointments[index]),
+          itemBuilder: (context, index) =>
+              AgendaCard(appointment: appointments[index]),
         );
       },
       loading: () => const Padding(
@@ -110,10 +121,18 @@ class _HospitalsList extends ConsumerWidget {
 
     return branchesAsync.when(
       data: (branches) {
-        if (branches.isEmpty) return const Padding(padding: EdgeInsets.all(24.0), child: Text(AppStrings.extTidakadarumahsakitterdekat, style: TextStyle(color: AppColors.textGrey)));
+        if (branches.isEmpty)
+          return const Padding(
+            padding: EdgeInsets.all(24.0),
+            child: Text(
+              AppointmentStrings.extTidakadarumahsakitterdekat,
+              style: TextStyle(color: AppColors.textGrey),
+            ),
+          );
         return Column(
           children: branches.map((branch) {
-            final dummyDistance = '${(branch.id * 1.5 + 2).toStringAsFixed(1)} KM';
+            final dummyDistance =
+                '${(branch.id * 1.5 + 2).toStringAsFixed(1)} KM';
             return HospitalCard(
               name: branch.name,
               address: branch.address,
@@ -130,7 +149,10 @@ class _HospitalsList extends ConsumerWidget {
       ),
       error: (err, stack) => const Padding(
         padding: EdgeInsets.all(24.0),
-        child: Text(AppStrings.extGagalmemuatrumahsakit, style: TextStyle(color: AppColors.errorRed)),
+        child: Text(
+          ErrorStrings.extGagalmemuatrumahsakit,
+          style: TextStyle(color: AppColors.errorRed),
+        ),
       ),
     );
   }

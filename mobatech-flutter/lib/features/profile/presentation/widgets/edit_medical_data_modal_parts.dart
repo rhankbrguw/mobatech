@@ -12,7 +12,7 @@ class _BloodTypeDropdown extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          AppStrings.extGolongandarah,
+          ProfileStrings.extGolongandarah,
           style: TextStyle(color: AppColors.textGrey, fontSize: 12),
         ),
         const SizedBox(height: 8),
@@ -21,16 +21,40 @@ class _BloodTypeDropdown extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.backgroundWhite,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.2)),
+            border: Border.all(
+              color: AppColors.textGrey.withValues(alpha: 0.2),
+            ),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value,
               isExpanded: true,
               icon: const Icon(Icons.arrow_drop_down, color: AppColors.primary),
-              items: ['A', 'B', 'AB', 'O', 'A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-']
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e, style: const TextStyle(fontWeight: FontWeight.w600))))
-                  .toList(),
+              items:
+                  [
+                        'A',
+                        'B',
+                        'AB',
+                        'O',
+                        'A+',
+                        'B+',
+                        'AB+',
+                        'O+',
+                        'A-',
+                        'B-',
+                        'AB-',
+                        'O-',
+                      ]
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(
+                            e,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      )
+                      .toList(),
               onChanged: onChanged,
             ),
           ),
@@ -55,18 +79,27 @@ class _SaveButton extends StatelessWidget {
         onPressed: isSaving ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           elevation: 0,
         ),
         child: isSaving
             ? const SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(color: AppColors.backgroundWhite, strokeWidth: 2),
+                child: CircularProgressIndicator(
+                  color: AppColors.backgroundWhite,
+                  strokeWidth: 2,
+                ),
               )
             : const Text(
-                AppStrings.extSimpanperubahan,
-                style: TextStyle(color: AppColors.backgroundWhite, fontWeight: FontWeight.bold, fontSize: 16),
+                CoreStrings.extSimpanperubahan,
+                style: TextStyle(
+                  color: AppColors.backgroundWhite,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
       ),
     );

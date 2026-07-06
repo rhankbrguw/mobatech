@@ -16,7 +16,7 @@ type ChatService interface {
 	DeleteSession(userID uint, sessionID uint) error
 	RenameSession(userID uint, sessionID uint, newTitle string) error
 	StreamChat(ctx context.Context, sessionID uint, userMessage string, outChan chan<- string, errChan chan<- error)
-	GetAllSessions(search string) ([]models.ChatSession, error)
+	GetAllSessions(search string, limit int, offset int) ([]models.ChatSession, int64, error)
 }
 
 type chatService struct {
@@ -48,8 +48,8 @@ func (s *chatService) RenameSession(userID uint, sessionID uint, newTitle string
 	return s.repo.RenameSession(userID, sessionID, newTitle)
 }
 
-func (s *chatService) GetAllSessions(search string) ([]models.ChatSession, error) {
-	return s.repo.GetAllSessions(search)
+func (s *chatService) GetAllSessions(search string, limit int, offset int) ([]models.ChatSession, int64, error) {
+	return s.repo.GetAllSessions(search, limit, offset)
 }
 
 func (s *chatService) StreamChat(ctx context.Context, sessionID uint, userMessage string, outChan chan<- string, errChan chan<- error) {
@@ -71,6 +71,10 @@ func (s *chatService) StreamChat(ctx context.Context, sessionID uint, userMessag
 		go s.asyncGenerateTitle(sessionID, userMessage)
 	}
 
+	s.handleGeminiStream(ctx, sessionID, userMessage, historyMsg, outChan, errChan)
+}
+
+func (s *chatService) handleGeminiStream(ctx context.Context, sessionID uint, userMessage string, history []models.ChatMessage, outChan chan<- string, errChan chan<- error) {
 	model, client, err := s.setupGemini(ctx)
 	if err != nil {
 		errChan <- err
@@ -79,11 +83,9 @@ func (s *chatService) StreamChat(ctx context.Context, sessionID uint, userMessag
 	defer client.Close()
 
 	cs := model.StartChat()
-	s.populateHistory(cs, historyMsg, userMessage)
+	s.populateHistory(cs, history, userMessage)
 
-	// RAG Integration
 	ragQuery := s.buildRAGPrompt(userMessage)
-
 	iter := cs.SendMessageStream(ctx, genai.Text(ragQuery))
 	s.processStream(iter, outChan, errChan, sessionID)
 }
@@ -116,4 +118,3 @@ func (s *chatService) asyncGenerateTitle(sessionID uint, firstMessage string) {
 		s.repo.UpdateSessionTitle(sessionID, title)
 	}
 }
-

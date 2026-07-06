@@ -52,11 +52,11 @@ export function UsersTable({ users, loading, authUser, onView, onEdit, onDelete 
                   <div className="flex justify-center">
                     <ActionMenu
                       items={[
-                        {
+                        ...(u.role === "patient" ? [{
                           label: "Lihat Detail",
                           icon: <Eye size={14} />,
                           onClick: () => onView(u)
-                        },
+                        }] : []),
                         {
                           label: "Ubah",
                           icon: <Edit size={14} />,

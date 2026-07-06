@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/custom_bottom_nav_bar.dart';
 import '../widgets/chat_bubble.dart';
 import '../widgets/chat_input_area.dart';
@@ -55,7 +55,7 @@ class ChatbotScreen extends ConsumerWidget {
                     : messages.isEmpty
                     ? const Center(
                         child: Text(
-                          AppStrings.chatGreeting,
+                          CoreStrings.chatGreeting,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColors.textGrey,

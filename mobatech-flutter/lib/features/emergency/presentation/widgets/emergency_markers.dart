@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 
 Marker buildPatientMarker(LatLng position) {
   return Marker(
@@ -22,7 +22,7 @@ Marker buildPatientMarker(LatLng position) {
             ],
           ),
           child: const Text(
-            AppStrings.you,
+            CoreStrings.you,
             style: TextStyle(
               color: AppColors.backgroundWhite,
               fontSize: 10,
@@ -54,7 +54,7 @@ Marker buildAmbulanceMarker(LatLng position) {
             ],
           ),
           child: const Text(
-            AppStrings.ambulance,
+            CoreStrings.ambulance,
             style: TextStyle(
               color: AppColors.backgroundWhite,
               fontSize: 10,

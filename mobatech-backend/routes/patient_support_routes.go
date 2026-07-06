@@ -11,45 +11,40 @@ import (
 )
 
 func SetupPatientSupportRoutes(r *gin.Engine, db *gorm.DB) {
-	// Medical Results DI
-	mrRepo := repositories.NewMedicalResultRepository(db)
-	mrService := services.NewMedicalResultService(mrRepo)
-	mrController := controllers.NewMedicalResultController(mrService)
+	setupMedicalResultRoutes(r, db)
+	setupReminderRoutes(r, db)
+}
 
-	// Reminder DI
-	remRepo := repositories.NewReminderRepository(db)
-	remService := services.NewReminderService(remRepo)
-	remController := controllers.NewReminderController(remService)
+func setupMedicalResultRoutes(r *gin.Engine, db *gorm.DB) {
+	mrRepo := repositories.NewMedicalResultRepository(db)
+	mrController := controllers.NewMedicalResultController(services.NewMedicalResultService(mrRepo))
 
 	mrUserGroup := r.Group("/api/medical-results")
 	mrUserGroup.Use(middleware.AuthMiddleware())
-	{
-		mrUserGroup.GET("", mrController.GetUserResults)
-		mrUserGroup.GET("/:id", mrController.GetByID)
-	}
+	mrUserGroup.GET("", mrController.GetUserResults)
+	mrUserGroup.GET("/:id", mrController.GetByID)
 
 	mrAdminGroup := r.Group("/api/admin/medical-results")
 	mrAdminGroup.Use(middleware.AdminMiddleware())
-	{
-		mrAdminGroup.GET("", mrController.GetAll)
-		mrAdminGroup.POST("", mrController.Create)
-		mrAdminGroup.PUT("/:id", mrController.Update)
-		mrAdminGroup.DELETE("/:id", mrController.Delete)
-	}
+	mrAdminGroup.GET("", mrController.GetAll)
+	mrAdminGroup.POST("", mrController.Create)
+	mrAdminGroup.PUT("/:id", mrController.Update)
+	mrAdminGroup.DELETE("/:id", mrController.Delete)
+}
+
+func setupReminderRoutes(r *gin.Engine, db *gorm.DB) {
+	remRepo := repositories.NewReminderRepository(db)
+	remController := controllers.NewReminderController(services.NewReminderService(remRepo))
 
 	remUserGroup := r.Group("/api/reminders")
 	remUserGroup.Use(middleware.AuthMiddleware())
-	{
-		remUserGroup.GET("", remController.GetUserReminders)
-		remUserGroup.GET("/unread-count", remController.GetUnreadCount)
-		remUserGroup.PUT("/:id/read", remController.MarkAsRead)
-	}
+	remUserGroup.GET("", remController.GetUserReminders)
+	remUserGroup.GET("/unread-count", remController.GetUnreadCount)
+	remUserGroup.PUT("/:id/read", remController.MarkAsRead)
 
 	remAdminGroup := r.Group("/api/admin/reminders")
 	remAdminGroup.Use(middleware.AdminMiddleware())
-	{
-		remAdminGroup.GET("", remController.GetAll)
-		remAdminGroup.POST("", remController.Create)
-		remAdminGroup.DELETE("/:id", remController.Delete)
-	}
+	remAdminGroup.GET("", remController.GetAll)
+	remAdminGroup.POST("", remController.Create)
+	remAdminGroup.DELETE("/:id", remController.Delete)
 }

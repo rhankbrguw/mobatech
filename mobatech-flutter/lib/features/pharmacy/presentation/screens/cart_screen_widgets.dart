@@ -8,22 +8,19 @@ class _CartItemList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (cart.items.isEmpty) {
       return const SliverFillRemaining(
-        child: Center(child: Text(AppStrings.extKeranjangandakosong)),
+        child: Center(child: Text(PharmacyStrings.extKeranjangandakosong)),
       );
     }
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final item = cart.items[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: _CartItemWidget(item: item),
-            );
-          },
-          childCount: cart.items.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final item = cart.items[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: _CartItemWidget(item: item),
+          );
+        }, childCount: cart.items.length),
       ),
     );
   }
@@ -73,7 +70,10 @@ class _CartItemWidget extends ConsumerWidget {
             ? Image.network(
                 item.medicine.imageUrl,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Icon(Icons.medication, color: AppColors.backgroundWhite),
+                errorBuilder: (_, __, ___) => const Icon(
+                  Icons.medication,
+                  color: AppColors.backgroundWhite,
+                ),
               )
             : const Icon(Icons.medication, color: AppColors.backgroundWhite),
       ),
@@ -109,10 +109,15 @@ class _CartItemWidget extends ConsumerWidget {
     return Row(
       children: [
         IconButton(
-          icon: const Icon(Icons.remove_circle_outline, color: AppColors.textGrey),
+          icon: const Icon(
+            Icons.remove_circle_outline,
+            color: AppColors.textGrey,
+          ),
           onPressed: () {
             if (item.quantity > 1) {
-              ref.read(cartProvider.notifier).updateCartItem(item.id, item.quantity - 1);
+              ref
+                  .read(cartProvider.notifier)
+                  .updateCartItem(item.id, item.quantity - 1);
             } else {
               ref.read(cartProvider.notifier).removeFromCart(item.id);
             }
@@ -125,11 +130,12 @@ class _CartItemWidget extends ConsumerWidget {
         IconButton(
           icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
           onPressed: () {
-            ref.read(cartProvider.notifier).updateCartItem(item.id, item.quantity + 1);
+            ref
+                .read(cartProvider.notifier)
+                .updateCartItem(item.id, item.quantity + 1);
           },
         ),
       ],
     );
   }
 }
-

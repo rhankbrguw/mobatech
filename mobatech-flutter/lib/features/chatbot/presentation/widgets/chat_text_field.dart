@@ -1,7 +1,7 @@
 import 'dart:ui';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 
 class ChatTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -36,7 +36,7 @@ class ChatTextField extends StatelessWidget {
                   controller: controller,
                   onSubmitted: (_) => onSubmitted(),
                   decoration: const InputDecoration(
-                    hintText: AppStrings.chatInputHint,
+                    hintText: CoreStrings.chatInputHint,
                     hintStyle: TextStyle(
                       fontSize: 13,
                       color: AppColors.textGrey,

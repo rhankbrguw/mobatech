@@ -1,4 +1,4 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -20,7 +20,7 @@ class GenderSelection extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.only(left: 4, bottom: 8),
           child: Text(
-            AppStrings.extJeniskelamin,
+            CoreStrings.extJeniskelamin,
             style: TextStyle(
               color: AppColors.textGrey,
               fontSize: 13,
@@ -78,7 +78,9 @@ class GenderSelection extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: isSelected ? AppColors.backgroundWhite : AppColors.textGrey,
+              color: isSelected
+                  ? AppColors.backgroundWhite
+                  : AppColors.textGrey,
               size: 20,
             ),
             const SizedBox(width: 8),
@@ -87,7 +89,9 @@ class GenderSelection extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
-                color: isSelected ? AppColors.backgroundWhite : AppColors.textDark,
+                color: isSelected
+                    ? AppColors.backgroundWhite
+                    : AppColors.textDark,
               ),
             ),
           ],

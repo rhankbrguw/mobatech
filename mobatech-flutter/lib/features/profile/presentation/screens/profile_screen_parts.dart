@@ -11,15 +11,23 @@ class ProfileSliverAppBar extends StatelessWidget {
       pinned: true,
       backgroundColor: AppColors.primary,
       elevation: 0,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(32))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
+      ),
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: const Text(
-          AppStrings.extProfilsaya,
-          style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold, fontSize: 18),
+          CoreStrings.extProfilsaya,
+          style: TextStyle(
+            color: AppColors.textWhite,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
         background: ClipRRect(
-          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(32),
+          ),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -36,7 +44,10 @@ class ProfileSliverAppBar extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [AppColors.transparent, AppColors.primary.withValues(alpha: 0.4)],
+                    colors: [
+                      AppColors.transparent,
+                      AppColors.primary.withValues(alpha: 0.4),
+                    ],
                   ),
                 ),
               ),
@@ -57,10 +68,16 @@ class ProfileNullUserView extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(AppStrings.extDataprofiltidakditemukansilakanloginulang, textAlign: TextAlign.center),
+          const Text(
+            AuthStrings.extDataprofiltidakditemukansilakanloginulang,
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 16),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.errorRed, foregroundColor: AppColors.backgroundWhite),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.errorRed,
+              foregroundColor: AppColors.backgroundWhite,
+            ),
             onPressed: () async {
               final prefs = await SharedPreferences.getInstance();
               await prefs.clear();
@@ -68,7 +85,7 @@ class ProfileNullUserView extends ConsumerWidget {
               ref.invalidate(userProfileProvider);
               if (context.mounted) context.go('/login');
             },
-            child: const Text(AppStrings.extKeluardariakun),
+            child: const Text(ProfileStrings.extKeluardariakun),
           ),
         ],
       ),

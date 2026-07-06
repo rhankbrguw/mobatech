@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 
 class EstimatedTimeCircle extends StatelessWidget {
   final int estimatedMinutes;
@@ -41,7 +41,7 @@ class EstimatedTimeCircle extends StatelessWidget {
             ),
           ),
           const Text(
-            AppStrings.min,
+            CoreStrings.min,
             style: TextStyle(
               color: AppColors.textWhite70,
               fontSize: 11,
@@ -76,7 +76,7 @@ class DriverInfoRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.driverName,
+                CoreStrings.driverName,
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
@@ -85,7 +85,7 @@ class DriverInfoRow extends StatelessWidget {
               ),
               SizedBox(height: 2),
               Text(
-                AppStrings.driverDetails,
+                CoreStrings.driverDetails,
                 style: TextStyle(fontSize: 12, color: AppColors.textGrey),
               ),
             ],
@@ -109,11 +109,15 @@ class DriverInfoRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
               onTap: () {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                CustomSnackbar.showInfo(context, AppStrings.contactingDriver);
+                CustomSnackbar.showInfo(context, CoreStrings.contactingDriver);
               },
               child: const Padding(
                 padding: EdgeInsets.all(12),
-                child: Icon(Icons.phone, color: AppColors.backgroundWhite, size: 22),
+                child: Icon(
+                  Icons.phone,
+                  color: AppColors.backgroundWhite,
+                  size: 22,
+                ),
               ),
             ),
           ),

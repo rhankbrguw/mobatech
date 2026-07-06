@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/home_strings.dart';
+import 'package:mobatech_app/core/constants/strings/appointment_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/error_handler.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../../../services/presentation/providers/service_provider.dart';
@@ -21,25 +22,25 @@ class QuickAccessGrid extends ConsumerWidget {
         final List<Widget> menuItems = [
           QuickAccessItem(
             icon: Icons.calendar_month_outlined,
-            label: AppStrings.menuAppointment,
+            label: AppointmentStrings.menuAppointment,
             iconColor: AppColors.primary,
             onTap: () => context.push('/appointment'),
           ),
           QuickAccessItem(
             icon: Icons.card_giftcard_outlined,
-            label: AppStrings.menuOffers,
+            label: AppointmentStrings.menuOffers,
             iconColor: AppColors.primary,
             onTap: () => context.push('/special-offers'),
           ),
           QuickAccessItem(
             icon: Icons.smart_toy_outlined,
-            label: AppStrings.menuAssistant,
+            label: HomeStrings.menuAssistant,
             iconColor: AppColors.primary,
             onTap: () => context.push('/chatbot'),
           ),
           QuickAccessItem(
             icon: Icons.emergency_outlined,
-            label: AppStrings.menuEmergency,
+            label: HomeStrings.menuEmergency,
             iconColor: AppColors.errorRed,
             onTap: () => context.push('/emergency'),
           ),
@@ -76,7 +77,7 @@ class QuickAccessGrid extends ConsumerWidget {
           displayedItems.add(
             QuickAccessItem(
               icon: Icons.grid_view,
-              label: AppStrings.menuOthers,
+              label: AppointmentStrings.menuOthers,
               iconColor: AppColors.primary,
               onTap: () {
                 showQuickAccessMoreMenu(context, remainingItems);
@@ -100,12 +101,16 @@ class QuickAccessGrid extends ConsumerWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: items.map((item) => Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: item,
-          ),
-        )).toList(),
+        children: items
+            .map(
+              (item) => Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: item,
+                ),
+              ),
+            )
+            .toList(),
       ),
     );
   }

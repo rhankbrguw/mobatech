@@ -55,7 +55,9 @@ class AppColors {
   // Transparent / Opacity
   static const Color transparent = Colors.transparent;
   static Color shadowColor = Colors.black.withValues(alpha: 0.05);
-  static Color overlayWhite20 = AppColors.backgroundWhite.withValues(alpha: 0.2);
+  static Color overlayWhite20 = AppColors.backgroundWhite.withValues(
+    alpha: 0.2,
+  );
   static Color overlayPrimary15 = primary.withValues(alpha: 0.15);
 
   // Chatbot specific / additions
@@ -80,8 +82,14 @@ class AppColors {
   static const Color warningOrange = Colors.orange;
   static Color warningLight = Colors.orange.withValues(alpha: 0.1);
 
-  static Color getGlassBackground(bool isDark) => isDark ? AppColors.backgroundWhite.withValues(alpha: 0.05) : AppColors.backgroundWhite.withValues(alpha: 0.7);
-  static Color getGlassBorder(bool isDark) => isDark ? AppColors.backgroundWhite.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1);
-  static Color getTextPrimary(bool isDark) => isDark ? AppColors.backgroundWhite : textDark;
-  static Color getTextSecondary(bool isDark) => isDark ? Colors.white70 : textGrey;
+  static Color getGlassBackground(bool isDark) => isDark
+      ? AppColors.backgroundWhite.withValues(alpha: 0.05)
+      : AppColors.backgroundWhite.withValues(alpha: 0.7);
+  static Color getGlassBorder(bool isDark) => isDark
+      ? AppColors.backgroundWhite.withValues(alpha: 0.1)
+      : Colors.black.withValues(alpha: 0.1);
+  static Color getTextPrimary(bool isDark) =>
+      isDark ? AppColors.backgroundWhite : textDark;
+  static Color getTextSecondary(bool isDark) =>
+      isDark ? Colors.white70 : textGrey;
 }

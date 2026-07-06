@@ -1,4 +1,4 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -78,7 +78,10 @@ class ProfileMenuSection extends ConsumerWidget {
                         context.push('/profile/help-support');
                       } else {
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        CustomSnackbar.showInfo(context, 'Menu ${item['title']} segera hadir!',);
+                        CustomSnackbar.showInfo(
+                          context,
+                          'Menu ${item['title']} segera hadir!',
+                        );
                       }
                     },
                   ),
@@ -94,7 +97,7 @@ class ProfileMenuSection extends ConsumerWidget {
                     child: const Icon(Icons.logout, color: AppColors.errorRed),
                   ),
                   title: Text(
-                    AppStrings.extKeluar,
+                    ProfileStrings.extKeluar,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: AppColors.errorRed,

@@ -11,7 +11,8 @@ final branchProvider = FutureProvider<List<Branch>>((ref) async {
 
   if (response.statusCode == 200) {
     final responseData = response.data;
-    final List<dynamic> data = responseData is Map && responseData.containsKey('data')
+    final List<dynamic> data =
+        responseData is Map && responseData.containsKey('data')
         ? responseData['data']
         : (responseData as List? ?? []);
     return data.map((json) => Branch.fromJson(json)).toList();

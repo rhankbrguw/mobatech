@@ -8,14 +8,13 @@ import 'core/theme/app_colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Load environment variables
   await dotenv.load(fileName: ".env");
 
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
-    if (kReleaseMode) {
-    }
+    if (kReleaseMode) {}
   };
 
   ErrorWidget.builder = (FlutterErrorDetails details) {
@@ -26,15 +25,25 @@ void main() async {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, color: AppColors.errorRed, size: 64),
+            const Icon(
+              Icons.error_outline,
+              color: AppColors.errorRed,
+              size: 64,
+            ),
             const SizedBox(height: 16),
             const Text(
               'Terjadi kesalahan',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textDark,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
-              kDebugMode ? details.exceptionAsString() : 'Silakan coba lagi atau hubungi dukungan.',
+              kDebugMode
+                  ? details.exceptionAsString()
+                  : 'Silakan coba lagi atau hubungi dukungan.',
               textAlign: TextAlign.center,
               style: const TextStyle(color: AppColors.textGrey),
             ),

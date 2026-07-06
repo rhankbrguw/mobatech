@@ -1,4 +1,5 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
+import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -28,10 +29,12 @@ class CartScreen extends ConsumerWidget {
               iconTheme: const IconThemeData(color: AppColors.textWhite),
               centerTitle: true,
               shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(24),
+                ),
               ),
               title: const Text(
-                AppStrings.extKeranjang,
+                PharmacyStrings.extKeranjang,
                 style: TextStyle(
                   color: AppColors.textWhite,
                   fontWeight: FontWeight.bold,
@@ -45,7 +48,10 @@ class CartScreen extends ConsumerWidget {
                       top: 0,
                       child: Opacity(
                         opacity: 0.2,
-                        child: Image.asset('assets/header_logo.png', width: 150),
+                        child: Image.asset(
+                          'assets/header_logo.png',
+                          width: 150,
+                        ),
                       ),
                     ),
                   ],
@@ -57,7 +63,7 @@ class CartScreen extends ConsumerWidget {
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) =>
-            const Center(child: Text(AppStrings.extGagalmemuatkeranjang)),
+            const Center(child: Text(ErrorStrings.extGagalmemuatkeranjang)),
       ),
       bottomNavigationBar: cartAsync.whenOrNull(
         data: (cart) {
@@ -68,4 +74,3 @@ class CartScreen extends ConsumerWidget {
     );
   }
 }
-

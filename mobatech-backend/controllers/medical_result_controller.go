@@ -21,6 +21,11 @@ func NewMedicalResultController(service services.MedicalResultService) *MedicalR
 func (c *MedicalResultController) GetAll(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
+	pageStr := ctx.DefaultQuery("page", "1")
+	limitStr := ctx.DefaultQuery("limit", "10")
+	page, _ := strconv.Atoi(pageStr)
+	limit, _ := strconv.Atoi(limitStr)
+	offset := (page - 1) * limit
 
 	roleFloat, _ := ctx.Get("role")
 	role := ""
@@ -34,12 +39,12 @@ func (c *MedicalResultController) GetAll(ctx *gin.Context) {
 		userID = uint(userIDFloat.(float64))
 	}
 
-	results, err := c.service.GetAllMedicalResults(search, filter, userID, role)
+	results, totalCount, err := c.service.GetAllMedicalResults(search, filter, userID, role, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", results))
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", results, page, limit, totalCount))
 }
 
 func (c *MedicalResultController) GetUserResults(ctx *gin.Context) {

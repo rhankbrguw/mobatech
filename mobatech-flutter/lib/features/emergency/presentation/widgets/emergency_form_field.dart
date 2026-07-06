@@ -33,8 +33,8 @@ class EmergencyFormField extends StatelessWidget {
       validator: validator ?? (v) => Validators.validateRequired(v, hint),
       prefixIcon: Icon(
         icon,
-        color: Theme.of(context).brightness == Brightness.dark 
-            ? AppColors.primaryGreen 
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.primaryGreen
             : AppColors.primary,
         size: 22,
       ),

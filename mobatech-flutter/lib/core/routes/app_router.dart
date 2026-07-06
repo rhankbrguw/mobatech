@@ -15,7 +15,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: '/splash',
     redirect: (context, state) {
       final isLoggedIn = globalAuthToken != null;
-      final isGoingToAuth = state.matchedLocation == '/login' ||
+      final isGoingToAuth =
+          state.matchedLocation == '/login' ||
           state.matchedLocation == '/register' ||
           state.matchedLocation == '/splash' ||
           state.matchedLocation == '/onboarding';

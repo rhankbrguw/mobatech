@@ -1,4 +1,5 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/appointment_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,12 +33,15 @@ class _DoctorDetailScreenState extends ConsumerState<DoctorDetailScreen> {
   void _bookAppointment() async {
     if (_selectedScheduleId == null) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      CustomSnackbar.showInfo(context, AppStrings.extPilihjadwalterlebihdahulu);
+      CustomSnackbar.showInfo(
+        context,
+        AppointmentStrings.extPilihjadwalterlebihdahulu,
+      );
       return;
     }
     if (_symptomsController.text.isEmpty) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      CustomSnackbar.showInfo(context, AppStrings.extIsikeluhanterlebihdahulu);
+      CustomSnackbar.showInfo(context, CoreStrings.extIsikeluhanterlebihdahulu);
       return;
     }
 
@@ -55,7 +59,10 @@ class _DoctorDetailScreenState extends ConsumerState<DoctorDetailScreen> {
         ref.invalidate(userAppointmentsProvider);
         ref.invalidate(doctorSchedulesProvider(widget.doctorId));
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        CustomSnackbar.showSuccess(context, AppStrings.extJanjitemuberhasildibuat);
+        CustomSnackbar.showSuccess(
+          context,
+          AppointmentStrings.extJanjitemuberhasildibuat,
+        );
         Navigator.pop(context); // go back
       }
     } catch (e) {

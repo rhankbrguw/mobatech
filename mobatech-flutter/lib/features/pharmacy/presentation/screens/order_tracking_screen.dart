@@ -1,4 +1,4 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -17,7 +17,10 @@ class OrderTrackingScreen extends StatelessWidget {
     final status = order?.status ?? 'Pending';
     final statusLower = status.toLowerCase();
 
-    bool isProcessing = statusLower == 'processing' || statusLower == 'ready' || statusLower == 'completed';
+    bool isProcessing =
+        statusLower == 'processing' ||
+        statusLower == 'ready' ||
+        statusLower == 'completed';
     bool isReady = statusLower == 'ready' || statusLower == 'completed';
     bool isCompleted = statusLower == 'completed';
     bool isCancelled = statusLower == 'cancelled';
@@ -26,7 +29,7 @@ class OrderTrackingScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundLightGrey,
       appBar: AppBar(
         title: Text(
-          AppStrings.extDetaillacakpesanan,
+          PharmacyStrings.extDetaillacakpesanan,
           style: TextStyle(
             color: AppColors.textWhite,
             fontWeight: FontWeight.bold,

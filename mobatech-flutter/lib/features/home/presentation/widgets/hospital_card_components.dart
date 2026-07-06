@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/home_strings.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class HospitalInfoColumn extends StatelessWidget {
@@ -57,10 +58,7 @@ class HospitalInfoColumn extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           address,
-          style: const TextStyle(
-            fontSize: 12,
-            color: AppColors.textGrey,
-          ),
+          style: const TextStyle(fontSize: 12, color: AppColors.textGrey),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -72,10 +70,7 @@ class HospitalInfoColumn extends StatelessWidget {
 class HospitalActionButtons extends StatelessWidget {
   final VoidCallback onMapTap;
 
-  const HospitalActionButtons({
-    super.key,
-    required this.onMapTap,
-  });
+  const HospitalActionButtons({super.key, required this.onMapTap});
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +84,7 @@ class HospitalActionButtons extends StatelessWidget {
               _buildIconContainer(Icons.directions_outlined),
               const SizedBox(height: 4),
               const Text(
-                AppStrings.extRute,
+                HomeStrings.extRute,
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
@@ -106,7 +101,7 @@ class HospitalActionButtons extends StatelessWidget {
             _buildIconContainer(Icons.more_vert),
             const SizedBox(height: 4),
             const Text(
-              AppStrings.extMore,
+              CoreStrings.extMore,
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
@@ -123,16 +118,10 @@ class HospitalActionButtons extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColors.borderGrey.withValues(alpha: 0.5),
-        ),
+        border: Border.all(color: AppColors.borderGrey.withValues(alpha: 0.5)),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Icon(
-        icon,
-        color: AppColors.primary,
-        size: 20,
-      ),
+      child: Icon(icon, color: AppColors.primary, size: 20),
     );
   }
 }

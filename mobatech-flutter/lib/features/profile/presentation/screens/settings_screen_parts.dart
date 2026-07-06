@@ -7,14 +7,19 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(
-        AppStrings.extPengaturan,
-        style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold),
+        ProfileStrings.extPengaturan,
+        style: TextStyle(
+          color: AppColors.textWhite,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       backgroundColor: AppColors.primary,
       centerTitle: true,
       elevation: 0,
       iconTheme: const IconThemeData(color: AppColors.backgroundWhite),
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(24))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+      ),
       flexibleSpace: ClipRRect(
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
         child: Stack(

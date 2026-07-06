@@ -1,4 +1,3 @@
-import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -13,8 +12,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/network/dio_client.dart';
 import '../widgets/medical_summary_card.dart';
 
+import 'package:mobatech_app/core/constants/strings/auth_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 part 'profile_screen_parts.dart';
-
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -28,7 +29,7 @@ class ProfileScreen extends ConsumerWidget {
       body: profileAsync.when(
         data: (user) {
           if (user == null) return const ProfileNullUserView();
-          
+
           return Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 800),
@@ -43,7 +44,10 @@ class ProfileScreen extends ConsumerWidget {
                       curve: Curves.easeOutCubic,
                       builder: (context, value, child) => Opacity(
                         opacity: value,
-                        child: Transform.translate(offset: Offset(0, 30 * (1 - value)), child: child),
+                        child: Transform.translate(
+                          offset: Offset(0, 30 * (1 - value)),
+                          child: child,
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(24),

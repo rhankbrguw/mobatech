@@ -61,12 +61,10 @@ export function ActionMenu({ items }: { items: ActionMenuItem[] }) {
     <div
       ref={dropdownRef}
       style={{
-        position: "fixed",
         top: `${coords.top - window.scrollY}px`,
         right: `${coords.right}px`,
-        zIndex: 9999,
       }}
-      className="w-48 rounded-xl shadow-2xl bg-white/95 dark:bg-[#113C2B]/95 backdrop-blur-xl saturate-150 border border-glass-border/50 overflow-hidden animate-slide-in origin-top-right"
+      className="fixed z-[9999] w-48 rounded-xl shadow-2xl bg-white/95 dark:bg-[#113C2B]/95 backdrop-blur-xl saturate-150 border border-glass-border/50 overflow-hidden animate-slide-in origin-top-right"
     >
       <div className="p-1 flex flex-col gap-0.5">
         {items.map((item, index) => (

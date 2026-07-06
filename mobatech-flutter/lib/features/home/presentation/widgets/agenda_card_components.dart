@@ -72,7 +72,8 @@ class _DoctorImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
-      child: appointment.doctor?.imageUrl != null &&
+      child:
+          appointment.doctor?.imageUrl != null &&
               !appointment.doctor!.imageUrl.contains('.svg')
           ? Image.network(
               appointment.doctor!.imageUrl,
@@ -117,7 +118,9 @@ class _ScheduleInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            appointment.schedule?.date != null ? '${Formatters.formatDateWithDayID(appointment.schedule!.date!)} • ${appointment.schedule!.startTime}' : 'Jadwal belum ditentukan',
+            appointment.schedule?.date != null
+                ? '${Formatters.formatDateWithDayID(appointment.schedule!.date!)} • ${appointment.schedule!.startTime}'
+                : 'Jadwal belum ditentukan',
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -129,16 +132,16 @@ class _ScheduleInfo extends StatelessWidget {
             children: [
               const Text(
                 'Status Pendaftaran',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textGrey,
-                ),
+                style: TextStyle(fontSize: 12, color: AppColors.textGrey),
               ),
               const SizedBox(width: 10),
               GlassStatusChip(
                 status: appointment.status,
                 fontSize: 10,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
               ),
             ],
           ),

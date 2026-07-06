@@ -82,7 +82,11 @@ class ChatMessagesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     }
   }
 
-  void _addOptimisticMessage(String message, String? imagePath, String? filePath) {
+  void _addOptimisticMessage(
+    String message,
+    String? imagePath,
+    String? filePath,
+  ) {
     state = [
       ...state,
       {
@@ -128,8 +132,7 @@ class ChatMessagesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
       } catch (e) {
         _appendChunkToLastMessage(dataStr);
       }
-    } else if (line.startsWith('event: error')) {
-    }
+    } else if (line.startsWith('event: error')) {}
   }
 
   void _appendChunkToLastMessage(String chunk) {

@@ -7,7 +7,7 @@ import (
 )
 
 type MedicalResultRepository interface {
-	FindAll(search string, filter string, userID uint, role string) ([]models.MedicalResult, error)
+	FindAll(search string, filter string, userID uint, role string, limit int, offset int) ([]models.MedicalResult, int64, error)
 	FindByUserID(userID uint) ([]models.MedicalResult, error)
 	FindByID(id uint) (*models.MedicalResult, error)
 	Create(medicalResult *models.MedicalResult) error
@@ -23,9 +23,10 @@ func NewMedicalResultRepository(db *gorm.DB) MedicalResultRepository {
 	return &medicalResultRepository{db}
 }
 
-func (r *medicalResultRepository) FindAll(search string, filter string, userID uint, role string) ([]models.MedicalResult, error) {
+func (r *medicalResultRepository) FindAll(search string, filter string, userID uint, role string, limit int, offset int) ([]models.MedicalResult, int64, error) {
 	var results []models.MedicalResult
-	query := r.db.Preload("Appointment").Joins("LEFT JOIN users ON users.id = medical_results.user_id")
+	var totalCount int64
+	query := r.db.Model(&models.MedicalResult{}).Joins("LEFT JOIN users ON users.id = medical_results.user_id")
 	
 	if role == "doctor" {
 		query = query.Where("medical_results.appointment_id IN (SELECT id FROM appointments WHERE doctor_id = (SELECT id FROM doctors WHERE user_id = ? LIMIT 1))", userID)
@@ -44,8 +45,13 @@ func (r *medicalResultRepository) FindAll(search string, filter string, userID u
 		query = query.Order("medical_results.created_at desc")
 	}
 	
-	err := query.Find(&results).Error
-	return results, err
+	err := query.Count(&totalCount).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	
+	err = query.Preload("Appointment").Limit(limit).Offset(offset).Find(&results).Error
+	return results, totalCount, err
 }
 
 func (r *medicalResultRepository) FindByUserID(userID uint) ([]models.MedicalResult, error) {

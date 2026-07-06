@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/auth_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/app_button.dart';
 import 'social_login_button.dart';
 
@@ -21,7 +22,7 @@ class LoginSubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppButton(
-      text: AppStrings.loginButton,
+      text: AuthStrings.loginButton,
       onPressed: isEnabled ? onPressed : null,
       isLoading: isLoading,
       isFullWidth: true,
@@ -45,11 +46,11 @@ class LoginFooter extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                AppStrings.orContinueWith,
+                CoreStrings.orContinueWith,
                 style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark 
-                      ? AppColors.textLightGrey 
-                      : AppColors.textGrey, 
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.textLightGrey
+                      : AppColors.textGrey,
                   fontSize: 14,
                 ),
               ),
@@ -61,9 +62,12 @@ class LoginFooter extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         SocialLoginButton(
-          text: AppStrings.continueWithGoogle,
+          text: CoreStrings.continueWithGoogle,
           onPressed: () {
-            CustomSnackbar.showInfo(context, AppStrings.extFirebaseauthgooglesignincomingsoon);
+            CustomSnackbar.showInfo(
+              context,
+              AuthStrings.extFirebaseauthgooglesignincomingsoon,
+            );
           },
         ),
         const SizedBox(height: 16),
@@ -71,18 +75,18 @@ class LoginFooter extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              AppStrings.noAccount,
+              AuthStrings.noAccount,
               style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.dark 
-                    ? AppColors.textLightGrey 
-                    : AppColors.textGrey, 
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.textLightGrey
+                    : AppColors.textGrey,
                 fontSize: 14,
               ),
             ),
             GestureDetector(
               onTap: () => context.push('/register'),
               child: const Text(
-                AppStrings.registerLink,
+                AuthStrings.registerLink,
                 style: TextStyle(
                   color: AppColors.primary,
                   fontSize: 14,

@@ -14,50 +14,58 @@ import (
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		authHeader := c.GetHeader("Authorization")
-		if authHeader == "" {
-			c.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Authorization header is required"))
+		tokenString, err := extractToken(c)
+		if err != nil {
+			c.Error(err)
 			c.Abort()
 			return
 		}
 
-		parts := strings.SplitN(authHeader, " ", 2)
-		if !(len(parts) == 2 && parts[0] == "Bearer") {
-			c.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Authorization header format must be Bearer {token}"))
+		claims, err := validateToken(tokenString)
+		if err != nil {
+			c.Error(err)
 			c.Abort()
 			return
 		}
 
-		tokenString := parts[1]
-		secret := os.Getenv("JWT_SECRET")
-		if secret == "" {
-			c.Error(utils.NewAppError(utils.ErrInternal, http.StatusInternalServerError, "JWT_SECRET is not configured on the server"))
-			c.Abort()
-			return
-		}
-
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-			}
-			return []byte(secret), nil
-		})
-
-		if err != nil || !token.Valid {
-			c.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Invalid or expired token"))
-			c.Abort()
-			return
-		}
-
-		if claims, ok := token.Claims.(jwt.MapClaims); ok {
-			c.Set("user_id", claims["user_id"])
-			c.Set("role", claims["role"])
-		} else {
-			c.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Invalid token claims"))
-			c.Abort()
-			return
-		}
-
+		c.Set("user_id", claims["user_id"])
+		c.Set("role", claims["role"])
 		c.Next()
 	}
+}
+
+func extractToken(c *gin.Context) (string, error) {
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		return "", utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Authorization header is required")
+	}
+
+	parts := strings.SplitN(authHeader, " ", 2)
+	if !(len(parts) == 2 && parts[0] == "Bearer") {
+		return "", utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Authorization header format must be Bearer {token}")
+	}
+	return parts[1], nil
+}
+
+func validateToken(tokenString string) (jwt.MapClaims, error) {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		return nil, utils.NewAppError(utils.ErrInternal, http.StatusInternalServerError, "JWT_SECRET is not configured on the server")
+	}
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(secret), nil
+	})
+
+	if err != nil || !token.Valid {
+		return nil, utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Invalid or expired token")
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		return claims, nil
+	}
+	return nil, utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Invalid token claims")
 }

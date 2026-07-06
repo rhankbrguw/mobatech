@@ -7,7 +7,7 @@ import (
 )
 
 type ReminderService interface {
-	GetAllReminders(search string, filter string) ([]models.Reminder, error)
+	GetAllReminders(search string, filter string, limit int, offset int) ([]models.Reminder, int64, error)
 	GetUserReminders(userID uint) ([]models.Reminder, error)
 	GetUnreadCount(userID uint) (int64, error)
 	CreateReminder(req *models.Reminder) (*models.Reminder, error)
@@ -23,8 +23,8 @@ func NewReminderService(repo repositories.ReminderRepository) ReminderService {
 	return &reminderService{repo}
 }
 
-func (s *reminderService) GetAllReminders(search string, filter string) ([]models.Reminder, error) {
-	return s.repo.FindAll(search, filter)
+func (s *reminderService) GetAllReminders(search string, filter string, limit int, offset int) ([]models.Reminder, int64, error) {
+	return s.repo.FindAll(search, filter, limit, offset)
 }
 
 func (s *reminderService) GetUserReminders(userID uint) ([]models.Reminder, error) {

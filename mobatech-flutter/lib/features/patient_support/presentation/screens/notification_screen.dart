@@ -1,4 +1,5 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -16,7 +17,7 @@ class NotificationScreen extends ConsumerWidget {
       backgroundColor: AppColors.backgroundScreen,
       appBar: AppBar(
         title: Text(
-          AppStrings.extNotifikasipengingat,
+          ProfileStrings.extNotifikasipengingat,
           style: TextStyle(
             color: AppColors.textWhite,
             fontWeight: FontWeight.bold,
@@ -82,8 +83,9 @@ class NotificationScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) =>
-            Center(child: Text('${AppStrings.extGagalmemuatnotifikasi} $err')),
+        error: (err, stack) => Center(
+          child: Text('${ErrorStrings.extGagalmemuatnotifikasi} $err'),
+        ),
       ),
     );
   }

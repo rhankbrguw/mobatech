@@ -7,14 +7,19 @@ class EditProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(
-        AppStrings.extUbahprofil,
-        style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold),
+        CoreStrings.extUbahprofil,
+        style: TextStyle(
+          color: AppColors.textWhite,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       backgroundColor: AppColors.primary,
       centerTitle: true,
       elevation: 0,
       iconTheme: const IconThemeData(color: AppColors.backgroundWhite),
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(24))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+      ),
       flexibleSpace: ClipRRect(
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
         child: Stack(
@@ -42,12 +47,16 @@ class EditProfileSubmitButton extends StatelessWidget {
   final bool isLoading;
   final VoidCallback? onPressed;
 
-  const EditProfileSubmitButton({super.key, required this.isLoading, this.onPressed});
+  const EditProfileSubmitButton({
+    super.key,
+    required this.isLoading,
+    this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppButton(
-      text: AppStrings.extSimpanperubahan,
+      text: CoreStrings.extSimpanperubahan,
       onPressed: onPressed,
       isLoading: isLoading,
       isFullWidth: true,

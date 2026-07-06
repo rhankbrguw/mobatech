@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
+import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import '../../providers/pharmacy_provider.dart';
 import '../widgets/shimmer_loading.dart';
@@ -14,7 +16,14 @@ class SearchAndCategories extends StatelessWidget {
   final ValueChanged<int?> onCategorySelected;
   final AsyncValue<List<dynamic>> categoriesAsync;
 
-  const SearchAndCategories({ super.key, required this.searchController, required this.onSearchChanged, required this.selectedCategoryId, required this.onCategorySelected, required this.categoriesAsync, });
+  const SearchAndCategories({
+    super.key,
+    required this.searchController,
+    required this.onSearchChanged,
+    required this.selectedCategoryId,
+    required this.onCategorySelected,
+    required this.categoriesAsync,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,17 +37,28 @@ class SearchAndCategories extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.backgroundLightGrey,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.borderGrey.withValues(alpha: 0.5)),
+                border: Border.all(
+                  color: AppColors.borderGrey.withValues(alpha: 0.5),
+                ),
               ),
               child: TextField(
                 controller: searchController,
                 onChanged: onSearchChanged,
                 decoration: InputDecoration(
-                  hintText: AppStrings.searchMedicineHint,
-                  hintStyle: const TextStyle(color: AppColors.textGrey, fontSize: 14),
-                  prefixIcon: const Icon(Icons.search, color: AppColors.iconGrey),
+                  hintText: PharmacyStrings.searchMedicineHint,
+                  hintStyle: const TextStyle(
+                    color: AppColors.textGrey,
+                    fontSize: 14,
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: AppColors.iconGrey,
+                  ),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                 ),
               ),
             ),
@@ -49,7 +69,7 @@ class SearchAndCategories extends StatelessWidget {
                 child: Row(
                   children: [
                     CategoryChip(
-                      label: AppStrings.allCategory,
+                      label: CoreStrings.allCategory,
                       isSelected: selectedCategoryId == null,
                       onSelected: () => onCategorySelected(null),
                     ),
@@ -80,7 +100,7 @@ class SearchAndCategories extends StatelessWidget {
                 ),
               ),
               error: (err, stack) =>
-                  const Text(AppStrings.errorLoadCategories),
+                  const Text(ErrorStrings.errorLoadCategories),
             ),
           ],
         ),
@@ -91,10 +111,7 @@ class SearchAndCategories extends StatelessWidget {
 
 class MedicinesList extends ConsumerWidget {
   final AsyncValue<List<dynamic>> medicinesAsync;
-  const MedicinesList({
-    super.key,
-    required this.medicinesAsync,
-  });
+  const MedicinesList({super.key, required this.medicinesAsync});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -114,7 +131,7 @@ class MedicinesList extends ConsumerWidget {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   CustomSnackbar.showSuccess(
                     context,
-                    '${medicines[index].name}${AppStrings.addedToCartSuffix}',
+                    '${medicines[index].name}${CoreStrings.addedToCartSuffix}',
                   );
                 },
               ),
@@ -139,7 +156,7 @@ class MedicinesList extends ConsumerWidget {
         ),
       ),
       error: (err, stack) => const SliverToBoxAdapter(
-        child: Center(child: Text(AppStrings.errorLoadMedicines)),
+        child: Center(child: Text(ErrorStrings.errorLoadMedicines)),
       ),
     );
   }

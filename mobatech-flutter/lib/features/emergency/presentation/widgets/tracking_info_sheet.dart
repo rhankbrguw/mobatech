@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'tracking_info_widgets.dart';
 
@@ -47,7 +47,7 @@ class TrackingInfoSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        AppStrings.ambulanceHeading,
+                        CoreStrings.ambulanceHeading,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -56,7 +56,7 @@ class TrackingInfoSheet extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${AppStrings.estimateArrival}$estimatedMinutes${AppStrings.minuteText}',
+                        '${CoreStrings.estimateArrival}$estimatedMinutes${CoreStrings.minuteText}',
                         style: const TextStyle(
                           fontSize: 13,
                           color: AppColors.textGrey,

@@ -26,6 +26,7 @@ export function DashboardStatCards({ stats }: { stats: DashboardStats }) {
         sub="Terdaftar"
         href="/dashboard/patients"
         colorClass="bg-blue-500 text-blue-600"
+        iconBgClass="bg-blue-500/10"
       />
       <StatCard
         icon={<CalendarDays size={20} />}
@@ -34,6 +35,7 @@ export function DashboardStatCards({ stats }: { stats: DashboardStats }) {
         sub={`${stats.pendingAppointments} Menunggu`}
         href="/dashboard/appointments"
         colorClass="bg-purple-500 text-purple-600"
+        iconBgClass="bg-purple-500/10"
       />
       <StatCard
         icon={<Stethoscope size={20} />}
@@ -42,6 +44,7 @@ export function DashboardStatCards({ stats }: { stats: DashboardStats }) {
         sub={`${stats.polyclinics} Poliklinik`}
         href="/dashboard/doctors"
         colorClass="bg-emerald-500 text-emerald-600"
+        iconBgClass="bg-emerald-500/10"
       />
       <StatCard
         icon={<Siren size={20} />}
@@ -50,6 +53,7 @@ export function DashboardStatCards({ stats }: { stats: DashboardStats }) {
         sub="Kasus Aktif"
         href="/dashboard/emergencies"
         colorClass="bg-red-500 text-red-600"
+        iconBgClass="bg-red-500/10"
       />
     </div>
   );

@@ -97,4 +97,3 @@ class OrderTrackingTimeline extends StatelessWidget {
     );
   }
 }
-

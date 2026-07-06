@@ -1,8 +1,8 @@
 import 'dart:ui';
+import 'package:mobatech_app/core/constants/strings/home_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 
 class HomeHeaderSearchField extends StatelessWidget {
   const HomeHeaderSearchField({super.key});
@@ -28,15 +28,11 @@ class HomeHeaderSearchField extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Icon(
-                  Icons.search,
-                  color: AppColors.textWhite,
-                  size: 20,
-                ),
+                const Icon(Icons.search, color: AppColors.textWhite, size: 20),
                 const SizedBox(width: 12),
                 const Expanded(
                   child: Text(
-                    AppStrings.searchHint,
+                    HomeStrings.searchHint,
                     style: TextStyle(
                       color: AppColors.textWhite70,
                       fontSize: 13,

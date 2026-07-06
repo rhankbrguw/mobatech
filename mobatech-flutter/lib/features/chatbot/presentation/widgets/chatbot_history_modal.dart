@@ -1,54 +1,16 @@
 import 'dart:ui';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/error_handler.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../providers/chat_provider.dart';
+import 'chatbot_history_modal_session_item.dart';
+
 class ChatbotHistoryModal extends ConsumerWidget {
   const ChatbotHistoryModal({super.key});
-  void _showRenameDialog(BuildContext context, WidgetRef ref, int sessionId, String currentTitle) {
-    final controller = TextEditingController(text: currentTitle);
-    showDialog(
-      context: context,
-      builder: (ctx) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: AlertDialog(
-          backgroundColor: AppColors.backgroundWhite.withValues(alpha: 0.9),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text('Ubah Nama Percakapan', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          content: TextField(
-            controller: controller,
-            decoration: const InputDecoration(
-              hintText: 'Nama baru...',
-              border: OutlineInputBorder(),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Batal', style: TextStyle(color: AppColors.textGrey)),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              onPressed: () {
-                if (controller.text.trim().isNotEmpty) {
-                  ref.read(chatMessagesProvider.notifier).renameSession(sessionId, controller.text.trim());
-                }
-                Navigator.pop(ctx);
-              },
-              child: const Text('Simpan', style: TextStyle(color: AppColors.backgroundWhite)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionsAsync = ref.watch(chatSessionsProvider);
@@ -75,7 +37,7 @@ class ChatbotHistoryModal extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  AppStrings.chatHistoryTitle,
+                  CoreStrings.chatHistoryTitle,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
@@ -91,7 +53,7 @@ class ChatbotHistoryModal extends ConsumerWidget {
                   if (sessions.isEmpty) {
                     return const Center(
                       child: Text(
-                        AppStrings.chatNoHistory,
+                        CoreStrings.chatNoHistory,
                         style: TextStyle(color: AppColors.textGrey),
                       ),
                     );
@@ -100,92 +62,7 @@ class ChatbotHistoryModal extends ConsumerWidget {
                     itemCount: sessions.length,
                     itemBuilder: (context, index) {
                       final session = sessions[index];
-                      return Card(
-                        elevation: 0,
-                        color: AppColors.transparent,
-                        margin: const EdgeInsets.only(bottom: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(
-                            color: AppColors.textGrey.withValues(alpha: 0.2),
-                          ),
-                        ),
-                        child: Material(
-                          color: AppColors.backgroundWhite.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(12),
-                          child: InkWell(
-                            onTap: () {
-                              ref
-                                  .read(chatMessagesProvider.notifier)
-                                  .loadSession(session['ID']);
-                              Navigator.pop(context);
-                            },
-                            borderRadius: BorderRadius.circular(12),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 4,
-                              ),
-                              leading: const CircleAvatar(
-                                backgroundColor: AppColors.primaryLight,
-                                child: Icon(
-                                  Icons.chat_bubble_outline,
-                                  color: AppColors.primary,
-                                  size: 20,
-                                ),
-                              ),
-                              title: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      session['title'] ??
-                                          AppStrings.chatNewConversation,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.edit_outlined,
-                                          color: AppColors.primary,
-                                          size: 20,
-                                        ),
-                                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                                        constraints: const BoxConstraints(),
-                                        onPressed: () => _showRenameDialog(
-                                          context,
-                                          ref,
-                                          session['ID'],
-                                          session['title'] ?? AppStrings.chatNewConversation,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.delete_outline,
-                                          color: AppColors.errorRed,
-                                          size: 20,
-                                        ),
-                                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                                        constraints: const BoxConstraints(),
-                                        onPressed: () => ref
-                                            .read(chatMessagesProvider.notifier)
-                                            .deleteSession(session['ID']),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
+                      return SessionItem(session: session);
                     },
                   );
                 },

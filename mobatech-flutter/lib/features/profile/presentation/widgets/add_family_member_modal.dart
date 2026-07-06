@@ -1,4 +1,3 @@
-import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/utils/custom_snackbar.dart';
@@ -9,6 +8,8 @@ import '../../../auth/presentation/providers/auth_provider.dart';
 import 'add_family_member_modal_widgets.dart';
 import 'modal_text_field.dart';
 
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 part 'add_family_member_modal_parts.dart';
 
 void showAddMemberModal(BuildContext context, WidgetRef ref) {

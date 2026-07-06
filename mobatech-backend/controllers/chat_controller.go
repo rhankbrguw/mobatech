@@ -1,19 +1,15 @@
 package controllers
-
 import (
 	"backend/services"
 	"backend/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"io"
 	"net/http"
 	"strconv"
 )
-
 type ChatController struct {
 	service services.ChatService
 }
-
 func NewChatController(service services.ChatService) *ChatController {
 	return &ChatController{service}
 }
@@ -75,7 +71,6 @@ func (c *ChatController) DeleteSession(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
 }
-
 func (c *ChatController) RenameSession(ctx *gin.Context) {
 	userID, exists := ctx.Get("user_id")
 	if !exists {
@@ -101,50 +96,17 @@ func (c *ChatController) RenameSession(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
 }
-func (c *ChatController) StreamChat(ctx *gin.Context) {
-	sessionID, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
-	if err != nil {
-		ctx.Error(utils.NewValidationError("invalid session id"))
-		return
-	}
-	var req struct {
-		Message string `json:"message"`
-	}
-	if err := ctx.BindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
-		return
-	}
-	outChan := make(chan string)
-	errChan := make(chan error)
-	go c.service.StreamChat(ctx.Request.Context(), uint(sessionID), req.Message, outChan, errChan)
-	c.handleStream(ctx, outChan, errChan)
-}
-func (c *ChatController) handleStream(ctx *gin.Context, outChan <-chan string, errChan <-chan error) {
-	ctx.Stream(func(w io.Writer) bool {
-		select {
-		case msg, ok := <-outChan:
-			if !ok {
-				return false
-			}
-			ctx.SSEvent("message", gin.H{"text": msg})
-			return true
-		case err, ok := <-errChan:
-			if !ok {
-				return false
-			}
-			ctx.SSEvent("error", err.Error())
-			return false
-		case <-ctx.Request.Context().Done():
-			return false
-		}
-	})
-}
 func (c *ChatController) GetAllSessions(ctx *gin.Context) {
 	search := ctx.Query("search")
-	sessions, err := c.service.GetAllSessions(search)
+	pageStr := ctx.DefaultQuery("page", "1")
+	limitStr := ctx.DefaultQuery("limit", "10")
+	page, _ := strconv.Atoi(pageStr)
+	limit, _ := strconv.Atoi(limitStr)
+	offset := (page - 1) * limit
+	sessions, totalCount, err := c.service.GetAllSessions(search, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", sessions))
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", sessions, page, limit, totalCount))
 }

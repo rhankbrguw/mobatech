@@ -21,11 +21,7 @@ class _TimelineItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildIndicator(),
-        const SizedBox(width: 16),
-        _buildDetails(),
-      ],
+      children: [_buildIndicator(), const SizedBox(width: 16), _buildDetails()],
     );
   }
 
@@ -36,18 +32,28 @@ class _TimelineItem extends StatelessWidget {
           width: 24,
           height: 24,
           decoration: BoxDecoration(
-            color: isError ? AppColors.errorRed : (isCompleted ? AppColors.primary : AppColors.backgroundLightGrey),
+            color: isError
+                ? AppColors.errorRed
+                : (isCompleted
+                      ? AppColors.primary
+                      : AppColors.backgroundLightGrey),
             shape: BoxShape.circle,
             border: Border.all(
-              color: isError ? AppColors.errorRed : (isCompleted ? AppColors.primary : AppColors.borderGrey),
+              color: isError
+                  ? AppColors.errorRed
+                  : (isCompleted ? AppColors.primary : AppColors.borderGrey),
               width: 2,
             ),
           ),
           child: isError
               ? const Icon(Icons.close, size: 16, color: AppColors.textWhite)
               : (isCompleted
-                  ? const Icon(Icons.check, size: 16, color: AppColors.textWhite)
-                  : null),
+                    ? const Icon(
+                        Icons.check,
+                        size: 16,
+                        color: AppColors.textWhite,
+                      )
+                    : null),
         ),
         if (!isLast)
           Container(
@@ -72,14 +78,18 @@ class _TimelineItem extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  color: isError ? AppColors.errorRed : (isCompleted ? AppColors.textDark : AppColors.textGrey),
+                  color: isError
+                      ? AppColors.errorRed
+                      : (isCompleted ? AppColors.textDark : AppColors.textGrey),
                 ),
               ),
               Text(
                 time,
                 style: TextStyle(
                   fontSize: 12,
-                  color: isCompleted ? AppColors.textGrey : AppColors.textLightGrey,
+                  color: isCompleted
+                      ? AppColors.textGrey
+                      : AppColors.textLightGrey,
                 ),
               ),
             ],

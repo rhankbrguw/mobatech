@@ -1,4 +1,4 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -18,7 +18,7 @@ class FamilyMembersScreen extends ConsumerWidget {
       backgroundColor: AppColors.backgroundScreen,
       appBar: AppBar(
         title: Text(
-          AppStrings.extAnggotakeluarga,
+          ProfileStrings.extAnggotakeluarga,
           style: TextStyle(
             color: AppColors.textWhite,
             fontWeight: FontWeight.bold,
@@ -69,14 +69,17 @@ class FamilyMembersScreen extends ConsumerWidget {
               data: (user) {
                 if (user == null) {
                   return const Center(
-                    child: Text(AppStrings.extDatatidakditemukan),
+                    child: Text(ProfileStrings.extDatatidakditemukan),
                   );
                 }
 
                 final familyList = user.familyMembers ?? [];
 
                 return ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 20,
+                  ),
                   physics: const BouncingScrollPhysics(),
                   children: [
                     FamilyMemberCard(
@@ -117,8 +120,11 @@ class FamilyMembersScreen extends ConsumerWidget {
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: AppColors.backgroundWhite),
         label: Text(
-          AppStrings.extTambahanggota,
-          style: TextStyle(color: AppColors.backgroundWhite, fontWeight: FontWeight.bold),
+          ProfileStrings.extTambahanggota,
+          style: TextStyle(
+            color: AppColors.backgroundWhite,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

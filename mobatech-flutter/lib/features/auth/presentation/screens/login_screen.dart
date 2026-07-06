@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/auth_strings.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../widgets/login_form.dart';
 
@@ -92,7 +92,7 @@ class LoginScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          AppStrings.loginGreeting,
+                          AuthStrings.loginGreeting,
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -101,7 +101,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          AppStrings.loginSubtitle,
+                          AuthStrings.loginSubtitle,
                           style: TextStyle(
                             fontSize: 14,
                             color: AppColors.textGrey,

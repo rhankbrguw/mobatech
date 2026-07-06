@@ -15,7 +15,7 @@ type ChatRepository interface {
 	DeleteSession(userID uint, sessionID uint) error
 	RenameSession(userID uint, sessionID uint, newTitle string) error
 	UpdateSessionTitle(sessionID uint, newTitle string) error
-	GetAllSessions(search string) ([]models.ChatSession, error)
+	GetAllSessions(search string, limit int, offset int) ([]models.ChatSession, int64, error)
 }
 
 type chatRepository struct {
@@ -65,12 +65,17 @@ func (r *chatRepository) UpdateSessionTitle(sessionID uint, newTitle string) err
 	return r.db.Model(&models.ChatSession{}).Where("id = ?", sessionID).Update("title", newTitle).Error
 }
 
-func (r *chatRepository) GetAllSessions(search string) ([]models.ChatSession, error) {
+func (r *chatRepository) GetAllSessions(search string, limit int, offset int) ([]models.ChatSession, int64, error) {
 	var sessions []models.ChatSession
-	query := r.db.Preload("Messages")
+	var totalCount int64
+	query := r.db.Model(&models.ChatSession{})
 	if search != "" {
 		query = query.Where("title LIKE ?", "%"+search+"%")
 	}
-	err := query.Order("updated_at desc").Find(&sessions).Error
-	return sessions, err
+	err := query.Count(&totalCount).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	err = query.Preload("Messages").Order("updated_at desc").Limit(limit).Offset(offset).Find(&sessions).Error
+	return sessions, totalCount, err
 }

@@ -1,4 +1,4 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +15,7 @@ class CheckoutBottomSheet extends ConsumerWidget {
   final String pickupMethod;
 
   const CheckoutBottomSheet({
-    super.key, 
+    super.key,
     required this.grandTotal,
     required this.cart,
     required this.paymentMethod,
@@ -64,18 +64,24 @@ class CheckoutBottomSheet extends ConsumerWidget {
                   final orderData = {
                     'payment_method': paymentMethod,
                     'pickup_method': pickupMethod,
-                    'items': cart.items.map((e) => {
-                      'medicine_id': e.medicine.id,
-                      'quantity': e.quantity,
-                    }).toList(),
+                    'items': cart.items
+                        .map(
+                          (e) => {
+                            'medicine_id': e.medicine.id,
+                            'quantity': e.quantity,
+                          },
+                        )
+                        .toList(),
                   };
-                  
+
                   final repo = ref.read(pharmacyOrderRepositoryProvider);
                   final result = await repo.createOrder(orderData);
                   final order = PharmacyOrder.fromJson(result);
 
                   for (var item in cart.items) {
-                    await ref.read(cartProvider.notifier).removeFromCart(item.id);
+                    await ref
+                        .read(cartProvider.notifier)
+                        .removeFromCart(item.id);
                   }
 
                   // Invalidate orders provider so the UI will fetch the new order
@@ -83,7 +89,10 @@ class CheckoutBottomSheet extends ConsumerWidget {
 
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    CustomSnackbar.showSuccess(context, AppStrings.extPesananberhasildibuat);
+                    CustomSnackbar.showSuccess(
+                      context,
+                      PharmacyStrings.extPesananberhasildibuat,
+                    );
                     context.go('/pharmacy/tracking', extra: order);
                   }
                 } catch (e) {

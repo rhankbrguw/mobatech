@@ -18,16 +18,13 @@ class _PharmacyAppBar extends StatelessWidget {
       iconTheme: const IconThemeData(color: AppColors.textWhite),
       centerTitle: true,
       title: const Text(
-        AppStrings.pharmacyTitle,
+        PharmacyStrings.pharmacyTitle,
         style: TextStyle(
           color: AppColors.textWhite,
           fontWeight: FontWeight.bold,
         ),
       ),
-      actions: [
-        _buildCartAction(context),
-        const SizedBox(width: 8),
-      ],
+      actions: [_buildCartAction(context), const SizedBox(width: 8)],
       flexibleSpace: _buildFlexibleSpace(),
       bottom: _buildTabBar(),
     );
@@ -38,7 +35,10 @@ class _PharmacyAppBar extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         IconButton(
-          icon: const Icon(Icons.shopping_cart_outlined, color: AppColors.textWhite),
+          icon: const Icon(
+            Icons.shopping_cart_outlined,
+            color: AppColors.textWhite,
+          ),
           onPressed: () => context.push('/pharmacy/cart'),
         ),
         if (cartItemCount > 0)
@@ -100,9 +100,9 @@ class _PharmacyAppBar extends StatelessWidget {
           indicatorColor: AppColors.primary,
           indicatorWeight: 3,
           tabs: const [
-            Tab(text: AppStrings.catalogTab),
-            Tab(text: AppStrings.ePrescriptionTab),
-            Tab(text: AppStrings.ordersTab),
+            Tab(text: CoreStrings.catalogTab),
+            Tab(text: CoreStrings.ePrescriptionTab),
+            Tab(text: AppointmentStrings.ordersTab),
           ],
         ),
       ),

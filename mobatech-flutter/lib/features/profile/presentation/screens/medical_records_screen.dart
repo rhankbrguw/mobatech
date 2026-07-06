@@ -1,4 +1,3 @@
-import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/utils/formatters.dart';
@@ -10,6 +9,7 @@ import '../providers/profile_provider.dart';
 import '../widgets/medical_record_card.dart';
 import '../widgets/medical_summary_card.dart';
 
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 part 'medical_records_screen_parts.dart';
 
 class MedicalRecordsScreen extends ConsumerWidget {
@@ -28,7 +28,10 @@ class MedicalRecordsScreen extends ConsumerWidget {
         duration: const Duration(milliseconds: 500),
         builder: (context, value, child) => Opacity(
           opacity: value,
-          child: Transform.translate(offset: Offset(0, 20 * (1 - value)), child: child),
+          child: Transform.translate(
+            offset: Offset(0, 20 * (1 - value)),
+            child: child,
+          ),
         ),
         child: Center(
           child: ConstrainedBox(
@@ -41,14 +44,24 @@ class MedicalRecordsScreen extends ConsumerWidget {
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
                       profileAsync.when(
-                        data: (user) => user != null ? MedicalSummaryCard(user: user, ref: ref) : const SizedBox(),
-                        loading: () => const SkeletonLoader(width: double.infinity, height: 160, borderRadius: 24),
+                        data: (user) => user != null
+                            ? MedicalSummaryCard(user: user, ref: ref)
+                            : const SizedBox(),
+                        loading: () => const SkeletonLoader(
+                          width: double.infinity,
+                          height: 160,
+                          borderRadius: 24,
+                        ),
                         error: (e, s) => const SizedBox(),
                       ),
                       const SizedBox(height: 24),
                       const Text(
                         'Riwayat Pemeriksaan',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark,
+                        ),
                       ),
                       const SizedBox(height: 16),
                     ]),

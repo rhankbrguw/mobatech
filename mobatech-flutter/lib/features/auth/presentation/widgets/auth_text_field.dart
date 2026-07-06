@@ -37,9 +37,11 @@ class AuthTextField extends StatelessWidget {
       suffixIcon: isPassword
           ? IconButton(
               icon: Icon(
-                obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                color: Theme.of(context).brightness == Brightness.dark 
-                    ? AppColors.textLightGrey 
+                obscureText
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.textLightGrey
                     : AppColors.textDark,
                 size: 22,
               ),

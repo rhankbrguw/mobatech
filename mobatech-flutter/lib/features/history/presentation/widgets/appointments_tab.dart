@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:mobatech_app/core/constants/strings/appointment_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../../../../core/utils/error_handler.dart';
 import '../../../appointment/providers/appointment_provider.dart';
@@ -24,7 +24,8 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
   void initState() {
     super.initState();
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
         ref.read(userAppointmentsProvider.notifier).fetchNextPage();
       }
     });
@@ -42,9 +43,13 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
     return appointmentsAsync.when(
       data: (appointments) {
         if (appointments.isEmpty) {
-          return const Center(child: Text(AppStrings.noAppointmentHistory));
+          return const Center(
+            child: Text(AppointmentStrings.noAppointmentHistory),
+          );
         }
-        final isFetchingNextPage = ref.read(userAppointmentsProvider.notifier).isFetchingNextPage;
+        final isFetchingNextPage = ref
+            .read(userAppointmentsProvider.notifier)
+            .isFetchingNextPage;
         return ListView.separated(
           controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
@@ -54,14 +59,12 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
             if (index == appointments.length) {
               return const Padding(
                 padding: EdgeInsets.all(16.0),
-                child: Center(
-                  child: CupertinoActivityIndicator(radius: 14),
-                ),
+                child: Center(child: CupertinoActivityIndicator(radius: 14)),
               );
             }
             final appt = appointments[index];
             final title =
-                '${AppStrings.appointmentWith} ${appt.doctor?.name ?? AppStrings.defaultDoctorName}';
+                '${AppointmentStrings.appointmentWith} ${appt.doctor?.name ?? AppointmentStrings.defaultDoctorName}';
             final status = appt.status.toUpperCase();
             final date = appt.schedule?.date != null
                 ? Formatters.formatDateID(appt.schedule!.date!)

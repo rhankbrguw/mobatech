@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../providers/chat_provider.dart';
 
 class ChatbotHeader extends ConsumerWidget {
@@ -55,7 +55,7 @@ class ChatbotHeader extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          AppStrings.chatHospitalName,
+                          CoreStrings.chatHospitalName,
                           style: TextStyle(
                             color: AppColors.textWhite,
                             fontSize: 20,
@@ -64,7 +64,7 @@ class ChatbotHeader extends ConsumerWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          AppStrings.chatSubtitle,
+                          CoreStrings.chatSubtitle,
                           style: TextStyle(
                             color: AppColors.textWhite,
                             fontSize: 13,
@@ -78,15 +78,18 @@ class ChatbotHeader extends ConsumerWidget {
                       Icons.add_circle_outline,
                       color: AppColors.backgroundWhite,
                     ),
-                    tooltip: AppStrings.chatNewTooltip,
+                    tooltip: CoreStrings.chatNewTooltip,
                     onPressed: () {
                       ref.read(currentSessionIdProvider.notifier).state = null;
                       ref.read(chatMessagesProvider.notifier).clearMessages();
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.history, color: AppColors.backgroundWhite),
-                    tooltip: AppStrings.chatHistoryTooltip,
+                    icon: const Icon(
+                      Icons.history,
+                      color: AppColors.backgroundWhite,
+                    ),
+                    tooltip: CoreStrings.chatHistoryTooltip,
                     onPressed: onShowHistory,
                   ),
                 ],

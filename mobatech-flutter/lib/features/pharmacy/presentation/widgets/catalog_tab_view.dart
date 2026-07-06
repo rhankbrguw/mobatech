@@ -36,9 +36,12 @@ class _CatalogTabViewState extends ConsumerState<CatalogTabView> {
   @override
   Widget build(BuildContext context) {
     final categoriesAsync = ref.watch(categoriesProvider);
-    final medicinesAsync = ref.watch(medicinesProvider(
-      (categoryId: _selectedCategoryId, search: _searchQuery),
-    ));
+    final medicinesAsync = ref.watch(
+      medicinesProvider((
+        categoryId: _selectedCategoryId,
+        search: _searchQuery,
+      )),
+    );
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -52,7 +55,8 @@ class _CatalogTabViewState extends ConsumerState<CatalogTabView> {
             searchController: _searchController,
             onSearchChanged: _onSearchChanged,
             selectedCategoryId: _selectedCategoryId,
-            onCategorySelected: (id) => setState(() => _selectedCategoryId = id),
+            onCategorySelected: (id) =>
+                setState(() => _selectedCategoryId = id),
             categoriesAsync: categoriesAsync,
           ),
           MedicinesList(medicinesAsync: medicinesAsync),

@@ -1,10 +1,11 @@
-import '../../../../core/constants/app_strings.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/providers/mock_ui_providers.dart';
 
+import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
+import 'package:mobatech_app/core/constants/strings/home_strings.dart';
 part 'offer_detail_screen_components.dart';
 
 class OfferDetailScreen extends StatelessWidget {

@@ -1,4 +1,5 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
+import 'package:mobatech_app/core/constants/strings/home_strings.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,7 +26,7 @@ class SpecialOffersScreen extends ConsumerWidget {
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       title: const Text(
-        AppStrings.extPenawarankhusus,
+        HomeStrings.extPenawarankhusus,
         style: TextStyle(
           color: AppColors.textWhite,
           fontWeight: FontWeight.bold,
@@ -61,7 +62,9 @@ class SpecialOffersScreen extends ConsumerWidget {
     return offersAsync.when(
       data: (offers) {
         if (offers.isEmpty) {
-          return const Center(child: Text(AppStrings.extTidakadapenawaranspesialsaatini));
+          return const Center(
+            child: Text(HomeStrings.extTidakadapenawaranspesialsaatini),
+          );
         }
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.0, end: 1.0),
@@ -87,7 +90,8 @@ class SpecialOffersScreen extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text('${AppStrings.extGagalmemuatpromo} $err')),
+      error: (err, stack) =>
+          Center(child: Text('${ErrorStrings.extGagalmemuatpromo} $err')),
     );
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_bottom_nav_bar.dart';
 import '../providers/branch_provider.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../widgets/home_header.dart';
 import '../widgets/quick_access_grid.dart';
 import '../widgets/promo_banner_carousel.dart';
@@ -14,6 +13,9 @@ import '../../../appointment/providers/appointment_provider.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../../../../core/utils/error_handler.dart';
 
+import 'package:mobatech_app/core/constants/strings/appointment_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
 part 'home_screen_widgets.dart';
 
 class HomeScreen extends ConsumerWidget {

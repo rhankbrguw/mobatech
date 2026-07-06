@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/home_strings.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 
 class ArrivedCheckmark extends StatelessWidget {
   const ArrivedCheckmark({super.key});
@@ -13,9 +14,16 @@ class ArrivedCheckmark extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: AppColors.backgroundWhite.withAlpha(30),
-        border: Border.all(color: AppColors.backgroundWhite.withAlpha(60), width: 3),
+        border: Border.all(
+          color: AppColors.backgroundWhite.withAlpha(60),
+          width: 3,
+        ),
       ),
-      child: const Icon(Icons.check_rounded, color: AppColors.backgroundWhite, size: 64),
+      child: const Icon(
+        Icons.check_rounded,
+        color: AppColors.backgroundWhite,
+        size: 64,
+      ),
     );
   }
 }
@@ -28,7 +36,7 @@ class ArrivedMessage extends StatelessWidget {
     return Column(
       children: [
         const Text(
-          AppStrings.ambulanceArrived,
+          CoreStrings.ambulanceArrived,
           style: TextStyle(
             color: AppColors.backgroundWhite,
             fontSize: 26,
@@ -37,7 +45,7 @@ class ArrivedMessage extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          AppStrings.arrivedMessage,
+          CoreStrings.arrivedMessage,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: AppColors.backgroundWhite.withAlpha(200),
@@ -65,13 +73,17 @@ class ArrivedDriverCard extends StatelessWidget {
       ),
       child: const Row(
         children: [
-          Icon(Icons.local_shipping, color: AppColors.backgroundWhite, size: 28),
+          Icon(
+            Icons.local_shipping,
+            color: AppColors.backgroundWhite,
+            size: 28,
+          ),
           SizedBox(width: 14),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.driverInfoArrived,
+                CoreStrings.driverInfoArrived,
                 style: TextStyle(
                   color: AppColors.backgroundWhite,
                   fontSize: 14,
@@ -80,7 +92,7 @@ class ArrivedDriverCard extends StatelessWidget {
               ),
               SizedBox(height: 2),
               Text(
-                AppStrings.ambulanceType,
+                CoreStrings.ambulanceType,
                 style: TextStyle(color: AppColors.textWhite70, fontSize: 12),
               ),
             ],
@@ -112,7 +124,7 @@ class BackToHomeButton extends StatelessWidget {
           elevation: 0,
         ),
         child: const Text(
-          AppStrings.backToHome,
+          HomeStrings.backToHome,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
       ),

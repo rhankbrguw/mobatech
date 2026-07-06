@@ -10,7 +10,7 @@ type EmergencyRepository interface {
 	Create(req *models.EmergencyRequest) error
 	GetByID(id uint) (*models.EmergencyRequest, error)
 	GetByUserID(userID uint) ([]models.EmergencyRequest, error)
-	GetAll(search string, filter string) ([]models.EmergencyRequest, error)
+	GetAll(search string, filter string, limit int, offset int) ([]models.EmergencyRequest, int64, error)
 	UpdateStatus(id uint, status string) error
 	UpdateTracking(id uint, ambulanceLat, ambulanceLng float64, estimatedMinutes int, status string) error
 }
@@ -39,9 +39,10 @@ func (r *emergencyRepository) GetByUserID(userID uint) ([]models.EmergencyReques
 	return reqs, err
 }
 
-func (r *emergencyRepository) GetAll(search string, filter string) ([]models.EmergencyRequest, error) {
+func (r *emergencyRepository) GetAll(search string, filter string, limit int, offset int) ([]models.EmergencyRequest, int64, error) {
 	var reqs []models.EmergencyRequest
-	query := r.db
+	var totalCount int64
+	query := r.db.Model(&models.EmergencyRequest{})
 	
 	if search != "" {
 		searchTerm := "%" + search + "%"
@@ -52,8 +53,13 @@ func (r *emergencyRepository) GetAll(search string, filter string) ([]models.Eme
 		query = query.Where("status = ?", filter)
 	}
 
-	err := query.Order("created_at desc").Find(&reqs).Error
-	return reqs, err
+	err := query.Count(&totalCount).Error
+	if err != nil {
+		return nil, 0, err
+	}
+
+	err = query.Order("created_at desc").Limit(limit).Offset(offset).Find(&reqs).Error
+	return reqs, totalCount, err
 }
 
 func (r *emergencyRepository) UpdateStatus(id uint, status string) error {

@@ -19,10 +19,7 @@ class CartRepository {
   }
 
   Future<void> updateCartItem(int cartItemId, int quantity) async {
-    await _dio.put(
-      '/pharmacy/cart/$cartItemId',
-      data: {'quantity': quantity},
-    );
+    await _dio.put('/pharmacy/cart/$cartItemId', data: {'quantity': quantity});
   }
 
   Future<void> removeFromCart(int cartItemId) async {

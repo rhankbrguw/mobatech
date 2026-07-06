@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/home_strings.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 
 class EmergencyDispatchingView extends StatefulWidget {
   const EmergencyDispatchingView({super.key});
@@ -81,7 +82,7 @@ class _EmergencyDispatchingViewState extends State<EmergencyDispatchingView>
               ),
               const SizedBox(height: 40),
               const Text(
-                AppStrings.searchingAmbulance,
+                HomeStrings.searchingAmbulance,
                 style: TextStyle(
                   color: AppColors.backgroundWhite,
                   fontSize: 22,
@@ -90,7 +91,7 @@ class _EmergencyDispatchingViewState extends State<EmergencyDispatchingView>
               ),
               const SizedBox(height: 12),
               Text(
-                AppStrings.contactingEmergencyUnit,
+                CoreStrings.contactingEmergencyUnit,
                 style: TextStyle(
                   color: AppColors.backgroundWhite.withAlpha(180),
                   fontSize: 14,

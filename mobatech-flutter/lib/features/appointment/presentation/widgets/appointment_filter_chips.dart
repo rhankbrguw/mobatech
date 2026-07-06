@@ -20,13 +20,15 @@ class AppointmentFilterChips extends ConsumerWidget {
           ...polyclinicsAsync.when(
             data: (polyclinics) => polyclinics
                 .where((p) => p.isActive)
-                .map((p) => _buildChip(
-                      ref,
-                      selectedId,
-                      p.id,
-                      p.name,
-                      Icons.local_hospital,
-                    )),
+                .map(
+                  (p) => _buildChip(
+                    ref,
+                    selectedId,
+                    p.id,
+                    p.name,
+                    Icons.local_hospital,
+                  ),
+                ),
             loading: () => [],
             error: (_, __) => [],
           ),

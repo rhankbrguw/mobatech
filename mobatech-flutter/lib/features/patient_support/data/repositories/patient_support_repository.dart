@@ -20,9 +20,7 @@ class PatientSupportRepository {
   Future<List<Reminder>> getReminders() async {
     final response = await _dio.get('/reminders');
     if (response.data != null) {
-      return (response.data as List)
-          .map((e) => Reminder.fromJson(e))
-          .toList();
+      return (response.data as List).map((e) => Reminder.fromJson(e)).toList();
     }
     return [];
   }
@@ -36,4 +34,3 @@ class PatientSupportRepository {
     return response.data['count'] ?? 0;
   }
 }
-

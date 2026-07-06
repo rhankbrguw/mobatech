@@ -18,7 +18,11 @@ class CustomSnackbar {
     _showSnackbar(context, message, AppColors.warningOrange);
   }
 
-  static void _showSnackbar(BuildContext context, String message, Color backgroundColor) {
+  static void _showSnackbar(
+    BuildContext context,
+    String message,
+    Color backgroundColor,
+  ) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -31,9 +35,7 @@ class CustomSnackbar {
         ),
         backgroundColor: backgroundColor,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 3),
       ),

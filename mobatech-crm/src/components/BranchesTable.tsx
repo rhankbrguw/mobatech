@@ -2,7 +2,7 @@ import React from "react";
 import { Branch } from "@/types/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { Card } from "@/components/ui/Card";
-import { Edit2, Trash2, MapPin, Eye, Inbox } from "lucide-react";
+import { Edit, Trash2, MapPin, Eye, Inbox } from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 import { SkeletonTable } from "@/components/ui/SkeletonTable";
 
@@ -71,7 +71,7 @@ export function BranchesTable({
                           }] : []),
                           {
                             label: "Ubah",
-                            icon: <Edit2 size={14} />,
+                            icon: <Edit size={14} />,
                             onClick: () => openForm(item),
                           },
                           {

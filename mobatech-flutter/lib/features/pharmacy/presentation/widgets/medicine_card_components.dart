@@ -24,14 +24,20 @@ class MedicineCardImage extends StatelessWidget {
     );
   }
 
-  Widget _buildFallbackIcon() => const Center(child: Icon(Icons.medication, size: 40, color: AppColors.backgroundWhite));
+  Widget _buildFallbackIcon() => const Center(
+    child: Icon(Icons.medication, size: 40, color: AppColors.backgroundWhite),
+  );
 }
 
 class MedicineCardDetails extends StatelessWidget {
   final Medicine medicine;
   final VoidCallback onAddToCart;
 
-  const MedicineCardDetails({super.key, required this.medicine, required this.onAddToCart});
+  const MedicineCardDetails({
+    super.key,
+    required this.medicine,
+    required this.onAddToCart,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +46,7 @@ class MedicineCardDetails extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildTextInfo(),
-          _buildPriceAndAction(),
-        ],
+        children: [_buildTextInfo(), _buildPriceAndAction()],
       ),
     );
   }
@@ -52,9 +55,23 @@ class MedicineCardDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(medicine.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark), maxLines: 1, overflow: TextOverflow.ellipsis),
+        Text(
+          medicine.name,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: AppColors.textDark,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
         const SizedBox(height: 4),
-        Text(medicine.genericName, style: const TextStyle(fontSize: 12, color: AppColors.textGrey), maxLines: 1, overflow: TextOverflow.ellipsis),
+        Text(
+          medicine.genericName,
+          style: const TextStyle(fontSize: 12, color: AppColors.textGrey),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       ],
     );
   }
@@ -63,8 +80,17 @@ class MedicineCardDetails extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('${AppStrings.extRp} ${medicine.price.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: 14)),
-        medicine.requiresPrescription ? _buildPrescriptionLabel() : _buildAddToCartButton(),
+        Text(
+          '${PharmacyStrings.extRp} ${medicine.price.toInt()}',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.primary,
+            fontSize: 14,
+          ),
+        ),
+        medicine.requiresPrescription
+            ? _buildPrescriptionLabel()
+            : _buildAddToCartButton(),
       ],
     );
   }
@@ -72,8 +98,18 @@ class MedicineCardDetails extends StatelessWidget {
   Widget _buildPrescriptionLabel() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: AppColors.iconOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
-      child: const Text(AppStrings.prescriptionLabel, style: TextStyle(color: AppColors.iconOrange, fontSize: 10, fontWeight: FontWeight.bold)),
+      decoration: BoxDecoration(
+        color: AppColors.iconOrange.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Text(
+        CoreStrings.prescriptionLabel,
+        style: TextStyle(
+          color: AppColors.iconOrange,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 
@@ -84,11 +120,20 @@ class MedicineCardDetails extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isOutOfStock ? AppColors.backgroundWave : AppColors.primaryLight,
+          color: isOutOfStock
+              ? AppColors.backgroundWave
+              : AppColors.primaryLight,
           borderRadius: BorderRadius.circular(8),
         ),
         child: isOutOfStock
-            ? Text(AppStrings.extStokhabis, style: TextStyle(color: AppColors.textGrey, fontSize: 10, fontWeight: FontWeight.bold))
+            ? Text(
+                PharmacyStrings.extStokhabis,
+                style: TextStyle(
+                  color: AppColors.textGrey,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
             : const Icon(Icons.add, color: AppColors.primary, size: 18),
       ),
     );

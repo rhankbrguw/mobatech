@@ -14,11 +14,13 @@ class ChatAttachmentHandler {
       return await picker.pickImage(source: source);
     } catch (e) {
       if (context.mounted) {
-        String errorMsg = 'Gagal membuka kamera/galeri. Pastikan izin akses diberikan dan perangkat mendukung fitur ini.';
+        String errorMsg =
+            'Gagal membuka kamera/galeri. Pastikan izin akses diberikan dan perangkat mendukung fitur ini.';
         if (e.toString().contains('MissingPluginException')) {
-          errorMsg = 'Fitur kamera/galeri tidak didukung pada simulator atau platform ini.';
+          errorMsg =
+              'Fitur kamera/galeri tidak didukung pada simulator atau platform ini.';
         }
-        
+
         CustomSnackbar.showError(context, errorMsg);
       }
       return null;
@@ -34,11 +36,14 @@ class ChatAttachmentHandler {
       );
     } catch (e) {
       if (context.mounted) {
-        String errorMsg = 'Gagal membuka pengelola berkas. Pastikan izin akses diberikan.';
-        if (e.toString().contains('MissingPluginException') || e.toString().contains('Unsupported operation')) {
-          errorMsg = 'Fitur lampiran dokumen tidak didukung pada simulator atau platform ini.';
+        String errorMsg =
+            'Gagal membuka pengelola berkas. Pastikan izin akses diberikan.';
+        if (e.toString().contains('MissingPluginException') ||
+            e.toString().contains('Unsupported operation')) {
+          errorMsg =
+              'Fitur lampiran dokumen tidak didukung pada simulator atau platform ini.';
         }
-        
+
         CustomSnackbar.showError(context, errorMsg);
       }
       return null;

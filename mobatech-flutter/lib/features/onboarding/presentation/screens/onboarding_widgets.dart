@@ -25,12 +25,7 @@ class _OnboardingImageSection extends StatelessWidget {
           bottomRight: Radius.circular(AppSizes.borderRadiusCard),
         ),
       ),
-      child: Stack(
-        children: [
-          _buildLogoOpacity(),
-          _buildDoctorImage(),
-        ],
-      ),
+      child: Stack(children: [_buildLogoOpacity(), _buildDoctorImage()]),
     );
   }
 
@@ -49,12 +44,13 @@ class _OnboardingImageSection extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(0, 0.2),
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(parent: slideController, curve: Curves.easeOutCubic),
-        ),
+        position: Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero)
+            .animate(
+              CurvedAnimation(
+                parent: slideController,
+                curve: Curves.easeOutCubic,
+              ),
+            ),
         child: Image.asset('assets/doctor.png', height: size.height * 0.4),
       ),
     );
@@ -90,7 +86,7 @@ class _OnboardingTextSection extends StatelessWidget {
 
   Widget _buildTitle() {
     return const Text(
-      AppStrings.welcomeTitle,
+      CoreStrings.welcomeTitle,
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 28,
@@ -103,13 +99,9 @@ class _OnboardingTextSection extends StatelessWidget {
 
   Widget _buildSubtitle() {
     return const Text(
-      AppStrings.welcomeSubtitle,
+      CoreStrings.welcomeSubtitle,
       textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 15,
-        color: AppColors.textGrey,
-        height: 1.5,
-      ),
+      style: TextStyle(fontSize: 15, color: AppColors.textGrey, height: 1.5),
     );
   }
 
@@ -128,7 +120,7 @@ class _OnboardingTextSection extends StatelessWidget {
           elevation: 0,
         ),
         child: const Text(
-          AppStrings.getStarted,
+          CoreStrings.getStarted,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ),

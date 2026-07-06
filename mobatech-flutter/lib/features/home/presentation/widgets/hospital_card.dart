@@ -22,9 +22,11 @@ class HospitalCard extends StatelessWidget {
   });
 
   void _launchMaps() async {
-    final url = (gmapsLink != null && gmapsLink!.isNotEmpty) 
-      ? Uri.parse(gmapsLink!)
-      : Uri.parse('https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent('$name $address')}');
+    final url = (gmapsLink != null && gmapsLink!.isNotEmpty)
+        ? Uri.parse(gmapsLink!)
+        : Uri.parse(
+            'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent('$name $address')}',
+          );
 
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.externalApplication);
@@ -86,10 +88,10 @@ class HospitalCard extends StatelessWidget {
 
   Widget _buildImageContainer() {
     final bool hasImage = imageUrl != null && imageUrl!.isNotEmpty;
-    final String fullImageUrl = hasImage 
+    final String fullImageUrl = hasImage
         ? (imageUrl!.startsWith('http') ? imageUrl! : '$baseMediaUrl$imageUrl')
         : '';
-        
+
     return Container(
       width: 60,
       height: 60,

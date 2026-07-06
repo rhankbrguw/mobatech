@@ -44,8 +44,8 @@ export function AiAuditChatHistory({
                 {expandedSession === session.id && (
                   <div className="p-4 bg-background">
                     <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-                      {session.Messages?.length > 0 ? (
-                        session.Messages.map((msg) => (
+                      {session.messages?.length > 0 ? (
+                        session.messages.map((msg) => (
                           <div
                             key={msg.id}
                             className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}

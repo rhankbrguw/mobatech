@@ -7,13 +7,36 @@ class Formatters {
     return DateFormat(format).format(date);
   }
 
-  static String getDayOfWeekID(DateTime d) => ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'][d.weekday-1];
-  
-  static String getMonthID(DateTime d) => ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][d.month-1];
+  static String getDayOfWeekID(DateTime d) => [
+    'Senin',
+    'Selasa',
+    'Rabu',
+    'Kamis',
+    'Jumat',
+    'Sabtu',
+    'Minggu',
+  ][d.weekday - 1];
 
-  static String formatDateID(DateTime d) => '${d.day} ${getMonthID(d)} ${d.year}';
+  static String getMonthID(DateTime d) => [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'Mei',
+    'Jun',
+    'Jul',
+    'Agu',
+    'Sep',
+    'Okt',
+    'Nov',
+    'Des',
+  ][d.month - 1];
 
-  static String formatDateWithDayID(DateTime d) => '${getDayOfWeekID(d)}, ${formatDateID(d)}';
+  static String formatDateID(DateTime d) =>
+      '${d.day} ${getMonthID(d)} ${d.year}';
+
+  static String formatDateWithDayID(DateTime d) =>
+      '${getDayOfWeekID(d)}, ${formatDateID(d)}';
 
   static String parseAndFormatDateID(String dateStr) {
     if (dateStr.isEmpty || dateStr == '-') return '-';
@@ -26,7 +49,8 @@ class Formatters {
   }
 
   static String formatDateTimeID(DateTime d) {
-    final timeStr = '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';
+    final timeStr =
+        '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';
     return '${formatDateID(d)} $timeStr';
   }
 
@@ -41,7 +65,8 @@ class Formatters {
   }
 
   static String formatDateTimeSecID(DateTime d) {
-    final timeStr = '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}:${d.second.toString().padLeft(2, '0')}';
+    final timeStr =
+        '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}:${d.second.toString().padLeft(2, '0')}';
     return '${formatDateID(d)} $timeStr';
   }
 
@@ -72,7 +97,7 @@ class Formatters {
     } else if (cleanPhone.startsWith('62')) {
       cleanPhone = cleanPhone.substring(2);
     }
-    
+
     if (cleanPhone.startsWith('0')) {
       cleanPhone = cleanPhone.substring(1);
     }
@@ -114,7 +139,7 @@ class PhonePrefixFormatter extends TextInputFormatter {
     } else if (text.startsWith('62')) {
       text = text.substring(2);
     }
-    
+
     if (text.startsWith('0')) {
       text = text.substring(1);
     }

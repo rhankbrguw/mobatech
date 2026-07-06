@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import { Edit2, Trash2, Eye, Inbox } from "lucide-react";
+import { Edit, Trash2, Eye, Inbox } from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 import { SkeletonTable } from "@/components/ui/SkeletonTable";
 import { Polyclinic } from "@/types/api";
@@ -65,7 +65,7 @@ export function PolyclinicsTable({
                           }] : []),
                           {
                             label: "Ubah",
-                            icon: <Edit2 size={14} />,
+                            icon: <Edit size={14} />,
                             onClick: () => onEdit(item),
                           },
                           {

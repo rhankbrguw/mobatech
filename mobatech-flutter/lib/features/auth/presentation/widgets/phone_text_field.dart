@@ -25,8 +25,8 @@ class PhoneTextField extends StatelessWidget {
             Text(
               '+62',
               style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.dark 
-                    ? AppColors.textLightGrey 
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.textLightGrey
                     : AppColors.textGrey,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -36,7 +36,9 @@ class PhoneTextField extends StatelessWidget {
             Container(
               width: 1,
               height: 24,
-              color: AppColors.getGlassBorder(Theme.of(context).brightness == Brightness.dark),
+              color: AppColors.getGlassBorder(
+                Theme.of(context).brightness == Brightness.dark,
+              ),
             ),
             const SizedBox(width: 8),
           ],

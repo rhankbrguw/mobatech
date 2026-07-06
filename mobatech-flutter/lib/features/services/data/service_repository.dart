@@ -9,6 +9,8 @@ class ServiceRepository {
     try {
       final response = await dio.get('/services');
       return response.data;
-    } on DioException { rethrow; }
+    } on DioException {
+      rethrow;
+    }
   }
 }

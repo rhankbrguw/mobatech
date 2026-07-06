@@ -95,11 +95,9 @@ class PolyclinicCard extends ConsumerWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               ref
-                                      .read(
-                                        selectedPolyclinicIdProvider.notifier,
-                                      )
-                                      .state =
-                                  poly.id;
+                                  .read(selectedPolyclinicIdProvider.notifier)
+                                  .state = poly
+                                  .id;
                               Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(

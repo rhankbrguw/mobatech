@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import 'location_card.dart';
 import 'emergency_form_field.dart';
 import 'emergency_form_widgets.dart';
@@ -63,7 +64,7 @@ class EmergencyFormView extends StatelessWidget {
 
                       // GPS Location Section
                       _buildSectionLabel(
-                        AppStrings.locationLabel,
+                        CoreStrings.locationLabel,
                         Icons.my_location,
                       ),
                       const SizedBox(height: 12),
@@ -79,21 +80,22 @@ class EmergencyFormView extends StatelessWidget {
                       const SizedBox(height: 24),
 
                       _buildSectionLabel(
-                        AppStrings.patientDataLabel,
+                        ProfileStrings.patientDataLabel,
                         Icons.person_outline,
                       ),
                       const SizedBox(height: 12),
                       EmergencyFormField(
                         controller: patientNameController,
-                        hint: AppStrings.patientNameHint,
+                        hint: CoreStrings.patientNameHint,
                         icon: Icons.person,
-                        validator: (v) => Validators.validateName(v, 'Nama Pasien'),
+                        validator: (v) =>
+                            Validators.validateName(v, 'Nama Pasien'),
                       ),
 
                       const SizedBox(height: 14),
                       EmergencyFormField(
                         controller: conditionController,
-                        hint: AppStrings.conditionHint,
+                        hint: CoreStrings.conditionHint,
                         icon: Icons.medical_services_outlined,
                         maxLines: 3,
                       ),
@@ -101,7 +103,7 @@ class EmergencyFormView extends StatelessWidget {
                       const SizedBox(height: 14),
                       EmergencyFormField(
                         controller: phoneController,
-                        hint: AppStrings.phoneActiveHint,
+                        hint: CoreStrings.phoneActiveHint,
                         icon: Icons.phone_outlined,
                         keyboardType: TextInputType.phone,
                         validator: Validators.validatePhone,

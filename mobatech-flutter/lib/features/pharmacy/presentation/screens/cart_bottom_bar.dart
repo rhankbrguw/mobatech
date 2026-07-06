@@ -21,10 +21,7 @@ class _CartBottomBar extends StatelessWidget {
       child: SafeArea(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildTotalText(),
-            _buildCheckoutButton(context),
-          ],
+          children: [_buildTotalText(), _buildCheckoutButton(context)],
         ),
       ),
     );
@@ -36,7 +33,7 @@ class _CartBottomBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          AppStrings.extTotalpembayaran,
+          PharmacyStrings.extTotalpembayaran,
           style: TextStyle(color: AppColors.textGrey, fontSize: 12),
         ),
         Text(
@@ -60,7 +57,7 @@ class _CartBottomBar extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: const Text(
-        AppStrings.extCheckout,
+        PharmacyStrings.extCheckout,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: AppColors.textWhite,

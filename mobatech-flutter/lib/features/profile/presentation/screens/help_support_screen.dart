@@ -1,4 +1,4 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/help_support_widgets.dart';
@@ -13,7 +13,7 @@ class HelpSupportScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundScreen,
       appBar: AppBar(
         title: Text(
-          AppStrings.extBantuandukungan,
+          ProfileStrings.extBantuandukungan,
           style: TextStyle(
             color: AppColors.textWhite,
             fontWeight: FontWeight.bold,

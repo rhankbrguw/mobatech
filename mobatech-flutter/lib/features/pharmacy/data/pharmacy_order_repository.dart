@@ -11,13 +11,17 @@ class PharmacyOrderRepository {
     return response.data;
   }
 
-  Future<List<PharmacyOrder>> getMyOrders({int page = 1, int limit = 10}) async {
+  Future<List<PharmacyOrder>> getMyOrders({
+    int page = 1,
+    int limit = 10,
+  }) async {
     final response = await _dio.get(
       '/pharmacy/orders',
       queryParameters: {'page': page, 'limit': limit},
     );
     final responseData = response.data;
-    final List<dynamic> data = responseData is Map && responseData.containsKey('data')
+    final List<dynamic> data =
+        responseData is Map && responseData.containsKey('data')
         ? responseData['data']
         : (responseData as List? ?? []);
     return data.map((e) => PharmacyOrder.fromJson(e)).toList();

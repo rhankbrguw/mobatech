@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/appointment_strings.dart';
 import 'suggestion_chip.dart';
 
 class SuggestionChipsRow extends StatelessWidget {
@@ -14,27 +15,28 @@ class SuggestionChipsRow extends StatelessWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => onSuggestionTap(AppStrings.chatSuggestionSymptoms),
+            onTap: () => onSuggestionTap(CoreStrings.chatSuggestionSymptoms),
             child: const SuggestionChip(
               icon: Icons.medical_services_outlined,
-              label: AppStrings.chatSuggestionSymptoms,
+              label: CoreStrings.chatSuggestionSymptoms,
             ),
           ),
           const SizedBox(width: 8),
           GestureDetector(
-            onTap: () =>
-                onSuggestionTap(AppStrings.chatSuggestionDoctorSchedule),
+            onTap: () => onSuggestionTap(
+              AppointmentStrings.chatSuggestionDoctorSchedule,
+            ),
             child: const SuggestionChip(
               icon: Icons.calendar_month_outlined,
-              label: AppStrings.chatSuggestionDoctorSchedule,
+              label: AppointmentStrings.chatSuggestionDoctorSchedule,
             ),
           ),
           const SizedBox(width: 8),
           GestureDetector(
-            onTap: () => onSuggestionTap(AppStrings.chatSuggestionFacilities),
+            onTap: () => onSuggestionTap(CoreStrings.chatSuggestionFacilities),
             child: const SuggestionChip(
               icon: Icons.local_hospital_outlined,
-              label: AppStrings.chatSuggestionFacilities,
+              label: CoreStrings.chatSuggestionFacilities,
             ),
           ),
         ],

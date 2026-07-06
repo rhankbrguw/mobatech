@@ -1,11 +1,10 @@
-import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/settings_widgets.dart';
 
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 part 'settings_screen_parts.dart';
-
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

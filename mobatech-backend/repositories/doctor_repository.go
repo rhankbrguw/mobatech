@@ -2,9 +2,7 @@ package repositories
 
 import (
 	"backend/models"
-
 	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -28,6 +26,27 @@ func (r *doctorRepository) FindAll(search string, filter string, specialization 
 	var doctors []models.Doctor
 	var totalCount int64
 
+	query := r.buildFindAllQuery(search, filter, specialization, polyclinicID)
+
+	if err := query.Count(&totalCount).Error; err != nil {
+		return nil, 0, err
+	}
+
+	query = query.Preload("Polyclinic")
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+	if offset > 0 {
+		query = query.Offset(offset)
+	}
+	err := query.Find(&doctors).Error
+	if err == nil {
+		r.populateAvailability(doctors)
+	}
+	return doctors, totalCount, err
+}
+
+func (r *doctorRepository) buildFindAllQuery(search, filter, specialization string, polyclinicID uint) *gorm.DB {
 	query := r.db.Model(&models.Doctor{}).Where("doctors.is_active = ?", true)
 	if search != "" {
 		query = query.Where("doctors.name LIKE ?", "%"+search+"%")
@@ -41,31 +60,18 @@ func (r *doctorRepository) FindAll(search string, filter string, specialization 
 	if polyclinicID > 0 {
 		query = query.Where("polyclinic_id = ?", polyclinicID)
 	}
+	return query
+}
 
-	err := query.Count(&totalCount).Error
-	if err != nil {
-		return nil, 0, err
+func (r *doctorRepository) populateAvailability(doctors []models.Doctor) {
+	currentTime := time.Now().Format("15:04")
+	for i, doc := range doctors {
+		var count int64
+		r.db.Model(&models.DoctorSchedule{}).
+			Where("doctor_id = ? AND DATE(date) = CURDATE() AND is_available = ? AND start_time <= ? AND end_time >= ?", doc.ID, true, currentTime, currentTime).
+			Count(&count)
+		doctors[i].IsAvailableToday = count > 0
 	}
-
-	query = query.Preload("Polyclinic")
-	if limit > 0 {
-		query = query.Limit(limit)
-	}
-	if offset > 0 {
-		query = query.Offset(offset)
-	}
-	err = query.Find(&doctors).Error
-	if err == nil {
-		currentTime := time.Now().Format("15:04")
-		for i, doc := range doctors {
-			var count int64
-			r.db.Model(&models.DoctorSchedule{}).
-				Where("doctor_id = ? AND DATE(date) = CURDATE() AND is_available = ? AND start_time <= ? AND end_time >= ?", doc.ID, true, currentTime, currentTime).
-				Count(&count)
-			doctors[i].IsAvailableToday = count > 0
-		}
-	}
-	return doctors, totalCount, err
 }
 
 func (r *doctorRepository) FindByID(id uint) (*models.Doctor, error) {

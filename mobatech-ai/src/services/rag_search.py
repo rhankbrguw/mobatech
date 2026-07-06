@@ -2,13 +2,14 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
+import constants as const
 
 class VectorSearchEngine:
     def __init__(self, data_path: str):
         self.data_path = data_path
         # Model specified in the report: paraphrase-multilingual-MiniLM-L12-v2 (dim 384)
-        self.model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
-        self.dimension = 384
+        self.model = SentenceTransformer(const.EMBEDDING_MODEL_NAME)
+        self.dimension = const.EMBEDDING_DIMENSION
         self.index = faiss.IndexFlatL2(self.dimension)
         self.knowledge_base = []
         
@@ -18,8 +19,8 @@ class VectorSearchEngine:
         except Exception:
             return False
             
-        self.knowledge_base = df.to_dict('records')
-        texts = [item['teks'] for item in self.knowledge_base]
+        self.knowledge_base = df.to_dict(const.PANDAS_ORIENT)
+        texts = [item[const.KEY_TEKS] for item in self.knowledge_base]
         
         # Create embeddings
         embeddings = self.model.encode(texts)
@@ -30,7 +31,7 @@ class VectorSearchEngine:
         self.index.add(embeddings)
         return True
         
-    def search(self, query: str, top_k: int = 3) -> list:
+    def search(self, query: str, top_k: int = const.DEFAULT_TOP_K) -> list:
         if self.index.ntotal == 0:
             return []
             
@@ -43,6 +44,6 @@ class VectorSearchEngine:
         for i in range(top_k):
             idx = indices[0][i]
             if idx != -1:
-                results.append(self.knowledge_base[idx]['teks'])
+                results.append(self.knowledge_base[idx][const.KEY_TEKS])
                 
         return results

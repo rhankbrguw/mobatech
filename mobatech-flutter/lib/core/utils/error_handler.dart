@@ -1,69 +1,78 @@
 import 'package:dio/dio.dart';
-import '../constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
 
 class ErrorHandler {
   static String getMessage(dynamic error) {
-    if (error == null) return AppStrings.errUnknown;
+    if (error == null) return ErrorStrings.errUnknown;
 
     if (error is DioException) {
-      if (error.type == DioExceptionType.connectionTimeout ||
-          error.type == DioExceptionType.receiveTimeout ||
-          error.type == DioExceptionType.sendTimeout ||
-          error.type == DioExceptionType.connectionError) {
-        return AppStrings.errConnection;
-      }
+      return _handleDioError(error);
+    }
 
-      if (error.response?.data != null) {
-        final data = error.response!.data;
-        if (data is Map<String, dynamic>) {
-          if (data.containsKey('errors') && data['errors'] != null) {
-            final errors = data['errors'] as Map<String, dynamic>;
-            if (errors.isNotEmpty) {
-              final firstError = errors.values.first;
-              if (firstError is List && firstError.isNotEmpty) {
-                return firstError.first.toString();
-              }
-            }
-          }
-          if (data.containsKey('message')) {
-            return data['message'].toString();
-          }
-          if (data.containsKey('error')) {
-            return data['error'].toString();
-          }
+    return _handleStringError(error.toString());
+  }
+
+  static String _handleDioError(DioException error) {
+    if (error.type == DioExceptionType.connectionTimeout ||
+        error.type == DioExceptionType.receiveTimeout ||
+        error.type == DioExceptionType.sendTimeout ||
+        error.type == DioExceptionType.connectionError) {
+      return ErrorStrings.errConnection;
+    }
+
+    if (error.response?.data != null) {
+      final data = error.response!.data;
+      if (data is Map<String, dynamic>) {
+        return _extractMessageFromMap(data);
+      }
+    }
+    return ErrorStrings.errRequestFailed;
+  }
+
+  static String _extractMessageFromMap(Map<String, dynamic> data) {
+    if (data.containsKey('errors') && data['errors'] != null) {
+      final errors = data['errors'] as Map<String, dynamic>;
+      if (errors.isNotEmpty) {
+        final firstError = errors.values.first;
+        if (firstError is List && firstError.isNotEmpty) {
+          return firstError.first.toString();
         }
       }
     }
+    if (data.containsKey('message')) return data['message'].toString();
+    if (data.containsKey('error')) return data['error'].toString();
+    return ErrorStrings.errRequestFailed;
+  }
 
-    String e = error.toString();
+  static String _handleStringError(String e) {
     String eLower = e.toLowerCase();
 
-    if (eLower.contains('unauthenticated') || eLower.contains('401')) {
-      return AppStrings.errSessionExpired;
-    } else if (eLower.contains('unauthorized') || eLower.contains('403')) {
-      return AppStrings.errUnauthorized;
-    } else if (eLower.contains('validation_error') || eLower.contains('422')) {
-      return AppStrings.errValidation;
-    } else if (eLower.contains('not_found') || eLower.contains('404')) {
-      return AppStrings.errNotFound;
-    } else if (eLower.contains('conflict') || eLower.contains('409')) {
-      return AppStrings.errConflict;
-    } else if (eLower.contains('internal_error') || eLower.contains('500')) {
-      return AppStrings.errServer;
-    }
+    if (eLower.contains('unauthenticated') || eLower.contains('401'))
+      return ErrorStrings.errSessionExpired;
+    if (eLower.contains('unauthorized') || eLower.contains('403'))
+      return ErrorStrings.errUnauthorized;
+    if (eLower.contains('validation_error') || eLower.contains('422'))
+      return ErrorStrings.errValidation;
+    if (eLower.contains('not_found') || eLower.contains('404'))
+      return ErrorStrings.errNotFound;
+    if (eLower.contains('conflict') || eLower.contains('409'))
+      return ErrorStrings.errConflict;
+    if (eLower.contains('internal_error') || eLower.contains('500'))
+      return ErrorStrings.errServer;
 
     if (eLower.contains('invalid credentials') ||
         eLower.contains('password salah') ||
         eLower.contains('user not found')) {
-      return AppStrings.errInvalidCreds;
-    } else if (eLower.contains('email already exists') ||
+      return ErrorStrings.errInvalidCreds;
+    }
+    if (eLower.contains('email already exists') ||
         eLower.contains('duplicate')) {
-      return AppStrings.errEmailExists;
+      return ErrorStrings.errEmailExists;
     }
 
     e = e.replaceAll('Exception:', '').replaceAll('Error:', '').trim();
-    if (e.isEmpty) return AppStrings.errRequestFailed;
-    if (e.length > 50) return AppStrings.errTimeout;
+    if (e.isEmpty) return ErrorStrings.errRequestFailed;
+    if (e.length > 50) return ErrorStrings.errTimeout;
 
     return '${e[0].toUpperCase()}${e.substring(1)}';
   }

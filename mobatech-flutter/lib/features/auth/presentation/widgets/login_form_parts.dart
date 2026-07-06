@@ -4,20 +4,17 @@ class _EmailInputSection extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onChanged;
 
-  const _EmailInputSection({
-    required this.controller,
-    required this.onChanged,
-  });
+  const _EmailInputSection({required this.controller, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AuthLabel(text: AppStrings.emailLabel),
+        const AuthLabel(text: AuthStrings.emailLabel),
         const SizedBox(height: 8),
         AuthTextField(
-          hint: AppStrings.emailHint,
+          hint: AuthStrings.emailHint,
           controller: controller,
           keyboardType: TextInputType.emailAddress,
           validator: Validators.validateEmail,
@@ -46,10 +43,10 @@ class _PasswordInputSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AuthLabel(text: AppStrings.passwordLabel),
+        const AuthLabel(text: AuthStrings.passwordLabel),
         const SizedBox(height: 8),
         AuthTextField(
-          hint: AppStrings.passwordHint,
+          hint: AuthStrings.passwordHint,
           isPassword: true,
           obscureText: obscurePassword,
           controller: controller,
@@ -85,10 +82,7 @@ class _LoginFormOptions extends StatelessWidget {
                 value: rememberMe,
                 activeColor: AppColors.primary,
                 checkColor: AppColors.textWhite,
-                side: const BorderSide(
-                  color: AppColors.borderGrey,
-                  width: 1.5,
-                ),
+                side: const BorderSide(color: AppColors.borderGrey, width: 1.5),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),
                 ),
@@ -97,7 +91,7 @@ class _LoginFormOptions extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             const Text(
-              AppStrings.rememberMe,
+              CoreStrings.rememberMe,
               style: TextStyle(color: AppColors.textGrey, fontSize: 14),
             ),
           ],
@@ -105,7 +99,7 @@ class _LoginFormOptions extends StatelessWidget {
         TextButton(
           onPressed: () {},
           child: const Text(
-            AppStrings.forgotPassword,
+            AuthStrings.forgotPassword,
             style: TextStyle(
               color: AppColors.primary,
               fontSize: 14,

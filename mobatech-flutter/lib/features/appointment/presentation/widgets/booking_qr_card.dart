@@ -34,7 +34,8 @@ class BookingQRCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          if (appointment.status.toLowerCase() == 'pending' || appointment.status.toLowerCase() == 'approved') ...[
+          if (appointment.status.toLowerCase() == 'pending' ||
+              appointment.status.toLowerCase() == 'approved') ...[
             Container(
               width: 150,
               height: 150,

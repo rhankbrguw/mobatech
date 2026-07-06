@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/auth_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/app_button.dart';
 import 'social_login_button.dart';
 
@@ -20,7 +21,7 @@ class RegisterSubmitButton extends StatelessWidget {
     return Column(
       children: [
         AppButton(
-          text: AppStrings.registerButton,
+          text: AuthStrings.registerButton,
           onPressed: onPressed,
           isLoading: isLoading,
           isFullWidth: true,
@@ -35,11 +36,11 @@ class RegisterSubmitButton extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                AppStrings.orContinueWith,
+                CoreStrings.orContinueWith,
                 style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark 
-                      ? AppColors.textLightGrey 
-                      : AppColors.textGrey, 
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.textLightGrey
+                      : AppColors.textGrey,
                   fontSize: 14,
                 ),
               ),
@@ -51,9 +52,12 @@ class RegisterSubmitButton extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         SocialLoginButton(
-          text: AppStrings.continueWithGoogle,
+          text: CoreStrings.continueWithGoogle,
           onPressed: () {
-            CustomSnackbar.showInfo(context, AppStrings.extFirebaseauthgooglesignincomingsoon);
+            CustomSnackbar.showInfo(
+              context,
+              AuthStrings.extFirebaseauthgooglesignincomingsoon,
+            );
           },
         ),
       ],
@@ -72,20 +76,24 @@ class PasswordValidationRules extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: [
-        _validationItem(context, AppStrings.passMinChars, password.length >= 8),
         _validationItem(
           context,
-          AppStrings.passUppercase,
+          AuthStrings.passMinChars,
+          password.length >= 8,
+        ),
+        _validationItem(
+          context,
+          AuthStrings.passUppercase,
           RegExp(r'[A-Z]').hasMatch(password),
         ),
         _validationItem(
           context,
-          AppStrings.passLowercase,
+          AuthStrings.passLowercase,
           RegExp(r'[a-z]').hasMatch(password),
         ),
         _validationItem(
           context,
-          AppStrings.passDigit,
+          AuthStrings.passDigit,
           RegExp(r'[0-9]').hasMatch(password),
         ),
       ],
@@ -106,9 +114,13 @@ class PasswordValidationRules extends StatelessWidget {
           text,
           style: TextStyle(
             fontSize: 12,
-            color: isValid 
-                ? AppColors.getTextPrimary(Theme.of(context).brightness == Brightness.dark)
-                : AppColors.getTextSecondary(Theme.of(context).brightness == Brightness.dark),
+            color: isValid
+                ? AppColors.getTextPrimary(
+                    Theme.of(context).brightness == Brightness.dark,
+                  )
+                : AppColors.getTextSecondary(
+                    Theme.of(context).brightness == Brightness.dark,
+                  ),
           ),
         ),
       ],

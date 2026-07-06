@@ -1,4 +1,5 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/home_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,7 +68,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
           onPressed: () => context.pop(),
         ),
         title: Text(
-          AppStrings.extHasilpencarian,
+          ProfileStrings.extHasilpencarian,
           style: TextStyle(
             color: AppColors.backgroundWhite,
             fontSize: 18,
@@ -92,10 +93,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                   child: TextField(
                     controller: _searchController,
                     autofocus: true,
-                    style: const TextStyle(color: AppColors.backgroundWhite, fontSize: 14),
+                    style: const TextStyle(
+                      color: AppColors.backgroundWhite,
+                      fontSize: 14,
+                    ),
                     decoration: const InputDecoration(
-                      hintText: AppStrings.searchGeneralHint,
-                      hintStyle: TextStyle(color: AppColors.textWhite70, fontSize: 13),
+                      hintText: HomeStrings.searchGeneralHint,
+                      hintStyle: TextStyle(
+                        color: AppColors.textWhite70,
+                        fontSize: 13,
+                      ),
                       border: InputBorder.none,
                       prefixIcon: Icon(
                         Icons.search,

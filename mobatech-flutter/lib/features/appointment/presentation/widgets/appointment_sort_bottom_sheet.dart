@@ -1,4 +1,4 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -32,7 +32,7 @@ class AppointmentSortBottomSheet extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             ListTile(
-              title: Text(AppStrings.extAbjadaz),
+              title: Text(CoreStrings.extAbjadaz),
               trailing:
                   ref.watch(doctorSortProvider) == DoctorSortOption.nameAsc
                   ? const Icon(Icons.check, color: AppColors.primary)
@@ -44,7 +44,7 @@ class AppointmentSortBottomSheet extends ConsumerWidget {
               },
             ),
             ListTile(
-              title: Text(AppStrings.extAbjadza),
+              title: Text(CoreStrings.extAbjadza),
               trailing:
                   ref.watch(doctorSortProvider) == DoctorSortOption.nameDesc
                   ? const Icon(Icons.check, color: AppColors.primary)

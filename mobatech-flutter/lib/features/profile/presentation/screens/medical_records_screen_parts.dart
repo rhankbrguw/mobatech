@@ -1,20 +1,26 @@
 part of 'medical_records_screen.dart';
 
-class _MedicalRecordsAppBar extends StatelessWidget implements PreferredSizeWidget {
+class _MedicalRecordsAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
   const _MedicalRecordsAppBar();
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(
-        AppStrings.extDatarekammedis,
-        style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold),
+        ProfileStrings.extDatarekammedis,
+        style: TextStyle(
+          color: AppColors.textWhite,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       backgroundColor: AppColors.primary,
       centerTitle: true,
       elevation: 0,
       iconTheme: const IconThemeData(color: AppColors.backgroundWhite),
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(24))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+      ),
       flexibleSpace: ClipRRect(
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
         child: Stack(
@@ -52,7 +58,10 @@ class _AppointmentsList extends StatelessWidget {
             child: Center(
               child: Padding(
                 padding: EdgeInsets.all(24),
-                child: Text(AppStrings.extBelumadariwayatmedis, style: TextStyle(color: AppColors.textGrey)),
+                child: Text(
+                  ProfileStrings.extBelumadariwayatmedis,
+                  style: TextStyle(color: AppColors.textGrey),
+                ),
               ),
             ),
           );
@@ -71,7 +80,9 @@ class _AppointmentsList extends StatelessWidget {
               final appt = sorted[index];
               final isDone = appt.status.toLowerCase() == 'completed';
               final dateStr = appt.schedule?.date != null
-                  ? Formatters.formatDateID(appt.schedule!.date ?? DateTime.now())
+                  ? Formatters.formatDateID(
+                      appt.schedule!.date ?? DateTime.now(),
+                    )
                   : '-';
               final docSpec = appt.doctor?.specialization ?? 'Umum';
               final docName = appt.doctor?.name ?? 'Dokter Tidak Diketahui';
@@ -96,9 +107,17 @@ class _AppointmentsList extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              SkeletonLoader(width: double.infinity, height: 100, borderRadius: 20),
+              SkeletonLoader(
+                width: double.infinity,
+                height: 100,
+                borderRadius: 20,
+              ),
               SizedBox(height: 16),
-              SkeletonLoader(width: double.infinity, height: 100, borderRadius: 20),
+              SkeletonLoader(
+                width: double.infinity,
+                height: 100,
+                borderRadius: 20,
+              ),
             ],
           ),
         ),

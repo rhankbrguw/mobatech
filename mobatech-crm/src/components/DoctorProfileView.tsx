@@ -1,7 +1,7 @@
 import { Doctor, DoctorSchedule } from "@/types/api";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Edit2, Calendar, MapPin, Activity } from "lucide-react";
+import { Edit, Calendar, MapPin, Activity } from "lucide-react";
 import { DoctorsScheduleTab } from "./DoctorsScheduleTab";
 
 export function DoctorProfileView({ 
@@ -42,21 +42,21 @@ export function DoctorProfileView({
             <Button onClick={() => openSchedules(doctor)} size="sm" icon={<Calendar size={14} />} className="flex-1 sm:flex-none justify-center h-10 shadow-sm">
               Kelola Jadwal
             </Button>
-            <Button onClick={() => openForm(doctor)} size="sm" variant="outline" icon={<Edit2 size={14} />} className="flex-1 sm:flex-none justify-center h-10 border-glass-border shadow-sm hover:bg-black/5 dark:hover:bg-white/5">
+            <Button onClick={() => openForm(doctor)} size="sm" variant="outline" icon={<Edit size={14} />} className="flex-1 sm:flex-none justify-center h-10 border-glass-border shadow-sm hover:bg-black/5 dark:hover:bg-white/5">
               Ubah Profil
             </Button>
           </div>
         </div>
       </div>
       
-      <div className="flex items-center gap-2 px-2 mt-10 mb-4 fade-in-up" style={{ animationDelay: "0.1s" }}>
+      <div className="flex items-center gap-2 px-2 mt-10 mb-4 fade-in-up [animation-delay:0.1s]">
         <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
           <Calendar size={18} />
         </div>
         <h2 className="text-xl font-bold text-foreground tracking-tight">Jadwal Praktik Anda</h2>
       </div>
       
-      <Card noPadding className="overflow-hidden shadow-lg border-glass-border fade-in-up" style={{ animationDelay: "0.2s" }}>
+      <Card noPadding className="overflow-hidden shadow-lg border-glass-border fade-in-up [animation-delay:0.2s]">
         <DoctorsScheduleTab schedules={schedules} />
       </Card>
     </div>

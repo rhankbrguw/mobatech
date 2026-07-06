@@ -49,7 +49,11 @@ class _PromoCard extends StatelessWidget {
             top: -30,
             child: Opacity(
               opacity: 0.2,
-              child: const Icon(Icons.local_offer, size: 150, color: AppColors.textWhite),
+              child: const Icon(
+                Icons.local_offer,
+                size: 150,
+                color: AppColors.textWhite,
+              ),
             ),
           ),
           Padding(
@@ -92,7 +96,7 @@ class _PromoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: const Text(
-        AppStrings.extPromo,
+        HomeStrings.extPromo,
         style: TextStyle(
           color: AppColors.textWhite,
           fontWeight: FontWeight.bold,

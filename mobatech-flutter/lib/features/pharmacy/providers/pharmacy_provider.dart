@@ -26,9 +26,7 @@ final pharmacyOrderRepositoryProvider = Provider<PharmacyOrderRepository>((
 });
 
 final cartRepositoryProvider = Provider<CartRepository>((ref) {
-  return CartRepository(
-    ref.watch(dioProvider),
-  );
+  return CartRepository(ref.watch(dioProvider));
 });
 
 final categoriesProvider = FutureProvider<List<MedicineCategory>>((ref) async {
@@ -38,13 +36,17 @@ final categoriesProvider = FutureProvider<List<MedicineCategory>>((ref) async {
 
 typedef MedicineFilter = ({int? categoryId, String? search});
 
-final medicinesProvider = FutureProvider.family<List<Medicine>, MedicineFilter>((
-  ref,
-  filter,
-) async {
-  final repo = ref.watch(medicineRepositoryProvider);
-  return repo.getMedicines(categoryId: filter.categoryId, search: filter.search, page: 1, limit: 10);
-});
+final medicinesProvider = FutureProvider.family<List<Medicine>, MedicineFilter>(
+  (ref, filter) async {
+    final repo = ref.watch(medicineRepositoryProvider);
+    return repo.getMedicines(
+      categoryId: filter.categoryId,
+      search: filter.search,
+      page: 1,
+      limit: 10,
+    );
+  },
+);
 
 final prescriptionsProvider = FutureProvider<List<Prescription>>((ref) async {
   final repo = ref.watch(prescriptionRepositoryProvider);

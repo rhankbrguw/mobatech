@@ -1,14 +1,13 @@
 import 'dart:async';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'dart:convert';
 import 'dart:math';
-
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/dio_client.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../../../../core/constants/app_strings.dart';
 import '../providers/emergency_provider.dart';
 import 'emergency_state.dart';
 import 'location_helper.dart';
@@ -49,27 +48,38 @@ class EmergencyController extends AutoDisposeNotifier<EmergencyScreenState> {
       );
     } catch (e) {
       state = state.copyWith(
-        locationError: '${AppStrings.locationDetectFailed}${e.toString()}',
+        locationError: '${CoreStrings.locationDetectFailed}${e.toString()}',
         isLocating: false,
       );
     }
   }
 
-  Future<void> submitRequest(String name, String condition, String phone) async {
+  Future<void> submitRequest(
+    String name,
+    String condition,
+    String phone,
+  ) async {
     if (state.userLat == null || state.userLng == null) {
-      throw Exception(AppStrings.locationNotDetected);
+      throw Exception(CoreStrings.locationNotDetected);
     }
-    state = state.copyWith(isLoading: true, status: EmergencyStatus.dispatching);
+    state = state.copyWith(
+      isLoading: true,
+      status: EmergencyStatus.dispatching,
+    );
 
     try {
-      final response = await ref.read(emergencyRepositoryProvider).submitRequest({
-        "patient_name": name,
-        "condition": condition,
-        "phone_number": phone,
-        "latitude": state.userLat,
-        "longitude": state.userLng,
-      });
-      _connectWebSocket((response['id'] ?? response['emergency_id'] ?? '1').toString());
+      final response = await ref
+          .read(emergencyRepositoryProvider)
+          .submitRequest({
+            "patient_name": name,
+            "condition": condition,
+            "phone_number": phone,
+            "latitude": state.userLat,
+            "longitude": state.userLng,
+          });
+      _connectWebSocket(
+        (response['id'] ?? response['emergency_id'] ?? '1').toString(),
+      );
     } catch (e) {
       state = state.copyWith(isLoading: false, status: EmergencyStatus.form);
       rethrow;
@@ -83,7 +93,10 @@ class EmergencyController extends AutoDisposeNotifier<EmergencyScreenState> {
       _channel = WebSocketChannel.connect(
         Uri.parse('$baseWsUrl/emergencies/$emergencyId/track'),
       );
-      _wsSubscription = _channel!.stream.listen(_onWsMessage, onError: (_) => _simulateTracking());
+      _wsSubscription = _channel!.stream.listen(
+        _onWsMessage,
+        onError: (_) => _simulateTracking(),
+      );
       Future.delayed(const Duration(seconds: 3), () {
         if (state.status == EmergencyStatus.dispatching) _simulateTracking();
       });
@@ -114,7 +127,13 @@ class EmergencyController extends AutoDisposeNotifier<EmergencyScreenState> {
     double aLng = bLng + 0.015 + Random().nextDouble() * 0.005;
     int mins = 8;
 
-    state = state.copyWith(status: EmergencyStatus.tracking, ambulanceLat: aLat, ambulanceLng: aLng, estimatedMinutes: mins, isLoading: false);
+    state = state.copyWith(
+      status: EmergencyStatus.tracking,
+      ambulanceLat: aLat,
+      ambulanceLng: aLng,
+      estimatedMinutes: mins,
+      isLoading: false,
+    );
     _simulationTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       aLat += (bLat - aLat) * 0.15;
       aLng += (bLng - aLng) * 0.15;
@@ -122,12 +141,24 @@ class EmergencyController extends AutoDisposeNotifier<EmergencyScreenState> {
 
       if (sqrt(pow(bLat - aLat, 2) + pow(bLng - aLng, 2)) < 0.001) {
         timer.cancel();
-        state = state.copyWith(ambulanceLat: bLat, ambulanceLng: bLng, estimatedMinutes: 0, status: EmergencyStatus.arrived);
+        state = state.copyWith(
+          ambulanceLat: bLat,
+          ambulanceLng: bLng,
+          estimatedMinutes: 0,
+          status: EmergencyStatus.arrived,
+        );
         return;
       }
-      state = state.copyWith(ambulanceLat: aLat, ambulanceLng: aLng, estimatedMinutes: mins);
+      state = state.copyWith(
+        ambulanceLat: aLat,
+        ambulanceLng: aLng,
+        estimatedMinutes: mins,
+      );
     });
   }
 }
 
-final emergencyControllerProvider = AutoDisposeNotifierProvider<EmergencyController, EmergencyScreenState>(() => EmergencyController());
+final emergencyControllerProvider =
+    AutoDisposeNotifierProvider<EmergencyController, EmergencyScreenState>(
+      () => EmergencyController(),
+    );

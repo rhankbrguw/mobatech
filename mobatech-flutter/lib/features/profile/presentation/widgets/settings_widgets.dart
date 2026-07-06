@@ -36,7 +36,11 @@ class SettingsContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.textGrey.withValues(alpha: 0.1)),
         boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: ClipRRect(
@@ -54,7 +58,12 @@ class SettingsContainer extends StatelessWidget {
       final idx = entry.key;
       final child = entry.value;
       if (idx < children.length - 1) {
-        return Column(children: [child, const Divider(height: 1, indent: 16, endIndent: 16)]);
+        return Column(
+          children: [
+            child,
+            const Divider(height: 1, indent: 16, endIndent: 16),
+          ],
+        );
       }
       return child;
     }).toList();

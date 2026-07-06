@@ -11,12 +11,13 @@ class _NameInputSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AuthLabel(text: AppStrings.fullNameLabel),
+        const AuthLabel(text: CoreStrings.fullNameLabel),
         const SizedBox(height: 8),
         AuthTextField(
-          hint: AppStrings.fullNameHint,
+          hint: CoreStrings.fullNameHint,
           controller: controller,
-          validator: (v) => Validators.validateName(v, AppStrings.fullNameLabel),
+          validator: (v) =>
+              Validators.validateName(v, CoreStrings.fullNameLabel),
           onChanged: (_) => onChanged(),
         ),
       ],
@@ -35,10 +36,10 @@ class _EmailInputSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AuthLabel(text: AppStrings.emailLabel),
+        const AuthLabel(text: AuthStrings.emailLabel),
         const SizedBox(height: 8),
         AuthTextField(
-          hint: AppStrings.emailHint,
+          hint: AuthStrings.emailHint,
           controller: controller,
           keyboardType: TextInputType.emailAddress,
           validator: Validators.validateEmail,
@@ -59,7 +60,7 @@ class _PhoneInputSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AuthLabel(text: AppStrings.phoneLabel),
+        const AuthLabel(text: CoreStrings.phoneLabel),
         const SizedBox(height: 8),
         PhoneTextField(
           controller: controller,
@@ -88,10 +89,10 @@ class _PasswordInputSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AuthLabel(text: AppStrings.passwordLabel),
+        const AuthLabel(text: AuthStrings.passwordLabel),
         const SizedBox(height: 8),
         AuthTextField(
-          hint: AppStrings.passwordHint,
+          hint: AuthStrings.passwordHint,
           isPassword: true,
           controller: controller,
           obscureText: obscurePassword,
@@ -124,14 +125,15 @@ class _ConfirmPasswordInputSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AuthLabel(text: AppStrings.confirmPasswordLabel),
+        const AuthLabel(text: AuthStrings.confirmPasswordLabel),
         const SizedBox(height: 8),
         AuthTextField(
-          hint: AppStrings.confirmPasswordHint,
+          hint: AuthStrings.confirmPasswordHint,
           isPassword: true,
           controller: controller,
           obscureText: obscureConfirm,
-          validator: (v) => Validators.validateConfirmPassword(v, passwordController.text),
+          validator: (v) =>
+              Validators.validateConfirmPassword(v, passwordController.text),
           onChanged: (_) => onChanged(),
           onTogglePassword: onTogglePassword,
         ),

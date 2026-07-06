@@ -91,7 +91,7 @@ export interface ChatMessage {
 export interface ChatSession {
   id: number; user_id: string;
   title: string; updated_at: string;
-  Messages: ChatMessage[];
+  messages: ChatMessage[];
 }
 export interface Reminder {
   id: number; created_at: string;

@@ -45,7 +45,10 @@ class ChatBubbleFile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.description, color: isUser ? AppColors.backgroundWhite : AppColors.iconOrange),
+          Icon(
+            Icons.description,
+            color: isUser ? AppColors.backgroundWhite : AppColors.iconOrange,
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(

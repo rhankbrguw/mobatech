@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/appointment_strings.dart';
+import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/custom_bottom_nav_bar.dart';
 import '../widgets/appointments_tab.dart';
 import '../widgets/pharmacy_tab.dart';
@@ -17,7 +19,7 @@ class HistoryScreen extends ConsumerWidget {
         backgroundColor: AppColors.backgroundScreen,
         appBar: AppBar(
           title: const Text(
-            AppStrings.historyTitle,
+            CoreStrings.historyTitle,
             style: TextStyle(
               color: AppColors.textWhite,
               fontWeight: FontWeight.bold,
@@ -53,8 +55,8 @@ class HistoryScreen extends ConsumerWidget {
             labelColor: AppColors.textWhite,
             unselectedLabelColor: AppColors.textWhite70,
             tabs: [
-              Tab(text: AppStrings.appointmentTab),
-              Tab(text: AppStrings.pharmacyTab),
+              Tab(text: AppointmentStrings.appointmentTab),
+              Tab(text: PharmacyStrings.pharmacyTab),
             ],
           ),
         ),

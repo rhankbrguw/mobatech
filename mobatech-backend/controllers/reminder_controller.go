@@ -21,12 +21,17 @@ func NewReminderController(service services.ReminderService) *ReminderController
 func (c *ReminderController) GetAll(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
-	reminders, err := c.service.GetAllReminders(search, filter)
+	pageStr := ctx.DefaultQuery("page", "1")
+	limitStr := ctx.DefaultQuery("limit", "10")
+	page, _ := strconv.Atoi(pageStr)
+	limit, _ := strconv.Atoi(limitStr)
+	offset := (page - 1) * limit
+	reminders, totalCount, err := c.service.GetAllReminders(search, filter, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", reminders))
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", reminders, page, limit, totalCount))
 }
 
 func (c *ReminderController) GetUserReminders(ctx *gin.Context) {

@@ -7,7 +7,7 @@ class _ForYouAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(
-        AppStrings.extUntukanda,
+        CoreStrings.extUntukanda,
         style: TextStyle(
           color: AppColors.textWhite,
           fontWeight: FontWeight.bold,
@@ -102,10 +102,7 @@ class _ArticleCard extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 article.readTime,
-                style: const TextStyle(
-                  color: AppColors.textGrey,
-                  fontSize: 12,
-                ),
+                style: const TextStyle(color: AppColors.textGrey, fontSize: 12),
               ),
             ],
           ),

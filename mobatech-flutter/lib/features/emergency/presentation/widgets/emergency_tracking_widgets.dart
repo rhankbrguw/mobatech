@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 
 class TrackingTopBar extends StatelessWidget {
   const TrackingTopBar({super.key});
@@ -29,12 +29,16 @@ class TrackingTopBar extends StatelessWidget {
               color: AppColors.backgroundWhite.withAlpha(50),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.emergency, color: AppColors.backgroundWhite, size: 20),
+            child: const Icon(
+              Icons.emergency,
+              color: AppColors.backgroundWhite,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
           const Expanded(
             child: Text(
-              AppStrings.ambulanceTracking,
+              CoreStrings.ambulanceTracking,
               style: TextStyle(
                 color: AppColors.backgroundWhite,
                 fontSize: 16,
@@ -54,7 +58,7 @@ class TrackingTopBar extends StatelessWidget {
                 Icon(Icons.circle, color: AppColors.backgroundWhite, size: 8),
                 SizedBox(width: 6),
                 Text(
-                  AppStrings.live,
+                  CoreStrings.live,
                   style: TextStyle(
                     color: AppColors.backgroundWhite,
                     fontSize: 11,
@@ -70,5 +74,3 @@ class TrackingTopBar extends StatelessWidget {
     );
   }
 }
-
-

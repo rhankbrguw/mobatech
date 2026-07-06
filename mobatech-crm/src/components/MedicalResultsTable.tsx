@@ -1,4 +1,4 @@
-import { Edit2, Trash2, Pill, Eye, Inbox } from "lucide-react";
+import { Edit, Trash2, Pill, Eye, Inbox } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Formatters } from "@/lib/formatters";
@@ -85,7 +85,7 @@ export function MedicalResultsTable({
                           },
                           {
                             label: "Edit",
-                            icon: <Edit2 size={14} />,
+                            icon: <Edit size={14} />,
                             onClick: () => onEdit(r),
                             disabled: userRole === "admin",
                           },

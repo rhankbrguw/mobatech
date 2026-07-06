@@ -1,4 +1,5 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/home_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -56,10 +57,13 @@ class ContactCard extends StatelessWidget {
                       child: ElevatedButton.icon(
                         onPressed: () {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          CustomSnackbar.showInfo(context, AppStrings.extMenghubungkankeagenlivechat);
+                          CustomSnackbar.showInfo(
+                            context,
+                            HomeStrings.extMenghubungkankeagenlivechat,
+                          );
                         },
                         icon: const Icon(Icons.chat_bubble_outline),
-                        label: Text(AppStrings.extLivechat),
+                        label: Text(HomeStrings.extLivechat),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: AppColors.backgroundWhite,
@@ -75,10 +79,13 @@ class ContactCard extends StatelessWidget {
                       child: OutlinedButton.icon(
                         onPressed: () {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          CustomSnackbar.showInfo(context, AppStrings.extMembukapanggilanke1500123);
+                          CustomSnackbar.showInfo(
+                            context,
+                            ProfileStrings.extMembukapanggilanke1500123,
+                          );
                         },
                         icon: const Icon(Icons.phone_outlined),
-                        label: Text(AppStrings.extCallcenter),
+                        label: Text(ProfileStrings.extCallcenter),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.primary,
                           side: const BorderSide(color: AppColors.primary),

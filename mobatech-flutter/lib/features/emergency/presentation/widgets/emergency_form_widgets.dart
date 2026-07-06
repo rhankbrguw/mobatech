@@ -1,7 +1,7 @@
 import 'dart:ui';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 
 class EmergencyAppBar extends StatelessWidget {
   const EmergencyAppBar({super.key});
@@ -13,7 +13,7 @@ class EmergencyAppBar extends StatelessWidget {
       backgroundColor: AppColors.errorRed,
       foregroundColor: AppColors.backgroundWhite,
       title: const Text(
-        AppStrings.emergencyTitle,
+        CoreStrings.emergencyTitle,
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
       ),
       centerTitle: true,
@@ -68,7 +68,7 @@ class EmergencyWarningBanner extends StatelessWidget {
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    AppStrings.emergencyWarning,
+                    CoreStrings.emergencyWarning,
                     style: TextStyle(
                       color: AppColors.errorRed,
                       fontSize: 13,
@@ -84,5 +84,3 @@ class EmergencyWarningBanner extends StatelessWidget {
     );
   }
 }
-
-

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobatech_app/core/theme/app_colors.dart';
 
-
 enum AppButtonVariant { primary, secondary, danger, ghost, outline }
+
 enum AppButtonSize { small, medium, large }
 
 class AppButton extends StatelessWidget {
@@ -33,14 +33,16 @@ class AppButton extends StatelessWidget {
     Color bgColor;
     Color fgColor;
     Color borderColor = AppColors.transparent;
-    
+
     switch (variant) {
       case AppButtonVariant.primary:
         bgColor = AppColors.primaryGreen;
         fgColor = AppColors.backgroundWhite;
         break;
       case AppButtonVariant.secondary:
-        bgColor = isDark ? AppColors.backgroundWhite.withValues(alpha: 0.1) : AppColors.backgroundWhite.withValues(alpha: 0.5);
+        bgColor = isDark
+            ? AppColors.backgroundWhite.withValues(alpha: 0.1)
+            : AppColors.backgroundWhite.withValues(alpha: 0.5);
         fgColor = AppColors.getTextPrimary(isDark);
         borderColor = AppColors.getGlassBorder(isDark);
         break;
@@ -63,7 +65,7 @@ class AppButton extends StatelessWidget {
     double height;
     double fontSize;
     EdgeInsets padding;
-    
+
     switch (size) {
       case AppButtonSize.small:
         height = 32;
@@ -86,7 +88,9 @@ class AppButton extends StatelessWidget {
       backgroundColor: bgColor,
       foregroundColor: fgColor,
       elevation: variant == AppButtonVariant.primary ? 2 : 0,
-      shadowColor: variant == AppButtonVariant.primary ? AppColors.primaryGreen.withValues(alpha: 0.4) : AppColors.transparent,
+      shadowColor: variant == AppButtonVariant.primary
+          ? AppColors.primaryGreen.withValues(alpha: 0.4)
+          : AppColors.transparent,
       padding: padding,
       minimumSize: Size(isFullWidth ? double.infinity : 0, height),
       shape: RoundedRectangleBorder(
@@ -95,30 +99,33 @@ class AppButton extends StatelessWidget {
       ),
     );
 
-    Widget content = isLoading 
-      ? SizedBox(
-          width: fontSize, 
-          height: fontSize, 
-          child: CircularProgressIndicator(strokeWidth: 2, color: fgColor)
-        )
-      : Row(
-          mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[
-              IconTheme(data: IconThemeData(color: fgColor, size: fontSize + 4), child: icon!),
-              const SizedBox(width: 8),
+    Widget content = isLoading
+        ? SizedBox(
+            width: fontSize,
+            height: fontSize,
+            child: CircularProgressIndicator(strokeWidth: 2, color: fgColor),
+          )
+        : Row(
+            mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (icon != null) ...[
+                IconTheme(
+                  data: IconThemeData(color: fgColor, size: fontSize + 4),
+                  child: icon!,
+                ),
+                const SizedBox(width: 8),
+              ],
+              Text(
+                text,
+                style: TextStyle(
+                  color: fgColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: fontSize,
+                ),
+              ),
             ],
-            Text(
-              text, 
-              style: TextStyle(
-                color: fgColor, 
-                fontWeight: FontWeight.w600,
-                fontSize: fontSize,
-              )
-            ),
-          ],
-        );
+          );
 
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,

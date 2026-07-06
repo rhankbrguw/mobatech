@@ -5,10 +5,12 @@ class _AddFamilyMemberModalContent extends StatefulWidget {
   const _AddFamilyMemberModalContent({required this.ref});
 
   @override
-  State<_AddFamilyMemberModalContent> createState() => _AddFamilyMemberModalContentState();
+  State<_AddFamilyMemberModalContent> createState() =>
+      _AddFamilyMemberModalContentState();
 }
 
-class _AddFamilyMemberModalContentState extends State<_AddFamilyMemberModalContent> {
+class _AddFamilyMemberModalContentState
+    extends State<_AddFamilyMemberModalContent> {
   final _nameController = TextEditingController();
   final _relationController = TextEditingController();
   final _dobController = TextEditingController();
@@ -24,8 +26,10 @@ class _AddFamilyMemberModalContentState extends State<_AddFamilyMemberModalConte
   }
 
   Future<void> _handleSave() async {
-    if (_nameController.text.trim().isEmpty || _relationController.text.trim().isEmpty || _dobController.text.trim().isEmpty) {
-      _showWarning(AppStrings.extHaraplengkapisemuadataterlebihdahulu);
+    if (_nameController.text.trim().isEmpty ||
+        _relationController.text.trim().isEmpty ||
+        _dobController.text.trim().isEmpty) {
+      _showWarning(ProfileStrings.extHaraplengkapisemuadataterlebihdahulu);
       return;
     }
     setState(() => _isSaving = true);
@@ -53,7 +57,10 @@ class _AddFamilyMemberModalContentState extends State<_AddFamilyMemberModalConte
   void _onSuccess() {
     Navigator.pop(context);
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    CustomSnackbar.showSuccess(context, AppStrings.extAnggotakeluargaberhasilditambahkan);
+    CustomSnackbar.showSuccess(
+      context,
+      ProfileStrings.extAnggotakeluargaberhasilditambahkan,
+    );
   }
 
   void _onError(dynamic error) {
@@ -69,14 +76,19 @@ class _AddFamilyMemberModalContentState extends State<_AddFamilyMemberModalConte
       lastDate: DateTime.now(),
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(primary: AppColors.primary, onPrimary: AppColors.backgroundWhite, onSurface: AppColors.textDark),
+          colorScheme: const ColorScheme.light(
+            primary: AppColors.primary,
+            onPrimary: AppColors.backgroundWhite,
+            onSurface: AppColors.textDark,
+          ),
         ),
         child: child!,
       ),
     );
     if (date != null && mounted) {
       setState(() {
-        _dobController.text = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+        _dobController.text =
+            "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
       });
     }
   }
@@ -84,7 +96,9 @@ class _AddFamilyMemberModalContentState extends State<_AddFamilyMemberModalConte
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: Material(
         color: AppColors.backgroundScreen,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
@@ -102,23 +116,73 @@ class _AddFamilyMemberModalContentState extends State<_AddFamilyMemberModalConte
 
   List<Widget> _buildFormContent() {
     return [
-      Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.textGrey.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)))),
+      Center(
+        child: Container(
+          width: 40,
+          height: 4,
+          decoration: BoxDecoration(
+            color: AppColors.textGrey.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+      ),
       const SizedBox(height: 24),
-      const Text(AppStrings.extTambahanggotakeluarga, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+      const Text(
+        ProfileStrings.extTambahanggotakeluarga,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: AppColors.textDark,
+        ),
+      ),
       const SizedBox(height: 24),
-      ModalTextField(label: 'Nama Lengkap', controller: _nameController, icon: Icons.person_outline, type: TextInputType.name),
+      ModalTextField(
+        label: 'Nama Lengkap',
+        controller: _nameController,
+        icon: Icons.person_outline,
+        type: TextInputType.name,
+      ),
       const SizedBox(height: 16),
-      ModalTextField(label: 'Hubungan (Anak, Istri, Suami, dll)', controller: _relationController, icon: Icons.family_restroom, type: TextInputType.text),
+      ModalTextField(
+        label: 'Hubungan (Anak, Istri, Suami, dll)',
+        controller: _relationController,
+        icon: Icons.family_restroom,
+        type: TextInputType.text,
+      ),
       const SizedBox(height: 16),
-      ModalTextField(label: 'Tanggal Lahir (YYYY-MM-DD)', controller: _dobController, icon: Icons.cake_outlined, type: TextInputType.datetime, readOnly: true, onTap: _pickDate),
+      ModalTextField(
+        label: 'Tanggal Lahir (YYYY-MM-DD)',
+        controller: _dobController,
+        icon: Icons.cake_outlined,
+        type: TextInputType.datetime,
+        readOnly: true,
+        onTap: _pickDate,
+      ),
       const SizedBox(height: 16),
-      const Text(AppStrings.extJeniskelamin, style: TextStyle(color: AppColors.textGrey, fontSize: 12)),
+      const Text(
+        CoreStrings.extJeniskelamin,
+        style: TextStyle(color: AppColors.textGrey, fontSize: 12),
+      ),
       const SizedBox(height: 8),
       Row(
         children: [
-          Expanded(child: GenderOptionButton(text: 'Laki-laki', icon: Icons.male, isSelected: _selectedGender == 'Laki-laki', onTap: () => setState(() => _selectedGender = 'Laki-laki'))),
+          Expanded(
+            child: GenderOptionButton(
+              text: 'Laki-laki',
+              icon: Icons.male,
+              isSelected: _selectedGender == 'Laki-laki',
+              onTap: () => setState(() => _selectedGender = 'Laki-laki'),
+            ),
+          ),
           const SizedBox(width: 16),
-          Expanded(child: GenderOptionButton(text: 'Perempuan', icon: Icons.female, isSelected: _selectedGender == 'Perempuan', onTap: () => setState(() => _selectedGender = 'Perempuan'))),
+          Expanded(
+            child: GenderOptionButton(
+              text: 'Perempuan',
+              icon: Icons.female,
+              isSelected: _selectedGender == 'Perempuan',
+              onTap: () => setState(() => _selectedGender = 'Perempuan'),
+            ),
+          ),
         ],
       ),
       const SizedBox(height: 32),

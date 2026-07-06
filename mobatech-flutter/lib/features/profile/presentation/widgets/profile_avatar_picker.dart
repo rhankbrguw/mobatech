@@ -47,7 +47,10 @@ class ProfileAvatarPicker extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.backgroundWhite, width: 2),
+                  border: Border.all(
+                    color: AppColors.backgroundWhite,
+                    width: 2,
+                  ),
                 ),
                 child: const Icon(
                   Icons.camera_alt,

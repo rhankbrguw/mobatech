@@ -1,30 +1,30 @@
 import logging
 import re
 from transformers import pipeline
+import constants as const
 
 class AnonymizationEngine:
     def __init__(self):
         try:
             self.ner_pipeline = pipeline(
-                "ner", 
-                model="cahya/bert-base-indonesian-NER", 
-                aggregation_strategy="simple"
+                const.PIPELINE_TASK, 
+                model=const.NER_MODEL_NAME, 
+                aggregation_strategy=const.NER_AGGREGATION_STRATEGY
             )
         except Exception as e:
             self.ner_pipeline = None
-            logging.info("Warning: NER model not loaded. Using fallback regex anonymizer.")
+            logging.info(const.WARN_NER_NOT_LOADED)
 
     def normalize_text(self, text: str) -> str:
         # Pembersihan karakter encoding & whitespace (Text Normalization)
-        text = text.encode('ascii', 'ignore').decode('ascii')
-        text = re.sub(r'\s+', ' ', text).strip()
+        text = text.encode(const.ASCII_ENCODING, const.ENCODE_ERROR_HANDLER).decode(const.ASCII_ENCODING)
+        text = re.sub(const.REGEX_WHITESPACE, const.REPLACE_WHITESPACE, text).strip()
         return text
 
     def apply_regex_masking(self, text: str) -> str:
         # Lapis 1: Regex untuk pola statis (NIK, No HP, Tanggal)
-        text = re.sub(r'\b\d{16}\b', '[REDACTED_NIK]', text)
-        text = re.sub(r'\b(?:08|\+628)\d{8,11}\b', '[REDACTED_PHONE]', text)
-        
+        text = re.sub(const.REGEX_NIK, const.REDACTED_NIK, text)
+        text = re.sub(const.REGEX_PHONE, const.REDACTED_PHONE, text)
         return text
 
     def anonymize(self, text: str) -> str:
@@ -37,13 +37,12 @@ class AnonymizationEngine:
         # Lapis 2: NER berbasis BERT
         entities = self.ner_pipeline(text)
         anonymized_text = text
-        
-        sorted_entities = sorted(entities, key=lambda x: x['start'], reverse=True)
+        sorted_entities = sorted(entities, key=lambda x: x[const.KEY_START], reverse=True)
         
         for entity in sorted_entities:
-            start = entity['start']
-            end = entity['end']
-            label = entity['entity_group']
+            start = entity[const.KEY_START]
+            end = entity[const.KEY_END]
+            label = entity[const.KEY_ENTITY_GROUP]
             
             # Disabled PER, ORG, LOC redaction because it destroys Doctor names, Hospital names, and queries.
             # if label in ['PER', 'ORG', 'LOC']:
@@ -53,4 +52,4 @@ class AnonymizationEngine:
         return anonymized_text
 
     def _fallback_anonymize(self, text: str) -> str:
-        return text.replace("Hermina", "[RS_NAME]")
+        return text.replace(const.RS_NAME_ORIGINAL, const.RS_NAME_REDACTED)

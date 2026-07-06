@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/appointment_strings.dart';
 
 void showQuickAccessMoreMenu(BuildContext context, List<Widget> items) {
   showModalBottomSheet(
@@ -15,7 +15,7 @@ void showQuickAccessMoreMenu(BuildContext context, List<Widget> items) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              AppStrings.menuOthersTitle,
+              AppointmentStrings.menuOthersTitle,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),

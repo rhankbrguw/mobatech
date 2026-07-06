@@ -44,7 +44,7 @@ class GlassTextField extends StatelessWidget {
               prefixText!,
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
-          ]
+          ],
         ],
       ),
       keyboardType: keyboardType,
@@ -52,17 +52,23 @@ class GlassTextField extends StatelessWidget {
       inputFormatters: formatters,
       validator: validator,
       onTap: onTap,
-      onChanged: onChanged ?? (val) {
-        if (label == 'Nomor Telepon') {
-          if (val.startsWith('62')) {
-            controller.text = val.substring(2);
-            controller.selection = TextSelection.collapsed(offset: controller.text.length);
-          } else if (val.startsWith('0')) {
-            controller.text = val.substring(1);
-            controller.selection = TextSelection.collapsed(offset: controller.text.length);
-          }
-        }
-      },
+      onChanged:
+          onChanged ??
+          (val) {
+            if (label == 'Nomor Telepon') {
+              if (val.startsWith('62')) {
+                controller.text = val.substring(2);
+                controller.selection = TextSelection.collapsed(
+                  offset: controller.text.length,
+                );
+              } else if (val.startsWith('0')) {
+                controller.text = val.substring(1);
+                controller.selection = TextSelection.collapsed(
+                  offset: controller.text.length,
+                );
+              }
+            }
+          },
     );
   }
 }

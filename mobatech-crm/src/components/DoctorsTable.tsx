@@ -5,7 +5,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { Formatters } from "@/lib/formatters";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { Edit2, Trash2, Calendar, Eye, Inbox } from "lucide-react";
+import { Edit, Trash2, Calendar, Eye, Inbox } from "lucide-react";
 import { SkeletonTable } from "@/components/ui/SkeletonTable";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 export function DoctorsTable({
@@ -79,7 +79,7 @@ export function DoctorsTable({
                       },
                       {
                         label: "Ubah",
-                        icon: <Edit2 size={14} />,
+                        icon: <Edit size={14} />,
                         onClick: () => openForm(item),
                       },
                       ...(!isDoctor ? [{

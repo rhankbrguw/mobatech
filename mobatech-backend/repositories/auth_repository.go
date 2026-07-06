@@ -60,12 +60,26 @@ func (r *authRepository) DeleteFamilyMember(id uint) error {
 func (r *authRepository) GetAllUsers(search string, filter string, roleFilter string, viewerID uint, viewerRole string, limit int, offset int) ([]models.User, int64, error) {
 	var users []models.User
 	var totalCount int64
+	query := r.buildUserQuery(search, filter, roleFilter, viewerID, viewerRole)
+
+	if err := query.Count(&totalCount).Error; err != nil {
+		return nil, 0, err
+	}
+
+	if limit > 0 {
+		query = query.Limit(limit).Offset(offset)
+	}
+
+	err := query.Preload("FamilyMembers").Find(&users).Error
+	return users, totalCount, err
+}
+
+func (r *authRepository) buildUserQuery(search, filter, roleFilter string, viewerID uint, viewerRole string) *gorm.DB {
 	query := r.db.Model(&models.User{})
 	
 	if viewerRole == "doctor" && roleFilter == "patient" {
 		query = query.Where("id IN (SELECT user_id FROM appointments WHERE doctor_id = (SELECT id FROM doctors WHERE user_id = ? LIMIT 1))", viewerID)
 	}
-
 	if roleFilter != "" {
 		query = query.Where("role = ?", roleFilter)
 	}
@@ -78,15 +92,5 @@ func (r *authRepository) GetAllUsers(search string, filter string, roleFilter st
 	} else if filter == "oldest" {
 		query = query.Order("created_at asc")
 	}
-
-	if err := query.Count(&totalCount).Error; err != nil {
-		return nil, 0, err
-	}
-
-	if limit > 0 {
-		query = query.Limit(limit).Offset(offset)
-	}
-
-	err := query.Preload("FamilyMembers").Find(&users).Error
-	return users, totalCount, err
+	return query
 }

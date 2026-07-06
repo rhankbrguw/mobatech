@@ -42,10 +42,7 @@ class ResultCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GlassStatusChip(
-                          status: result.status,
-                          fontSize: 12,
-                        ),
+                        GlassStatusChip(status: result.status, fontSize: 12),
                         Text(
                           result.date,
                           style: const TextStyle(

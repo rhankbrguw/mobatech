@@ -35,7 +35,6 @@ func (s *appointmentService) GetUserAppointments(userID uint, limit, offset int)
 }
 
 func (s *appointmentService) BookAppointment(userID uint, req *models.Appointment) (*models.Appointment, error) {
-	// Verify schedule exists and has quota
 	schedule, err := s.scheduleRepo.FindByID(req.DoctorScheduleID)
 	if err != nil {
 		return nil, errors.New("schedule not found")
@@ -45,28 +44,12 @@ func (s *appointmentService) BookAppointment(userID uint, req *models.Appointmen
 		return nil, errors.New("schedule is full or not available")
 	}
 
-	// Validate if the schedule is expired (past date/time)
-	now := time.Now()
-	// Combine schedule.Date (time.Time) and schedule.EndTime (string)
-	scheduleEndStr := fmt.Sprintf("%s %s", schedule.Date.Format("2006-01-02"), schedule.EndTime)
-	
-	var scheduleEnd time.Time
-	var errParse error
-	if len(schedule.EndTime) > 5 {
-		scheduleEnd, errParse = time.ParseInLocation("2006-01-02 15:04:05", scheduleEndStr, time.Local)
-	} else {
-		scheduleEnd, errParse = time.ParseInLocation("2006-01-02 15:04", scheduleEndStr, time.Local)
-	}
-
-	if errParse == nil {
-		if now.After(scheduleEnd) {
-			return nil, errors.New("schedule has already expired")
-		}
+	if s.checkScheduleExpired(schedule) {
+		return nil, errors.New("schedule has already expired")
 	}
 
 	schedule.Booked += 1
-	err = s.scheduleRepo.Update(schedule)
-	if err != nil {
+	if err := s.scheduleRepo.Update(schedule); err != nil {
 		return nil, err
 	}
 
@@ -74,13 +57,25 @@ func (s *appointmentService) BookAppointment(userID uint, req *models.Appointmen
 	req.UserID = userID
 	req.Status = "pending"
 
-	err = s.appointmentRepo.Create(req)
-	if err != nil {
+	if err := s.appointmentRepo.Create(req); err != nil {
 		s.rollbackScheduleBooking(schedule)
 		return nil, err
 	}
-
 	return s.appointmentRepo.FindByID(req.ID)
+}
+
+func (s *appointmentService) checkScheduleExpired(schedule *models.DoctorSchedule) bool {
+	now := time.Now()
+	scheduleEndStr := fmt.Sprintf("%s %s", schedule.Date.Format("2006-01-02"), schedule.EndTime)
+	var scheduleEnd time.Time
+	var errParse error
+
+	if len(schedule.EndTime) > 5 {
+		scheduleEnd, errParse = time.ParseInLocation("2006-01-02 15:04:05", scheduleEndStr, time.Local)
+	} else {
+		scheduleEnd, errParse = time.ParseInLocation("2006-01-02 15:04", scheduleEndStr, time.Local)
+	}
+	return errParse == nil && now.After(scheduleEnd)
 }
 
 func (s *appointmentService) CancelAppointment(id uint, userID uint, isAdmin bool) error {
@@ -98,18 +93,15 @@ func (s *appointmentService) CancelAppointment(id uint, userID uint, isAdmin boo
 	}
 
 	appointment.Status = "cancelled"
-	err = s.appointmentRepo.Update(appointment)
-	if err != nil {
+	if err := s.appointmentRepo.Update(appointment); err != nil {
 		return err
 	}
 
-	// Release schedule slot
 	schedule, err := s.scheduleRepo.FindByID(appointment.DoctorScheduleID)
 	if err == nil && schedule.Booked > 0 {
 		schedule.Booked -= 1
 		s.scheduleRepo.Update(schedule)
 	}
-
 	return nil
 }
 

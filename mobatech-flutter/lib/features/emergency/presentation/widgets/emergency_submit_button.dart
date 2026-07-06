@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 
 class EmergencySubmitButton extends StatelessWidget {
   final bool isLoading;
@@ -54,7 +54,7 @@ class EmergencySubmitButton extends StatelessWidget {
                   Icon(Icons.emergency, size: 22),
                   SizedBox(width: 10),
                   Text(
-                    AppStrings.callAmbulance,
+                    ProfileStrings.callAmbulance,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,

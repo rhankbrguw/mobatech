@@ -1,13 +1,12 @@
 import '../../../core/network/dio_client.dart';
 
-
 class PrescriptionItem {
   final int medicineId;
   final String medicineName;
   final String dosageInstruction;
   final String duration;
   final int quantity;
-  
+
   PrescriptionItem({
     required this.medicineId,
     required this.medicineName,
@@ -19,7 +18,10 @@ class PrescriptionItem {
   factory PrescriptionItem.fromJson(Map<String, dynamic> json) {
     return PrescriptionItem(
       medicineId: json['medicine_id'] as int? ?? 0,
-      medicineName: (json['medicine'] != null ? json['medicine']['name'] : '') as String? ?? 'Obat',
+      medicineName:
+          (json['medicine'] != null ? json['medicine']['name'] : '')
+              as String? ??
+          'Obat',
       dosageInstruction: json['dosage_instruction'] as String? ?? '',
       duration: json['duration'] as String? ?? '',
       quantity: json['quantity'] as int? ?? 1,
@@ -61,13 +63,17 @@ class Prescription {
       appointmentId: json['appointment_id'] as int?,
       doctorName: json['doctor_name'] as String? ?? '',
       diagnosis: json['diagnosis'] as String? ?? '',
-      items: (json['items'] as List<dynamic>?)?.map((e) => PrescriptionItem.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+      items:
+          (json['items'] as List<dynamic>?)
+              ?.map((e) => PrescriptionItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       userId: json['user_id'] as int? ?? 0,
       imageUrl: rawImageUrl,
       notes: json['notes'] as String? ?? '',
       status: json['status'] as String? ?? 'Pending',
-      createdAt: json['CreatedAt'] != null 
-          ? DateTime.parse(json['CreatedAt']) 
+      createdAt: json['CreatedAt'] != null
+          ? DateTime.parse(json['CreatedAt'])
           : DateTime.now(),
     );
   }

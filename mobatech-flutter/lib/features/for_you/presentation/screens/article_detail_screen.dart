@@ -1,4 +1,4 @@
-import '../../../../core/constants/app_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -15,7 +15,7 @@ class ArticleDetailScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundScreen,
       appBar: AppBar(
         title: Text(
-          AppStrings.extDetailartikel,
+          ProfileStrings.extDetailartikel,
           style: TextStyle(
             color: AppColors.textWhite,
             fontWeight: FontWeight.bold,

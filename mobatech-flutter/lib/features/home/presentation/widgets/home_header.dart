@@ -1,9 +1,10 @@
 import 'dart:io';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/home_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../../patient_support/providers/patient_support_provider.dart';
 import 'home_header_parts.dart';
@@ -15,7 +16,7 @@ class HomeHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userProfile = ref.watch(userProfileProvider).valueOrNull;
     final firstName =
-        userProfile?.fullName.split(' ').first ?? AppStrings.defaultUser;
+        userProfile?.fullName.split(' ').first ?? CoreStrings.defaultUser;
 
     return Container(
       width: double.infinity,
@@ -48,7 +49,9 @@ class HomeHeader extends ConsumerWidget {
                     children: [
                       CircleAvatar(
                         radius: 24,
-                        backgroundColor: AppColors.backgroundWhite.withValues(alpha: 0.2),
+                        backgroundColor: AppColors.backgroundWhite.withValues(
+                          alpha: 0.2,
+                        ),
                         backgroundImage: userProfile?.imagePath != null
                             ? (userProfile!.imagePath!.startsWith('http')
                                   ? NetworkImage(userProfile.imagePath!)
@@ -69,7 +72,7 @@ class HomeHeader extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${AppStrings.homeGreetingPrefix}$firstName',
+                              '${HomeStrings.homeGreetingPrefix}$firstName',
                               style: const TextStyle(
                                 color: AppColors.textWhite,
                                 fontSize: 20,
@@ -78,7 +81,7 @@ class HomeHeader extends ConsumerWidget {
                             ),
                             const SizedBox(height: 4),
                             const Text(
-                              AppStrings.homeGreetingSubtitle,
+                              HomeStrings.homeGreetingSubtitle,
                               style: TextStyle(
                                 color: AppColors.textWhite,
                                 fontSize: 13,

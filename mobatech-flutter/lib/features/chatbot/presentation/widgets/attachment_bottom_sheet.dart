@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 
 class AttachmentBottomSheet extends StatelessWidget {
   final VoidCallback onPickGallery;
@@ -39,19 +39,19 @@ class AttachmentBottomSheet extends StatelessWidget {
             children: [
               _buildOption(
                 Icons.image,
-                AppStrings.chatAttachmentGallery,
+                CoreStrings.chatAttachmentGallery,
                 AppColors.iconBlue,
                 onPickGallery,
               ),
               _buildOption(
                 Icons.camera_alt,
-                AppStrings.chatAttachmentCamera,
+                CoreStrings.chatAttachmentCamera,
                 AppColors.iconGreen,
                 onPickCamera,
               ),
               _buildOption(
                 Icons.description,
-                AppStrings.chatAttachmentDocument,
+                CoreStrings.chatAttachmentDocument,
                 AppColors.iconOrange,
                 onPickDocument,
               ),

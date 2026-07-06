@@ -42,7 +42,9 @@ class BookingBottomBar extends StatelessWidget {
                   elevation: 0,
                 ),
                 child: isBooking
-                    ? const CircularProgressIndicator(color: AppColors.backgroundWhite)
+                    ? const CircularProgressIndicator(
+                        color: AppColors.backgroundWhite,
+                      )
                     : const Text(
                         'Buat Janji Temu',
                         style: TextStyle(

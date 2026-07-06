@@ -1,4 +1,3 @@
-import '../../../../core/constants/app_strings.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/formatters.dart';
 import 'family_member_card_widgets.dart';
 
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 part 'family_member_card_parts.dart';
 
 class FamilyMemberCard extends ConsumerWidget {
@@ -34,11 +34,21 @@ class FamilyMemberCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
-        color: isPrimary ? AppColors.primaryLight.withValues(alpha: 0.5) : AppColors.backgroundWhite.withValues(alpha: 0.85),
+        color: isPrimary
+            ? AppColors.primaryLight.withValues(alpha: 0.5)
+            : AppColors.backgroundWhite.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: isPrimary ? AppColors.primary.withValues(alpha: 0.2) : AppColors.textGrey.withValues(alpha: 0.1)),
+        border: Border.all(
+          color: isPrimary
+              ? AppColors.primary.withValues(alpha: 0.2)
+              : AppColors.textGrey.withValues(alpha: 0.1),
+        ),
         boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: ClipRRect(
@@ -50,7 +60,10 @@ class FamilyMemberCard extends ConsumerWidget {
             child: InkWell(
               onTap: () {},
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
                 child: Row(
                   children: [
                     FamilyMemberAvatar(name: name, isPrimary: isPrimary),
@@ -59,9 +72,16 @@ class FamilyMemberCard extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _FamilyMemberHeader(name: name, isPrimary: isPrimary, relation: relation),
+                          _FamilyMemberHeader(
+                            name: name,
+                            isPrimary: isPrimary,
+                            relation: relation,
+                          ),
                           const SizedBox(height: 12),
-                          Container(height: 1, color: AppColors.textGrey.withValues(alpha: 0.1)),
+                          Container(
+                            height: 1,
+                            color: AppColors.textGrey.withValues(alpha: 0.1),
+                          ),
                           const SizedBox(height: 12),
                           _FamilyMemberDetails(dob: dob, gender: gender),
                         ],

@@ -1,5 +1,4 @@
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/formatters.dart';
@@ -7,6 +6,7 @@ import '../../../../core/utils/validators.dart';
 import 'glass_text_field.dart';
 import 'gender_selection.dart';
 
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 part 'edit_profile_widgets_parts.dart';
 
 class EditProfileFormFields extends StatelessWidget {
@@ -35,9 +35,19 @@ class EditProfileFormFields extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GlassTextField(label: 'Nama Lengkap', controller: fullNameController, icon: Icons.person_outline, validator: (v) => Validators.validateName(v, 'Nama lengkap')),
+        GlassTextField(
+          label: 'Nama Lengkap',
+          controller: fullNameController,
+          icon: Icons.person_outline,
+          validator: (v) => Validators.validateName(v, 'Nama lengkap'),
+        ),
         const SizedBox(height: 16),
-        GlassTextField(label: 'Email', controller: emailController, icon: Icons.email_outlined, readOnly: true),
+        GlassTextField(
+          label: 'Email',
+          controller: emailController,
+          icon: Icons.email_outlined,
+          readOnly: true,
+        ),
         const SizedBox(height: 16),
         GlassTextField(
           label: 'Nomor Telepon',
@@ -58,7 +68,10 @@ class EditProfileFormFields extends StatelessWidget {
           onTap: () => _pickDate(context),
         ),
         const SizedBox(height: 16),
-        GenderSelection(selectedGender: selectedGender, onChanged: onGenderChanged),
+        GenderSelection(
+          selectedGender: selectedGender,
+          onChanged: onGenderChanged,
+        ),
       ],
     );
   }
@@ -71,13 +84,18 @@ class EditProfileFormFields extends StatelessWidget {
       lastDate: DateTime.now(),
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(primary: AppColors.primary, onPrimary: AppColors.backgroundWhite, onSurface: AppColors.textDark),
+          colorScheme: const ColorScheme.light(
+            primary: AppColors.primary,
+            onPrimary: AppColors.backgroundWhite,
+            onSurface: AppColors.textDark,
+          ),
         ),
         child: child!,
       ),
     );
     if (date != null) {
-      dobController.text = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+      dobController.text =
+          "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
       onDateSelected();
     }
   }

@@ -1,13 +1,14 @@
 part of 'offer_detail_screen.dart';
 
-class _OfferDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
+class _OfferDetailAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
   const _OfferDetailAppBar();
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(
-        AppStrings.extDetailpromo,
+        HomeStrings.extDetailpromo,
         style: TextStyle(
           color: AppColors.textWhite,
           fontWeight: FontWeight.bold,
@@ -58,7 +59,10 @@ class _OfferCard extends StatelessWidget {
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [offer.themeColor.withValues(alpha: 0.8), offer.themeColor],
+              colors: [
+                offer.themeColor.withValues(alpha: 0.8),
+                offer.themeColor,
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -73,7 +77,11 @@ class _OfferCard extends StatelessWidget {
           ),
           child: Column(
             children: [
-              const Icon(Icons.card_giftcard, size: 80, color: AppColors.textWhite),
+              const Icon(
+                Icons.card_giftcard,
+                size: 80,
+                color: AppColors.textWhite,
+              ),
               const SizedBox(height: 24),
               Text(
                 offer.title,
@@ -123,7 +131,10 @@ class _ClaimButton extends StatelessWidget {
       height: 55,
       child: ElevatedButton(
         onPressed: () {
-          CustomSnackbar.showSuccess(context, AppStrings.extVoucherpromoberhasildiklaim);
+          CustomSnackbar.showSuccess(
+            context,
+            PharmacyStrings.extVoucherpromoberhasildiklaim,
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: offer.themeColor,
@@ -132,8 +143,12 @@ class _ClaimButton extends StatelessWidget {
           ),
         ),
         child: const Text(
-          AppStrings.extKlaimpromo,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textWhite),
+          HomeStrings.extKlaimpromo,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textWhite,
+          ),
         ),
       ),
     );

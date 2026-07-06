@@ -8,10 +8,7 @@ import 'appointment_header_widgets.dart';
 class AppointmentSliverHeader extends ConsumerWidget {
   final TextEditingController searchController;
 
-  const AppointmentSliverHeader({
-    super.key,
-    required this.searchController,
-  });
+  const AppointmentSliverHeader({super.key, required this.searchController});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

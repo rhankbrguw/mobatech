@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../providers/pharmacy_provider.dart';
 import '../widgets/shimmer_loading.dart';
 import 'prescription_card.dart';
@@ -14,7 +15,8 @@ class PrescriptionTabView extends ConsumerStatefulWidget {
   const PrescriptionTabView({super.key});
 
   @override
-  ConsumerState<PrescriptionTabView> createState() => _PrescriptionTabViewState();
+  ConsumerState<PrescriptionTabView> createState() =>
+      _PrescriptionTabViewState();
 }
 
 class _PrescriptionTabViewState extends ConsumerState<PrescriptionTabView> {
@@ -28,22 +30,24 @@ class _PrescriptionTabViewState extends ConsumerState<PrescriptionTabView> {
     setState(() => _isUploading = true);
     try {
       final dio = ref.read(dioProvider);
-      
+
       final formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(pickedFile.path),
       });
       final uploadRes = await dio.post('$baseUrl/upload', data: formData);
       final imageUrl = uploadRes.data['url'] as String;
 
-      await dio.post('/pharmacy/prescriptions', data: {
-        'image_url': imageUrl,
-        'notes': 'Resep dari pelanggan (Mobile)',
-      });
+      await dio.post(
+        '/pharmacy/prescriptions',
+        data: {'image_url': imageUrl, 'notes': 'Resep dari pelanggan (Mobile)'},
+      );
 
-      if (mounted) CustomSnackbar.showSuccess(context, 'E-Resep berhasil diunggah!');
+      if (mounted)
+        CustomSnackbar.showSuccess(context, 'E-Resep berhasil diunggah!');
       ref.invalidate(prescriptionsProvider);
     } catch (e) {
-      if (mounted) CustomSnackbar.showError(context, 'Gagal mengunggah E-Resep');
+      if (mounted)
+        CustomSnackbar.showError(context, 'Gagal mengunggah E-Resep');
     } finally {
       if (mounted) setState(() => _isUploading = false);
     }
@@ -60,20 +64,25 @@ class _PrescriptionTabViewState extends ConsumerState<PrescriptionTabView> {
           slivers: [
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 16.0,
+                ),
                 child: ElevatedButton.icon(
                   onPressed: _isUploading ? null : _uploadPrescription,
-                  icon: _isUploading 
+                  icon: _isUploading
                       ? const SizedBox(
-                          width: 20, 
-                          height: 20, 
+                          width: 20,
+                          height: 20,
                           child: CircularProgressIndicator(
-                            strokeWidth: 2, 
+                            strokeWidth: 2,
                             color: AppColors.backgroundWhite,
                           ),
                         )
                       : const Icon(Icons.upload_file),
-                  label: Text(_isUploading ? 'Mengunggah...' : 'Unggah E-Resep Baru'),
+                  label: Text(
+                    _isUploading ? 'Mengunggah...' : 'Unggah E-Resep Baru',
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: AppColors.textWhite,
@@ -87,12 +96,13 @@ class _PrescriptionTabViewState extends ConsumerState<PrescriptionTabView> {
             ),
             if (prescriptions.isEmpty)
               const SliverFillRemaining(
-                child: Center(child: Text(AppStrings.noPrescription)),
+                child: Center(child: Text(CoreStrings.noPrescription)),
               )
             else
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => PrescriptionCard(prescription: prescriptions[index]),
+                  (context, index) =>
+                      PrescriptionCard(prescription: prescriptions[index]),
                   childCount: prescriptions.length,
                 ),
               ),
@@ -110,7 +120,7 @@ class _PrescriptionTabViewState extends ConsumerState<PrescriptionTabView> {
         ),
       ),
       error: (err, stack) =>
-          const Center(child: Text(AppStrings.errorLoadPrescriptions)),
+          const Center(child: Text(ErrorStrings.errorLoadPrescriptions)),
     );
   }
 }

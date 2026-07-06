@@ -20,8 +20,8 @@ class CartItem {
       id: json['ID'] ?? json['id'] as int, // Support GORM ID formatting
       medicine: med,
       quantity: qty,
-      totalPrice: json['total_price'] != null 
-          ? (json['total_price'] as num).toDouble() 
+      totalPrice: json['total_price'] != null
+          ? (json['total_price'] as num).toDouble()
           : med.price * qty,
     );
   }
@@ -47,7 +47,7 @@ class Cart {
     List<CartItem> cartItems = itemsList
         .map((i) => CartItem.fromJson(i))
         .toList();
-        
+
     double computedTotal = 0.0;
     for (var item in cartItems) {
       computedTotal += item.totalPrice;
@@ -55,8 +55,8 @@ class Cart {
 
     return Cart(
       items: cartItems,
-      totalPrice: json['total_price'] != null 
-          ? (json['total_price'] as num).toDouble() 
+      totalPrice: json['total_price'] != null
+          ? (json['total_price'] as num).toDouble()
           : computedTotal,
     );
   }
