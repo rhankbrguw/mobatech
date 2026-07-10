@@ -78,6 +78,7 @@ class OrderTrackingScreen extends StatelessWidget {
               isCompleted: isCompleted,
               isCancelled: isCancelled,
               createdAt: order?.createdAt ?? DateTime.now(),
+              updatedAt: order?.updatedAt,
             ),
             const SizedBox(height: 40),
             SizedBox(

@@ -11,6 +11,7 @@ class OrderTrackingTimeline extends StatelessWidget {
   final bool isCompleted;
   final bool isCancelled;
   final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   const OrderTrackingTimeline({
     super.key,
@@ -19,12 +20,12 @@ class OrderTrackingTimeline extends StatelessWidget {
     required this.isCompleted,
     this.isCancelled = false,
     this.createdAt,
+    this.updatedAt,
   });
 
-  String _formatTime(DateTime? date, int addMinutes) {
+  String _formatTime(DateTime? date) {
     if (date == null) return 'Menunggu';
-    final target = date.toLocal().add(Duration(minutes: addMinutes));
-    return Formatters.formatDateTimeWithDayID(target);
+    return Formatters.formatDateTimeWithDayID(date.toLocal());
   }
 
   @override
@@ -48,7 +49,7 @@ class OrderTrackingTimeline extends StatelessWidget {
             _TimelineItem(
               title: 'Pesanan Dibatalkan',
               description: 'Pesanan ini telah dibatalkan.',
-              time: _formatTime(createdAt, 0),
+              time: _formatTime(updatedAt ?? createdAt),
               isCompleted: true,
               isLast: true,
               isError: true,
@@ -76,28 +77,28 @@ class OrderTrackingTimeline extends StatelessWidget {
           _TimelineItem(
             title: 'Pesanan Masuk',
             description: 'Sistem telah menerima pesanan Anda.',
-            time: _formatTime(createdAt, 0),
+            time: _formatTime(createdAt),
             isCompleted: true,
             isLast: false,
           ),
           _TimelineItem(
             title: 'Sedang Diproses',
             description: 'Apoteker sedang menyiapkan pesanan Anda.',
-            time: isProcessing ? _formatTime(createdAt, 15) : 'Menunggu',
+            time: isProcessing ? _formatTime(isReady ? createdAt : (updatedAt ?? createdAt)) : 'Menunggu',
             isCompleted: isProcessing,
             isLast: false,
           ),
           _TimelineItem(
             title: 'Pesanan Siap',
             description: 'Pesanan Anda siap untuk diambil / dikirim.',
-            time: isReady ? _formatTime(createdAt, 30) : 'Menunggu',
+            time: isReady ? _formatTime(isCompleted ? createdAt : (updatedAt ?? createdAt)) : 'Menunggu',
             isCompleted: isReady,
             isLast: false,
           ),
           _TimelineItem(
             title: 'Selesai',
             description: 'Pesanan telah selesai.',
-            time: isCompleted ? _formatTime(createdAt, 45) : 'Menunggu',
+            time: isCompleted ? _formatTime(updatedAt ?? createdAt) : 'Menunggu',
             isCompleted: isCompleted,
             isLast: true,
           ),

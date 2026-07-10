@@ -36,6 +36,7 @@ class PharmacyOrder {
   final String paymentMethod;
   final String pickupMethod;
   final DateTime? createdAt;
+  final DateTime? updatedAt;
   final List<OrderItem> items;
 
   PharmacyOrder({
@@ -46,6 +47,7 @@ class PharmacyOrder {
     required this.paymentMethod,
     required this.pickupMethod,
     this.createdAt,
+    this.updatedAt,
     required this.items,
   });
 
@@ -59,6 +61,9 @@ class PharmacyOrder {
       pickupMethod: json['pickup_method'] as String? ?? '',
       createdAt: json['CreatedAt'] != null || json['created_at'] != null 
           ? DateTime.tryParse((json['CreatedAt'] ?? json['created_at']).toString())
+          : null,
+      updatedAt: json['UpdatedAt'] != null || json['updated_at'] != null
+          ? DateTime.tryParse((json['UpdatedAt'] ?? json['updated_at']).toString())
           : null,
       items:
           (json['items'] as List<dynamic>?)
