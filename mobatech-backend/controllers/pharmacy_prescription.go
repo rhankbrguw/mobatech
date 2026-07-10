@@ -87,7 +87,7 @@ func (c *PharmacyController) authorizePrescriptionAccess(ctx *gin.Context, id in
 	}
 	userID := uint(userIDVal.(float64))
 	if prescription.UserID != userID {
-		err = fmt.Errorf("Access denied")
+		err = fmt.Errorf("access denied")
 		ctx.Error(utils.NewAppError(utils.ErrUnauthorized, http.StatusForbidden, err.Error(), nil))
 		return nil, err
 	}

@@ -1,3 +1,5 @@
+import { APP_STRINGS } from "./constants";
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.(com|id|co\.id|net|org|ac\.id|go\.id|sch\.id)$/i;
 const NAME_REGEX = /^[a-zA-Z\s'.,-]+$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$/;
@@ -6,14 +8,14 @@ const PHONE_DIGITS_MAX = 12;
 
 export const FormValidators = {
   name: (value: string): string | null => {
-    if (!value.trim()) return "Nama tidak boleh kosong.";
-    if (!NAME_REGEX.test(value)) return "Nama tidak boleh mengandung angka atau karakter khusus.";
+    if (!value.trim()) return APP_STRINGS.validation.nameEmpty;
+    if (!NAME_REGEX.test(value)) return APP_STRINGS.validation.nameInvalid;
     return null;
   },
 
   email: (value: string): string | null => {
-    if (!value.trim()) return "Email tidak boleh kosong.";
-    if (!EMAIL_REGEX.test(value)) return "Format email tidak valid. Gunakan domain yang benar (contoh: .com, .id).";
+    if (!value.trim()) return APP_STRINGS.validation.emailEmpty;
+    if (!EMAIL_REGEX.test(value)) return APP_STRINGS.validation.emailInvalid;
     return null;
   },
 
@@ -24,20 +26,20 @@ export const FormValidators = {
     else if (cleanPhone.startsWith("0")) cleanPhone = cleanPhone.substring(1);
     
     const digits = cleanPhone.replace(/\D/g, "");
-    if (!digits) return "Nomor HP tidak boleh kosong.";
-    if (digits.length < PHONE_DIGITS_MIN) return "Nomor HP terlalu pendek.";
-    if (digits.length > PHONE_DIGITS_MAX) return "Nomor HP terlalu panjang.";
+    if (!digits) return APP_STRINGS.validation.phoneEmpty;
+    if (digits.length < PHONE_DIGITS_MIN) return APP_STRINGS.validation.phoneShort;
+    if (digits.length > PHONE_DIGITS_MAX) return APP_STRINGS.validation.phoneLong;
     return null;
   },
 
   password: (value: string): string | null => {
-    if (!value.trim()) return "Kata sandi tidak boleh kosong.";
-    if (!PASSWORD_REGEX.test(value)) return "Kata sandi terlalu lemah (Min. 8 karakter, 1 huruf besar, 1 huruf kecil, 1 angka).";
+    if (!value.trim()) return APP_STRINGS.validation.passwordEmpty;
+    if (!PASSWORD_REGEX.test(value)) return APP_STRINGS.validation.passwordWeak;
     return null;
   },
 
   required: (value: string, label: string): string | null => {
-    if (!value.trim()) return `${label} tidak boleh kosong.`;
+    if (!value.trim()) return `${label}${APP_STRINGS.validation.requiredSuffix}`;
     return null;
   },
 } as const;

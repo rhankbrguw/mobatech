@@ -1,57 +1,32 @@
-import 'package:flutter/services.dart';
-
 import 'package:intl/intl.dart';
-
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 
 class Formatters {
   static String formatDate(DateTime date, {String format = 'dd MMM yyyy'}) {
     return DateFormat(format).format(date.toLocal());
   }
 
-  static String getDayOfWeekID(DateTime d) {
-    final localD = d.toLocal();
-    return [
-      'Senin',
-      'Selasa',
-      'Rabu',
-      'Kamis',
-      'Jumat',
-      'Sabtu',
-      'Minggu',
-    ][localD.weekday - 1];
-  }
+  static String getDayOfWeekID(DateTime d) => CoreFormatters.daysOfWeek[d.toLocal().weekday - 1];
 
-  static String getMonthID(DateTime d) {
-    final localD = d.toLocal();
-    return [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'Mei',
-      'Jun',
-      'Jul',
-      'Agu',
-      'Sep',
-      'Okt',
-      'Nov',
-      'Des',
-    ][localD.month - 1];
-  }
+  static String getMonthID(DateTime d) => CoreFormatters.months[d.toLocal().month - 1];
 
   static String formatDateID(DateTime d) {
     final localD = d.toLocal();
     return '${localD.day.toString().padLeft(2, '0')} ${getMonthID(localD)} ${localD.year}';
   }
 
-  static String formatDateWithDayID(DateTime d) =>
-      '${getDayOfWeekID(d)}, ${formatDateID(d)}';
+  static String formatDateWithDayID(DateTime d) => '${getDayOfWeekID(d)}, ${formatDateID(d)}';
+
+  static String formatDateTimeWithDayID(DateTime d) {
+    final localD = d.toLocal();
+    final timeStr = '${localD.hour.toString().padLeft(2, '0')}:${localD.minute.toString().padLeft(2, '0')}';
+    return '${formatDateWithDayID(localD)} • $timeStr';
+  }
 
   static String parseAndFormatDateID(String dateStr) {
     if (dateStr.isEmpty || dateStr == '-') return '-';
     try {
-      final dt = DateTime.parse(dateStr).toLocal();
-      return formatDateID(dt);
+      return formatDateID(DateTime.parse(dateStr).toLocal());
     } catch (e) {
       return dateStr;
     }
@@ -59,16 +34,14 @@ class Formatters {
 
   static String formatDateTimeID(DateTime d) {
     final localD = d.toLocal();
-    final timeStr =
-        '${localD.hour.toString().padLeft(2, '0')}:${localD.minute.toString().padLeft(2, '0')}';
+    final timeStr = '${localD.hour.toString().padLeft(2, '0')}:${localD.minute.toString().padLeft(2, '0')}';
     return '${formatDateID(localD)} $timeStr';
   }
 
   static String parseAndFormatDateTimeID(String dateStr) {
     if (dateStr.isEmpty || dateStr == '-') return '-';
     try {
-      final dt = DateTime.parse(dateStr).toLocal();
-      return formatDateTimeID(dt);
+      return formatDateTimeID(DateTime.parse(dateStr).toLocal());
     } catch (e) {
       return dateStr;
     }
@@ -76,16 +49,14 @@ class Formatters {
 
   static String formatDateTimeSecID(DateTime d) {
     final localD = d.toLocal();
-    final timeStr =
-        '${localD.hour.toString().padLeft(2, '0')}:${localD.minute.toString().padLeft(2, '0')}:${localD.second.toString().padLeft(2, '0')}';
+    final timeStr = '${localD.hour.toString().padLeft(2, '0')}:${localD.minute.toString().padLeft(2, '0')}:${localD.second.toString().padLeft(2, '0')}';
     return '${formatDateID(localD)} $timeStr';
   }
 
   static String parseAndFormatDateTimeSecID(String dateStr) {
     if (dateStr.isEmpty || dateStr == '-') return '-';
     try {
-      final dt = DateTime.parse(dateStr).toLocal();
-      return formatDateTimeSecID(dt);
+      return formatDateTimeSecID(DateTime.parse(dateStr).toLocal());
     } catch (e) {
       return dateStr;
     }
@@ -93,46 +64,40 @@ class Formatters {
 
   static String formatCurrency(double amount) {
     return NumberFormat.currency(
-      locale: 'id_ID',
-      symbol: 'Rp ',
+      locale: CoreFormatters.localeID,
+      symbol: CoreFormatters.currencySymbol,
       decimalDigits: 0,
     ).format(amount);
   }
 
+  static String _cleanPhone(String phone) {
+    String clean = phone.replaceAll(RegExp(r'[^\d+]'), '');
+    if (clean.startsWith(CoreFormatters.phonePrefixIntl)) {
+      clean = clean.substring(3);
+    } else if (clean.startsWith(CoreFormatters.phonePrefixLocalIntl)) {
+      clean = clean.substring(2);
+    } else if (clean.startsWith(CoreFormatters.phonePrefixLocal)) {
+      clean = clean.substring(1);
+    }
+    return '${CoreFormatters.phonePrefixIntl}$clean';
+  }
+
+  static String _formatCleanPhone(String cleanPhone, String prefix) {
+    String localPart = cleanPhone.substring(3);
+    if (localPart.length <= 3) return localPart.isEmpty ? cleanPhone : '$prefix $localPart';
+    String p1 = localPart.substring(0, 3);
+    String remainder = localPart.substring(3);
+    if (remainder.length > 4) {
+      return '$prefix $p1-${remainder.substring(0, 4)}-${remainder.substring(4)}';
+    }
+    return '$prefix $p1-$remainder';
+  }
+
   static String formatPhoneNumber(String phone) {
-    // Clean all non-digit characters except the leading plus
-    String cleanPhone = phone.replaceAll(RegExp(r'[^\d+]'), '');
-
-    if (cleanPhone.startsWith('+62')) {
-      cleanPhone = cleanPhone.substring(3);
-    } else if (cleanPhone.startsWith('62')) {
-      cleanPhone = cleanPhone.substring(2);
+    String cleanPhone = _cleanPhone(phone);
+    if (cleanPhone.startsWith(CoreFormatters.phonePrefixIntl)) {
+      return _formatCleanPhone(cleanPhone, CoreFormatters.phonePrefixIntl);
     }
-
-    if (cleanPhone.startsWith('0')) {
-      cleanPhone = cleanPhone.substring(1);
-    }
-
-    cleanPhone = '+62$cleanPhone';
-
-    // Now format: +62 812-3456-7890
-    if (cleanPhone.startsWith('+62')) {
-      String localPart = cleanPhone.substring(3);
-      if (localPart.length > 3) {
-        String p1 = localPart.substring(0, 3); // 812
-        String remainder = localPart.substring(3); // 34567890
-
-        if (remainder.length > 4) {
-          String p2 = remainder.substring(0, 4); // 3456
-          String p3 = remainder.substring(4); // 7890
-          return '+62 $p1-$p2-$p3';
-        } else {
-          return '+62 $p1-$remainder';
-        }
-      } else if (localPart.isNotEmpty) {
-        return '+62 $localPart';
-      }
-    }
-    return cleanPhone; // Fallback
+    return cleanPhone;
   }
 }

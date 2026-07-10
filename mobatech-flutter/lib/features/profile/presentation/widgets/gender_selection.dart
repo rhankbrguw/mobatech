@@ -47,57 +47,45 @@ class GenderSelection extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primary
-              : AppColors.backgroundWhite.withValues(alpha: 0.9),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected
-                ? AppColors.primary
-                : AppColors.textGrey.withValues(alpha: 0.2),
-            width: 1.5,
-          ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: isSelected
-                  ? AppColors.backgroundWhite
-                  : AppColors.textGrey,
-              size: 20,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              gender,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: isSelected
-                    ? AppColors.backgroundWhite
-                    : AppColors.textDark,
-              ),
-            ),
-          ],
-        ),
+        decoration: _buildCardDecoration(isSelected),
+        child: _buildCardContent(gender, icon, isSelected),
       ),
+    );
+  }
+
+  BoxDecoration _buildCardDecoration(bool isSelected) {
+    return BoxDecoration(
+      color: isSelected ? AppColors.primary : AppColors.backgroundWhite.withValues(alpha: 0.9),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: isSelected ? AppColors.primary : AppColors.textGrey.withValues(alpha: 0.2),
+        width: 1.5,
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.primary.withValues(alpha: isSelected ? 0.3 : 0.05),
+          blurRadius: isSelected ? 8 : 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCardContent(String gender, IconData icon, bool isSelected) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: isSelected ? AppColors.backgroundWhite : AppColors.textGrey, size: 20),
+        const SizedBox(width: 8),
+        Text(
+          gender,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: isSelected ? AppColors.backgroundWhite : AppColors.textDark,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -37,10 +37,11 @@ func (s *doctorService) GetDoctorByID(ctx context.Context, id uint) (*models.Doc
 func (s *doctorService) CreateDoctor(ctx context.Context, doctor *models.Doctor) error {
 	doctor.IsActive = true
 	err := s.doctorRepo.Create(ctx, doctor)
-	if err == nil {
-		utils.TriggerAsyncRAGSync()
+	if err != nil {
+		return fmt.Errorf("doctorService.CreateDoctor: %w", err)
 	}
-	return fmt.Errorf("doctorService.CreateDoctor: %w", err)
+	utils.TriggerAsyncRAGSync()
+	return nil
 }
 
 func (s *doctorService) UpdateDoctor(ctx context.Context, id uint, input *models.Doctor) (*models.Doctor, error) {
@@ -81,8 +82,9 @@ func (s *doctorService) applyDoctorUpdates(ctx context.Context, doctor, input *m
 
 func (s *doctorService) DeleteDoctor(ctx context.Context, id uint) error {
 	err := s.doctorRepo.Delete(ctx, id)
-	if err == nil {
-		utils.TriggerAsyncRAGSync()
+	if err != nil {
+		return fmt.Errorf("doctorService.DeleteDoctor: %w", err)
 	}
-	return fmt.Errorf("doctorService.DeleteDoctor: %w", err)
+	utils.TriggerAsyncRAGSync()
+	return nil
 }

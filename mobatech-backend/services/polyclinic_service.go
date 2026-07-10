@@ -43,18 +43,20 @@ func (s *polyclinicService) GetPolyclinicByID(ctx context.Context, id uint) (*mo
 
 func (s *polyclinicService) CreatePolyclinic(ctx context.Context, polyclinic *models.Polyclinic) error {
 	err := s.repo.Create(ctx, polyclinic)
-	if err == nil {
-		utils.TriggerAsyncRAGSync()
+	if err != nil {
+		return fmt.Errorf("polyclinicService.CreatePolyclinic: %w", err)
 	}
-	return fmt.Errorf("polyclinicService.CreatePolyclinic: %w", err)
+	utils.TriggerAsyncRAGSync()
+	return nil
 }
 
 func (s *polyclinicService) UpdatePolyclinic(ctx context.Context, polyclinic *models.Polyclinic) error {
 	err := s.repo.Update(ctx, polyclinic)
-	if err == nil {
-		utils.TriggerAsyncRAGSync()
+	if err != nil {
+		return fmt.Errorf("polyclinicService.UpdatePolyclinic: %w", err)
 	}
-	return fmt.Errorf("polyclinicService.UpdatePolyclinic: %w", err)
+	utils.TriggerAsyncRAGSync()
+	return nil
 }
 
 func (s *polyclinicService) DeletePolyclinic(ctx context.Context, id uint) error {
@@ -68,10 +70,11 @@ func (s *polyclinicService) DeletePolyclinic(ctx context.Context, id uint) error
 	}
 
 	err = s.repo.Delete(ctx, id)
-	if err == nil {
-		utils.TriggerAsyncRAGSync()
+	if err != nil {
+		return fmt.Errorf("polyclinicService.DeletePolyclinic: %w", err)
 	}
-	return fmt.Errorf("polyclinicService.DeletePolyclinic: %w", err)
+	utils.TriggerAsyncRAGSync()
+	return nil
 }
 
 func (s *polyclinicService) GetSchedules(ctx context.Context, polyclinicID uint) ([]models.PolyclinicSchedule, error) {
@@ -80,24 +83,27 @@ func (s *polyclinicService) GetSchedules(ctx context.Context, polyclinicID uint)
 
 func (s *polyclinicService) CreateSchedule(ctx context.Context, schedule *models.PolyclinicSchedule) error {
 	err := s.repo.CreateSchedule(ctx, schedule)
-	if err == nil {
-		utils.TriggerAsyncRAGSync()
+	if err != nil {
+		return fmt.Errorf("polyclinicService.CreateSchedule: %w", err)
 	}
-	return fmt.Errorf("polyclinicService.CreateSchedule: %w", err)
+	utils.TriggerAsyncRAGSync()
+	return nil
 }
 
 func (s *polyclinicService) UpdateSchedule(ctx context.Context, schedule *models.PolyclinicSchedule) error {
 	err := s.repo.UpdateSchedule(ctx, schedule)
-	if err == nil {
-		utils.TriggerAsyncRAGSync()
+	if err != nil {
+		return fmt.Errorf("polyclinicService.UpdateSchedule: %w", err)
 	}
-	return fmt.Errorf("polyclinicService.UpdateSchedule: %w", err)
+	utils.TriggerAsyncRAGSync()
+	return nil
 }
 
 func (s *polyclinicService) DeleteSchedule(ctx context.Context, id uint) error {
 	err := s.repo.DeleteSchedule(ctx, id)
-	if err == nil {
-		utils.TriggerAsyncRAGSync()
+	if err != nil {
+		return fmt.Errorf("polyclinicService.DeleteSchedule: %w", err)
 	}
-	return fmt.Errorf("polyclinicService.DeleteSchedule: %w", err)
+	utils.TriggerAsyncRAGSync()
+	return nil
 }

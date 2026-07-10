@@ -1,4 +1,5 @@
 import 'package:mobatech_app/core/constants/strings/error_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,7 +56,7 @@ class NotificationScreen extends ConsumerWidget {
           if (reminders.isEmpty) {
             return const Center(
               child: Text(
-                'Belum ada notifikasi.',
+                CoreStrings.noNotification,
                 style: TextStyle(color: AppColors.textGrey),
               ),
             );

@@ -6,6 +6,7 @@ import (
 	"backend/cron"
 	"backend/middleware"
 	"backend/routes"
+	"log"
 	"os"
 
 	"github.com/gin-contrib/cors"
@@ -15,7 +16,9 @@ import (
 func main() {
 	config.ConnectDatabase()
 	cron.StartScheduleExpirationCron(config.DB)
-	os.MkdirAll(constants.DefaultUploadsDir, os.ModePerm)
+	if err := os.MkdirAll(constants.DefaultUploadsDir, 0750); err != nil {
+		log.Printf("Warning: Failed to create uploads directory: %v", err)
+	}
 
 	r := setupServer()
 

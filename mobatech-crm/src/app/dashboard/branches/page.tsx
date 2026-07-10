@@ -18,5 +18,5 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
     console.error(e);
   }
 
-  return <BranchesClient initialData={initialData} searchParams={await searchParams} />;
+  return <><h1 className="sr-only">{metadata.title as string}</h1><BranchesClient initialData={initialData} searchParams={await searchParams} /></>;
 }

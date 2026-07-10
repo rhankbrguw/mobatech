@@ -95,6 +95,9 @@ export const APP_STRINGS = {
   reminders: {
     titlePlaceholder: "Contoh: Jadwal Kontrol Rutin", datePlaceholder: "Contoh: 2023-12-31T10:00",
     messagePlaceholder: "Contoh: Halo Bapak/Ibu, ini adalah pengingat...",
+    formTitle: "Form Kirim Reminder", patientLabel: "Pasien *", patientSelect: "— Pilih Pasien —",
+    typeLabel: "Tipe Reminder", titleLabel: "Judul *", dateLabel: "Tanggal & Waktu *",
+    messageLabel: "Pesan", submitButton: "Kirim Reminder"
   },
   common: {
     medicalResultsUpdated: "Hasil medis diperbarui", medicalResultsAdded: "Hasil medis berhasil ditambahkan", medicalResultsLoadFailed: "Gagal memuat hasil medis", medicalResultsSaveFailed: "Gagal menyimpan data",
@@ -107,7 +110,7 @@ export const APP_STRINGS = {
     imageUploadSuccess: "Gambar berhasil diunggah", imageUploadError: "Terjadi kesalahan jaringan saat mengunggah", fileUploadSuccess: "Berkas berhasil diunggah", fileUploadError: "Terjadi kesalahan jaringan saat mengunggah",
     promoSaveSuccess: "Berhasil menyimpan promo", userUpdateSuccess: "Pengguna diperbarui", userCreateSuccess: "Pengguna ditambahkan", userLoadError: "Gagal memuat data pengguna",
     userDeleteSuccess: "Pengguna berhasil dihapus", categoryAddSuccess: "Kategori berhasil ditambahkan", categoryAddError: "Gagal menambahkan kategori",
-    validationMissingFields: "User ID, Nama Tes, dan Tanggal wajib diisi", validationReminderFields: "Pilih pasien, isi Judul, dan Tanggal",
+    validationMissingFields: "User ID, Nama Tes, dan Tanggal wajib diisi", validationReminderFields: "Pilih pasien, isi Judul, dan lengkapi Tanggal beserta Waktu (Jam).",
     reminderLoadError: "Gagal memuat data reminder", reminderSendSuccess: "Reminder berhasil dikirim ke pasien", reminderCreateError: "Gagal membuat reminder",
     reminderDeleteSuccess: "Reminder dihapus", reminderDeleteError: "Gagal menghapus reminder", ragStatusError: "Gagal mengambil status RAG Engine", ragHistoryError: "Gagal memuat histori chat",
     ragSyncSuccess: "Sinkronisasi berhasil! Knowledge Base telah diperbarui.", ragSyncError: "Gagal melakukan sinkronisasi: ",
@@ -145,4 +148,25 @@ export const APP_STRINGS = {
     defaultColor: "#1e5e44",
     defaultColorLight: "#1e5e4499",
   },
+  validation: {
+    nameEmpty: "Nama tidak boleh kosong.",
+    nameInvalid: "Nama tidak boleh mengandung angka atau karakter khusus.",
+    emailEmpty: "Email tidak boleh kosong.",
+    emailInvalid: "Format email tidak valid. Gunakan domain yang benar (contoh: .com, .id).",
+    phoneEmpty: "Nomor HP tidak boleh kosong.",
+    phoneShort: "Nomor HP terlalu pendek.",
+    phoneLong: "Nomor HP terlalu panjang.",
+    passwordEmpty: "Kata sandi tidak boleh kosong.",
+    passwordWeak: "Kata sandi terlalu lemah (Min. 8 karakter, 1 huruf besar, 1 huruf kecil, 1 angka).",
+    requiredSuffix: " tidak boleh kosong.",
+  },
+  formatters: {
+    phonePrefix: "+62 ",
+    phonePrefixIntl: "62",
+    phonePrefixLocal: "0",
+    currencyPrefix: "Rp ",
+    currencyZero: "Rp 0",
+    locale: "id-ID",
+    timezone: "Asia/Jakarta"
+  }
 } as const;

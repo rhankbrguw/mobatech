@@ -16,7 +16,7 @@ var (
 	ErrScheduleExpired            = errors.New("schedule has already expired")
 	ErrScheduleFullOrNotAvail     = errors.New("schedule is full or not available")
 	ErrScheduleNotFound           = errors.New("schedule not found")
-	ErrCannotDeletePolyclinic     = errors.New("Tidak bisa menghapus poliklinik karena masih ada dokter yang terdaftar di dalamnya. Pindahkan dokternya terlebih dahulu.")
+	ErrCannotDeletePolyclinic     = errors.New("tidak bisa menghapus poliklinik karena masih ada dokter yang terdaftar di dalamnya, pindahkan dokternya terlebih dahulu")
 	ErrUnauthorizedToCancelAppt   = errors.New("unauthorized to cancel this appointment")
 	ErrUnauthorizedToDeletePresc  = errors.New("unauthorized to delete this prescription")
 	ErrUnauthorizedToUpdateRemind = errors.New("unauthorized to update this reminder")

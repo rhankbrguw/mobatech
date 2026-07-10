@@ -52,10 +52,11 @@ func (s *scheduleService) CreateSchedule(ctx context.Context, schedule *models.D
 	schedule.IsAvailable = true
 	schedule.Booked = 0
 	err := s.scheduleRepo.Create(ctx, schedule)
-	if err == nil {
-		triggerRAGSync()
+	if err != nil {
+		return fmt.Errorf("scheduleService.CreateSchedule: %w", err)
 	}
-	return fmt.Errorf("scheduleService.CreateSchedule: %w", err)
+	triggerRAGSync()
+	return nil
 }
 
 func (s *scheduleService) UpdateSchedule(ctx context.Context, id uint, input *models.DoctorSchedule) (*models.DoctorSchedule, error) {
@@ -88,8 +89,9 @@ func (s *scheduleService) UpdateSchedule(ctx context.Context, id uint, input *mo
 
 func (s *scheduleService) DeleteSchedule(ctx context.Context, id uint) error {
 	err := s.scheduleRepo.Delete(ctx, id)
-	if err == nil {
-		triggerRAGSync()
+	if err != nil {
+		return fmt.Errorf("scheduleService.DeleteSchedule: %w", err)
 	}
-	return fmt.Errorf("scheduleService.DeleteSchedule: %w", err)
+	triggerRAGSync()
+	return nil
 }

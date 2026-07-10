@@ -95,7 +95,7 @@ func (c *PharmacyController) authorizeOrderAccess(ctx *gin.Context, id int) (*mo
 	}
 	userID := uint(userIDVal.(float64))
 	if order.UserID != userID {
-		err = fmt.Errorf("Access denied")
+		err = fmt.Errorf("access denied")
 		ctx.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
 		return nil, fmt.Errorf("PharmacyController.authorizeOrderAccess: %w", err)
 	}

@@ -1,13 +1,16 @@
-"use client";
+import ClientPage from "./Client";
+import { Metadata } from "next";
 
-import { PharmacyPrescriptions } from "@/components/pharmacy/PharmacyPrescriptions";
+export const metadata: Metadata = {
+  title: "Resep Obat | Hermina CRM",
+  description: "Manajemen Resep Obat Hermina CRM"
+};
 
-
-
-export default function PrescriptionsPage() {
+export default function Page() {
   return (
-    <div className="space-y-6 animate-slide-in">
-      <PharmacyPrescriptions />
-    </div>
+    <>
+      <h1 className="sr-only">{metadata.title as string}</h1>
+      <ClientPage />
+    </>
   );
 }

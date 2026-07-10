@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/reminder.dart';
 import 'package:mobatech_app/core/theme/app_spacing.dart';
+import '../../../../core/utils/formatters.dart';
 
 class ReminderCard extends StatelessWidget {
   final Reminder reminder;
@@ -11,11 +12,12 @@ class ReminderCard extends StatelessWidget {
   const ReminderCard({super.key, required this.reminder, required this.onTap});
 
   IconData _getIconData(String type) {
-    switch (type) {
+    switch (type.toLowerCase()) {
       case 'medication':
         return Icons.medication;
       case 'appointment':
         return Icons.calendar_today;
+      case 'checkup':
       case 'result':
         return Icons.medical_information;
       default:
@@ -24,11 +26,12 @@ class ReminderCard extends StatelessWidget {
   }
 
   Color _getIconColor(String type) {
-    switch (type) {
+    switch (type.toLowerCase()) {
       case 'medication':
         return AppColors.errorRed;
       case 'appointment':
         return AppColors.primary;
+      case 'checkup':
       case 'result':
         return AppColors.iconBlue;
       default:
@@ -124,8 +127,7 @@ class ReminderCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          reminder
-                              .dateTime, // In a real app we might format this
+                          Formatters.parseAndFormatDateTimeID(reminder.dateTime),
                           style: const TextStyle(
                             color: AppColors.textLightGrey,
                             fontSize: 12,

@@ -38,7 +38,7 @@ class AnonymizationEngine:
         anonymized_text = text
         sorted_entities = sorted(entities, key=lambda x: x[const.KEY_START], reverse=True)
         
-        for entity in sorted_entities:
+        for _ in sorted_entities:
             # In future, we can add more logic here. Currently disabled PER, ORG, LOC
             pass
                 

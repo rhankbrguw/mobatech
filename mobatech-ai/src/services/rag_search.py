@@ -37,7 +37,7 @@ class VectorSearchEngine:
         query_vector = self.model.encode([query])
         faiss.normalize_L2(query_vector)
         
-        distances, indices = self.index.search(query_vector, top_k)
+        _, indices = self.index.search(query_vector, top_k)
         
         results: list[str] = []
         for i in range(top_k):

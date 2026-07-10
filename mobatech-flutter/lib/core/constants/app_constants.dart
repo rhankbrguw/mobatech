@@ -17,3 +17,16 @@ class AppSizes {
   static const double touchTarget = 48.0;
   static const double inputHeight = 48.0;
 }
+
+class AppRegexes {
+  static const String email = r"^[^\s@]+@[^\s@]+\.(com|id|co\.id|net|org|ac\.id|go\.id|sch\.id)$";
+  static const String name = r"^[a-zA-Z\s\.,'-]+$";
+  static const String password = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$';
+  static const String nonDigit = r'\D';
+  static const String nonDigitPlus = r'[^\d+]';
+}
+
+class AppLimits {
+  static const int phoneMinLength = 7;
+  static const int phoneMaxLength = 12;
+}

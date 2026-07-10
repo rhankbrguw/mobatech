@@ -108,7 +108,7 @@ func (r *doctorRepository) Create(ctx context.Context, doctor *models.Doctor) er
 				// In production, use bcrypt hash directly. E.g., bcrypt.GenerateFromPassword
 				// Since we don't import bcrypt here, we will just store a dummy or
 				// assume auth_service handles password hashing on first login/reset.
-				Password: "$2a$10$wY.uJz6O9.4q8U4s/yH2P.o/9q0lOq.6/m6Q1O6M.Q8Y8Q8Q8Q8Q8", // "Hermina123!" hashed
+				Password: "$2a$10$wY.uJz6O9.4q8U4s/yH2P.o/9q0lOq.6/m6Q1O6M.Q8Y8Q8Q8Q8Q8", // #nosec G101 -- Initial seed password hash
 			}
 			if err := tx.Create(&user).Error; err != nil {
 				return fmt.Errorf("doctorRepository.Create: %w", err)

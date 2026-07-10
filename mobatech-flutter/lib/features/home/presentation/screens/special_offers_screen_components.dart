@@ -28,62 +28,57 @@ class _PromoCard extends StatelessWidget {
   Widget _buildCardContent() {
     return Container(
       height: 160,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [offer.themeColor.withValues(alpha: 0.8), offer.themeColor],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: offer.themeColor.withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+      decoration: _buildCardDecoration(),
       child: Stack(
         children: [
-          Positioned(
-            right: -30,
-            top: -30,
-            child: Opacity(
-              opacity: 0.2,
-              child: const Icon(
-                Icons.local_offer,
-                size: 150,
-                color: AppColors.textWhite,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildPromoLabel(),
-                const SizedBox(height: 12),
-                Text(
-                  offer.title,
-                  style: const TextStyle(
-                    color: AppColors.textWhite,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  offer.subtitle,
-                  style: TextStyle(
-                    color: AppColors.textWhite.withValues(alpha: 0.9),
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          _buildBackgroundIcon(),
+          _buildTextContent(),
+        ],
+      ),
+    );
+  }
+
+  BoxDecoration _buildCardDecoration() {
+    return BoxDecoration(
+      gradient: LinearGradient(
+        colors: [offer.themeColor.withValues(alpha: 0.8), offer.themeColor],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: offer.themeColor.withValues(alpha: 0.3),
+          blurRadius: 15,
+          offset: const Offset(0, 8),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBackgroundIcon() {
+    return Positioned(
+      right: -30,
+      top: -30,
+      child: Opacity(
+        opacity: 0.2,
+        child: const Icon(Icons.local_offer, size: 150, color: AppColors.textWhite),
+      ),
+    );
+  }
+
+  Widget _buildTextContent() {
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildPromoLabel(),
+          const SizedBox(height: 12),
+          Text(offer.title, style: const TextStyle(color: AppColors.textWhite, fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          Text(offer.subtitle, style: TextStyle(color: AppColors.textWhite.withValues(alpha: 0.9), fontSize: 14)),
         ],
       ),
     );

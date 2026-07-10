@@ -5,5 +5,5 @@ export const metadata = {
 };
 
 export default function UsersPage() {
-  return <UsersClient />;
+  return <><h1 className="sr-only">{metadata.title as string}</h1><UsersClient /></>;
 }

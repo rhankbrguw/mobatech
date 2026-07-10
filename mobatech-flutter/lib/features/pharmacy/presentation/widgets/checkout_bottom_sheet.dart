@@ -37,7 +37,7 @@ class CheckoutBottomSheet extends ConsumerWidget {
             color: AppColors.backgroundWhite.withValues(alpha: 0.85),
             border: Border(
               top: BorderSide(
-                color: Colors.grey.withValues(alpha: 0.1),
+                color: AppColors.textGrey.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -52,7 +52,7 @@ class CheckoutBottomSheet extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Total Pembayaran',
+                        PharmacyStrings.extTotalpembayaran,
                         style: TextStyle(color: AppColors.textGrey, fontSize: 13, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 4),
@@ -122,7 +122,7 @@ class CheckoutBottomSheet extends ConsumerWidget {
                 ),
               ),
               child: const Text(
-                'Bayar Sekarang',
+                PharmacyStrings.extBayarsekarang,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AppColors.textWhite,

@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
 
 import '../../../../core/network/dio_client.dart';
 

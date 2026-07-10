@@ -47,18 +47,24 @@ class ErrorHandler {
   static String _handleStringError(String e) {
     String eLower = e.toLowerCase();
 
-    if (eLower.contains('unauthenticated') || eLower.contains('401'))
+    if (eLower.contains('unauthenticated') || eLower.contains('401')) {
       return ErrorStrings.errSessionExpired;
-    if (eLower.contains('unauthorized') || eLower.contains('403'))
+    }
+    if (eLower.contains('unauthorized') || eLower.contains('403')) {
       return ErrorStrings.errUnauthorized;
-    if (eLower.contains('validation_error') || eLower.contains('422'))
+    }
+    if (eLower.contains('validation_error') || eLower.contains('422')) {
       return ErrorStrings.errValidation;
-    if (eLower.contains('not_found') || eLower.contains('404'))
+    }
+    if (eLower.contains('not_found') || eLower.contains('404')) {
       return ErrorStrings.errNotFound;
-    if (eLower.contains('conflict') || eLower.contains('409'))
+    }
+    if (eLower.contains('conflict') || eLower.contains('409')) {
       return ErrorStrings.errConflict;
-    if (eLower.contains('internal_error') || eLower.contains('500'))
+    }
+    if (eLower.contains('internal_error') || eLower.contains('500')) {
       return ErrorStrings.errServer;
+    }
 
     if (eLower.contains('invalid credentials') ||
         eLower.contains('password salah') ||

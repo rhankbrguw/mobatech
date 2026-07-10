@@ -18,5 +18,5 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
     console.error(e);
   }
 
-  return <RemindersClient initialData={initialData} searchParams={await searchParams} />;
+  return <><h1 className="sr-only">{metadata.title as string}</h1><RemindersClient initialData={initialData} searchParams={await searchParams} /></>;
 }

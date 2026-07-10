@@ -24,8 +24,7 @@ class OrderTrackingTimeline extends StatelessWidget {
   String _formatTime(DateTime? date, int addMinutes) {
     if (date == null) return 'Menunggu';
     final target = date.toLocal().add(Duration(minutes: addMinutes));
-    final timeStr = '${target.hour.toString().padLeft(2, '0')}:${target.minute.toString().padLeft(2, '0')}';
-    return '${Formatters.getDayOfWeekID(target)}, ${Formatters.formatDateID(target)} • $timeStr';
+    return Formatters.formatDateTimeWithDayID(target);
   }
 
   @override

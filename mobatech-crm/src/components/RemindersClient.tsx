@@ -15,6 +15,7 @@ import { RemindersList } from "./RemindersList";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { User, Reminder } from "@/types/api";
 import { APP_STRINGS } from "@/lib/constants";
+import { Formatters } from "@/lib/formatters";
 const REMINDER_TYPES = ["Appointment", "Medication", "Checkup", "General"];
 const defaultForm = { user_id: 0, appointment_id: 0, title: "", message: "", reminder_date: "", type: "General" };
 export function RemindersClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
@@ -70,7 +71,7 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
       await api.post("/api/admin/reminders", { ...form, reminder_date: isoDate });
       showToast(APP_STRINGS.common.reminderSendSuccess, "success");
       setShowForm(false);
-      setForm(defaultForm);
+      setForm({ ...defaultForm, reminder_date: Formatters.currentLocalDatetimeInput() });
       loadReminders();
     } catch { showToast(APP_STRINGS.common.reminderCreateError, "error"); }
     finally { setSaving(false); }
@@ -94,7 +95,12 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
         title="Pengingat Pasien"
         description="Kirim notifikasi / pengingat ke pasien terdaftar."
         action={
-          <Button onClick={() => setShowForm(!showForm)} variant={showForm ? "outline" : "primary"} icon={showForm ? <X size={18} /> : <Plus size={18} />}>
+          <Button onClick={() => {
+            if (!showForm) {
+              setForm({ ...defaultForm, reminder_date: Formatters.currentLocalDatetimeInput() });
+            }
+            setShowForm(!showForm);
+          }} variant={showForm ? "outline" : "primary"} icon={showForm ? <X size={18} /> : <Plus size={18} />}>
             {showForm ? "Batal" : "Kirim Reminder Baru"}
           </Button>
         }
@@ -104,8 +110,11 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
           value={filterValue}
           onChange={setFilterValue}
           options={[
-            { label: 'Obat', value: 'medicine' },
-            { label: 'Jadwal', value: 'schedule' },
+            { label: 'Semua Tipe', value: '' },
+            { label: 'Janji Temu', value: 'Appointment' },
+            { label: 'Obat', value: 'Medication' },
+            { label: 'Checkup', value: 'Checkup' },
+            { label: 'Umum', value: 'General' },
           ]}
           placeholder={APP_STRINGS.common.searchType}
         />

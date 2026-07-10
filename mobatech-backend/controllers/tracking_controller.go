@@ -53,6 +53,7 @@ func (tc *TrackingController) TrackAmbulance(c *gin.Context) {
 }
 
 func (tc *TrackingController) startSimulation(ctx context.Context, conn *websocket.Conn, reqID uint, patientLat, patientLng float64) {
+	/* #nosec G404 -- Used for map simulation, not crypto */
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 	angle := rng.Float64() * 2 * math.Pi
 	distance := constants.SimulatedDistance + rng.Float64()*constants.SimulatedDistanceRand

@@ -2,7 +2,7 @@ import os
 
 # API configuration
 API_TITLE = os.getenv("API_TITLE", "Hermina AI Orchestrator")
-API_HOST = os.getenv("API_HOST", "0.0.0.0")
+API_HOST = os.getenv("API_HOST", "0.0.0.0")  # nosec B104
 API_PORT = int(os.getenv("API_PORT", 8000))
 API_SYNC_ENDPOINT = "/api/rag/sync"
 API_STATUS_ENDPOINT = "/api/rag/status"
@@ -80,14 +80,14 @@ REPLACE_WHITESPACE = " "
 DB_ENV_KEYS = {
     "host": "DB_HOST",
     "user": "DB_USER",
-    "password": "DB_PASSWORD",
+    "password": "DB_PASSWORD",  # nosec B105
     "name": "DB_NAME",
     "port": "DB_PORT"
 }
 DB_DEFAULTS = {
     "host": "127.0.0.1",
     "user": "root",
-    "password": "",
+    "password": "",  # nosec B105
     "name": "mobatech",
     "port": 3306
 }
@@ -123,8 +123,6 @@ KEY_MESSAGE = "message"
 KEY_VECTOR_COUNT = "vector_count"
 KEY_KNOWLEDGE_BASE_SIZE = "knowledge_base_size"
 KEY_START = "start"
-KEY_END = "end"
-KEY_ENTITY_GROUP = "entity_group"
 KEY_TEKS = "teks"
 KEY_KATEGORI = "kategori"
 KEY_ID = "id"

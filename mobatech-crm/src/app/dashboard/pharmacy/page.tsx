@@ -28,5 +28,5 @@ export default async function PharmacyPage({ searchParams }: { searchParams: Pro
   }
 
 
-  return <PharmacyClient initialMedicines={medicines} categories={categories} initialOrders={orders} />;
+  return <><h1 className="sr-only">{metadata.title as string}</h1><PharmacyClient initialMedicines={medicines} categories={categories} initialOrders={orders} /></>;
 }
