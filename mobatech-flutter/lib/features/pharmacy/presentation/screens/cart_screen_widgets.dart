@@ -1,3 +1,4 @@
+
 part of 'cart_screen.dart';
 
 class _CartItemList extends ConsumerWidget {
@@ -12,12 +13,12 @@ class _CartItemList extends ConsumerWidget {
       );
     }
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
           final item = cart.items[index];
           return Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
             child: _CartItemWidget(item: item),
           );
         }, childCount: cart.items.length),
@@ -33,7 +34,7 @@ class _CartItemWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSpacing.sm12),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(16),

@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../widgets/settings_widgets.dart';
 
 import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 part 'settings_screen_parts.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -59,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 800),
             child: ListView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppSpacing.lg),
               physics: const BouncingScrollPhysics(),
               children: [
                 SectionHeader(title: 'Notifikasi'),

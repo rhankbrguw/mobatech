@@ -9,6 +9,8 @@ import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { AiAuditMonitor } from "./AiAuditMonitor";
 import { AiAuditChatHistory } from "./AiAuditChatHistory";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
+import { Pagination } from "@/components/ui/Pagination";
+import { APP_STRINGS } from "@/lib/constants";
 import { PrivacyComplianceBadge } from "./PrivacyComplianceBadge";
 import { AiAuditHeader } from "./AiAuditHeader";
 import { ConfirmModal } from "./ConfirmModal";
@@ -41,7 +43,7 @@ export function AiAuditClient({ initialData, searchParams }: { initialData?: unk
       const res = await api.get<RagStatus>("/api/admin/rag/status");
       setRagStatus(res.data);
     } catch (err) {
-      setToast({ isOpen: true, message: "Gagal mengambil status RAG Engine", type: "error" });
+      setToast({ isOpen: true, message: APP_STRINGS.common.ragStatusError, type: "error" });
     } finally {
       setLoadingStats(false);
     }
@@ -53,7 +55,7 @@ export function AiAuditClient({ initialData, searchParams }: { initialData?: unk
       const res = await api.get<ChatSession[]>(`/api/admin/chats${searchQuery ? `?search=${encodeURIComponent(searchQuery)}` : ""}`);
       setSessions(res.data || []);
     } catch (err) {
-      setToast({ isOpen: true, message: "Gagal memuat histori chat", type: "error" });
+      setToast({ isOpen: true, message: APP_STRINGS.common.ragHistoryError, type: "error" });
     } finally {
       setLoadingChats(false);
     }
@@ -74,13 +76,13 @@ export function AiAuditClient({ initialData, searchParams }: { initialData?: unk
       setIsSyncing(true);
       const res = await api.post<{ status: string; message: string }>("/api/admin/rag/sync", {});
       if (res.data.status === "success") {
-        setToast({ isOpen: true, message: "Sinkronisasi berhasil! Knowledge Base telah diperbarui.", type: "success" });
+        setToast({ isOpen: true, message: APP_STRINGS.common.ragSyncSuccess, type: "success" });
         loadStatus();
       } else {
         throw new Error(res.data.message);
       }
     } catch (err) {
-      setToast({ isOpen: true, message: "Gagal melakukan sinkronisasi: " + (err as Error).message, type: "error" });
+      setToast({ isOpen: true, message: APP_STRINGS.common.ragSyncError + (err as Error).message, type: "error" });
     } finally {
       setIsSyncing(false);
     }

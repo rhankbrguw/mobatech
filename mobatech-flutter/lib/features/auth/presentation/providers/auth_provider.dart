@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/auth_repository.dart';
 import '../../../../core/network/dio_client.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final authRepositoryProvider = Provider((ref) {
@@ -22,8 +23,9 @@ class AuthNotifier extends StateNotifier<bool> {
     try {
       final res = await _repository.login(email, password);
       globalAuthToken = res['token'];
+      const secureStorage = FlutterSecureStorage();
+      await secureStorage.write(key: 'jwt_token', value: globalAuthToken ?? '');
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('jwt_token', globalAuthToken!);
       await prefs.setString('user_data', jsonEncode(res['user']));
     } finally {
       state = false;

@@ -23,7 +23,7 @@ export function AiAuditMonitor({
         <div className="space-y-4">
           <div className="flex justify-between items-center border-b border-glass-border pb-2">
             <span className="text-foreground/70">Status Engine</span>
-            <span className="px-2 py-1 bg-green-500/10 text-green-600 rounded-md text-xs font-semibold capitalize">
+            <span className="px-2 py-1 bg-success-muted text-success rounded-md text-xs font-semibold capitalize">
               {ragStatus.status}
             </span>
           </div>
@@ -41,7 +41,7 @@ export function AiAuditMonitor({
           </div>
         </div>
       ) : (
-        <div className="text-rose-500 text-sm">Python AI Engine tidak merespon / Offline.</div>
+        <div className="text-error text-sm">Python AI Engine tidak merespon / Offline.</div>
       )}
 
       <div className="mt-6">

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AttachmentBottomSheet extends StatelessWidget {
   final VoidCallback onPickGallery;
@@ -17,7 +18,7 @@ class AttachmentBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: const BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -28,7 +29,7 @@ class AttachmentBottomSheet extends StatelessWidget {
           Container(
             width: 40,
             height: 4,
-            margin: const EdgeInsets.only(bottom: 24),
+            margin: const EdgeInsets.only(bottom: AppSpacing.lg),
             decoration: BoxDecoration(
               color: AppColors.dividerGrey,
               borderRadius: BorderRadius.circular(2),

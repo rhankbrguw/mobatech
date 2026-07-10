@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/formatters.dart';
 import '../providers/profile_provider.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ProfileUserCard extends StatelessWidget {
   final UserProfile user;
@@ -28,16 +29,16 @@ class ProfileUserCard extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(AppSpacing.lg),
             child: Row(
               children: [
                 CircleAvatar(
                   radius: 36,
                   backgroundColor: AppColors.primary,
                   backgroundImage: user.imagePath != null
-                      ? (user.imagePath!.startsWith('http')
-                            ? NetworkImage(user.imagePath!) as ImageProvider
-                            : FileImage(File(user.imagePath!)))
+                      ? ((user.imagePath?.startsWith('http') ?? false)
+                            ? NetworkImage(user.imagePath ?? '') as ImageProvider
+                            : FileImage(File(user.imagePath ?? '')))
                       : null,
                   child: user.imagePath == null
                       ? Text(

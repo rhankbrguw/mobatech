@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { Plus, X } from "lucide-react";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
+import { Pagination } from "@/components/ui/Pagination";
 import { RemindersForm } from "./RemindersForm";
 import { RemindersList } from "./RemindersList";
 import { ConfirmModal } from "@/components/ConfirmModal";
@@ -27,6 +28,8 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
   const [saving, setSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterValue, setFilterValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [toast, setToast] = useState<{ isOpen: boolean; message: string; type: "success" | "error" }>({ isOpen: false, message: "", type: "success" });
   const showToast = (message: string, type: "success" | "error") =>
     setToast({ isOpen: true, message, type });
@@ -42,17 +45,21 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
       const queryParams = new URLSearchParams();
       if (searchQuery) queryParams.append("search", searchQuery);
       if (filterValue) queryParams.append("filter", filterValue);
+      queryParams.append("page", String(currentPage));
+      queryParams.append("limit", "10");
       const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
       const res = await api.get<Reminder[]>(`/api/admin/reminders${qs}`);
       setReminders(res.data || []);
-    } catch { showToast("Gagal memuat data reminder", "error"); }
+      if (res.meta?.total_pages) setTotalPages(res.meta.total_pages);
+    } catch { showToast(APP_STRINGS.common.reminderLoadError, "error"); }
     finally { setLoading(false); }
   };
   useEffect(() => { loadUsers(); }, []);
-  useEffect(() => { loadReminders(); }, [searchQuery, filterValue]);
+  useEffect(() => { setCurrentPage(1); }, [searchQuery, filterValue]);
+  useEffect(() => { loadReminders(); }, [searchQuery, filterValue, currentPage]);
   const handleCreate = async () => {
     if (!form.user_id || !form.title || !form.reminder_date) {
-      showToast("Pilih pasien, isi Judul, dan Tanggal", "error");
+      showToast(APP_STRINGS.common.validationReminderFields, "error");
       return;
     }
     const isoDate = form.reminder_date.includes(":") && form.reminder_date.length === 16
@@ -61,20 +68,20 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
     setSaving(true);
     try {
       await api.post("/api/admin/reminders", { ...form, reminder_date: isoDate });
-      showToast("Reminder berhasil dikirim ke pasien", "success");
+      showToast(APP_STRINGS.common.reminderSendSuccess, "success");
       setShowForm(false);
       setForm(defaultForm);
       loadReminders();
-    } catch { showToast("Gagal membuat reminder", "error"); }
+    } catch { showToast(APP_STRINGS.common.reminderCreateError, "error"); }
     finally { setSaving(false); }
   };
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
   const executeDelete = async (id: number) => {
     try {
       await api.delete(`/api/admin/reminders/${id}`);
-      showToast("Reminder dihapus", "success");
+      showToast(APP_STRINGS.common.reminderDeleteSuccess, "success");
       loadReminders();
-    } catch { showToast("Gagal menghapus reminder", "error"); }
+    } catch { showToast(APP_STRINGS.common.reminderDeleteError, "error"); }
     finally { setDeleteConfirmId(null); }
   };
   
@@ -120,6 +127,7 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
         users={users}
         onDelete={setDeleteConfirmId}
       />
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       <ConfirmModal
         isOpen={deleteConfirmId !== null}
         onClose={() => setDeleteConfirmId(null)}

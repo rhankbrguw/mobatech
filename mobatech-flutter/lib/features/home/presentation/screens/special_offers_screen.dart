@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/providers/mock_ui_providers.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 part 'special_offers_screen_components.dart';
 
@@ -80,7 +81,7 @@ class SpecialOffersScreen extends ConsumerWidget {
             );
           },
           child: ListView.separated(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpacing.md),
             itemCount: offers.length,
             separatorBuilder: (context, index) => const SizedBox(height: 16),
             itemBuilder: (context, index) {

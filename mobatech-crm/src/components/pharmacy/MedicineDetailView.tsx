@@ -20,7 +20,7 @@ export function MedicineDetailView({ isOpen, onClose, medicine }: MedicineDetail
             {medicine.image_url ? (
               <img src={medicine.image_url} alt={medicine.name} className="w-20 h-20 object-cover rounded-xl border border-glass-border shadow-sm" />
             ) : (
-              <div className="w-20 h-20 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center border border-glass-border">
+              <div className="w-20 h-20 rounded-xl bg-overlay-dark dark:bg-overlay-light flex items-center justify-center border border-glass-border">
                 <Package size={32} className="text-foreground/40" />
               </div>
             )}
@@ -36,7 +36,7 @@ export function MedicineDetailView({ isOpen, onClose, medicine }: MedicineDetail
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col"><span className="text-xs text-foreground/50">Kategori</span><span className="text-sm font-medium">{medicine.category?.name || "-"}</span></div>
             <div className="flex flex-col"><span className="text-xs text-foreground/50">Dosis / Satuan</span><span className="text-sm font-medium">{medicine.dosage} {medicine.unit}</span></div>
-            <div className="flex flex-col"><span className="text-xs text-foreground/50">Harga (Rp)</span><span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{Formatters.currency(medicine.price)}</span></div>
+            <div className="flex flex-col"><span className="text-xs text-foreground/50">Harga (Rp)</span><span className="text-sm font-medium text-success dark:text-success">{Formatters.currency(medicine.price)}</span></div>
             <div className="flex flex-col"><span className="text-xs text-foreground/50">Stok Saat Ini</span><span className="text-sm font-medium"><Badge variant={medicine.stock <= 10 ? "error" : "success"}>{medicine.stock} pcs</Badge></span></div>
             <div className="flex flex-col col-span-2"><span className="text-xs text-foreground/50">Ditambahkan Pada</span><span className="text-sm font-medium">{new Date(medicine.created_at).toLocaleString('id-ID')}</span></div>
           </div>

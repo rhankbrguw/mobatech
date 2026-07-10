@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/doctor_schedule.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ScheduleItemCard extends StatelessWidget {
   final DoctorSchedule schedule;
@@ -19,7 +20,7 @@ class ScheduleItemCard extends StatelessWidget {
     bool isExpired = false;
     if (schedule.date != null && schedule.endTime.isNotEmpty) {
       final now = DateTime.now();
-      final localDate = schedule.date!.toLocal();
+      final localDate = (schedule.date?.toLocal() ?? DateTime.now());
       final timeParts = schedule.endTime.split(':');
       if (timeParts.length >= 2) {
         final endHour = int.tryParse(timeParts[0]) ?? 0;
@@ -50,7 +51,7 @@ class ScheduleItemCard extends StatelessWidget {
       onTap: isAvailable ? onTap : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primary.withValues(alpha: 0.05)
@@ -106,7 +107,7 @@ class ScheduleItemCard extends StatelessWidget {
             ),
             if (!isAvailable)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
                 decoration: BoxDecoration(
                   color: AppColors.errorRed.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),

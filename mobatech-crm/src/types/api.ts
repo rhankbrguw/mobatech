@@ -106,11 +106,15 @@ export interface Promo extends GormModel {
 }
 
 export interface PrescriptionItem {
-  medicine_id: number;
+  medicine_id: number | null;
   medicine_name?: string;
-  dosage: string;
+  medicine?: Medicine;
+  custom_medicine?: string;
+  dosage?: string;
+  dosage_instruction?: string;
   duration: string;
   quantity: number;
+  notes?: string;
 }
 export interface Prescription extends GormModel {
   user_id: number;

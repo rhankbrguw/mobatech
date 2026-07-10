@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobatech_app/core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 enum AppButtonVariant { primary, secondary, danger, ghost, outline }
 
@@ -70,17 +71,17 @@ class AppButton extends StatelessWidget {
       case AppButtonSize.small:
         height = 32;
         fontSize = 12;
-        padding = const EdgeInsets.symmetric(horizontal: 12);
+        padding = const EdgeInsets.symmetric(horizontal: AppSpacing.sm12);
         break;
       case AppButtonSize.medium:
         height = 44;
         fontSize = 14;
-        padding = const EdgeInsets.symmetric(horizontal: 16);
+        padding = const EdgeInsets.symmetric(horizontal: AppSpacing.md);
         break;
       case AppButtonSize.large:
         height = 56;
         fontSize = 16;
-        padding = const EdgeInsets.symmetric(horizontal: 24);
+        padding = const EdgeInsets.symmetric(horizontal: AppSpacing.lg);
         break;
     }
 
@@ -112,7 +113,7 @@ class AppButton extends StatelessWidget {
               if (icon != null) ...[
                 IconTheme(
                   data: IconThemeData(color: fgColor, size: fontSize + 4),
-                  child: icon!,
+                  child: icon ?? const SizedBox(),
                 ),
                 const SizedBox(width: 8),
               ],

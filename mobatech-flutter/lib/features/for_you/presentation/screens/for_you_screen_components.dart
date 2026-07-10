@@ -1,3 +1,4 @@
+
 part of 'for_you_screen.dart';
 
 class _ForYouAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -69,7 +70,7 @@ class _ArticleCard extends StatelessWidget {
 
   Widget _buildCardContent() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(20),
@@ -113,7 +114,7 @@ class _ArticleCard extends StatelessWidget {
 
   Widget _buildCategoryLabel() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm12, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(12),

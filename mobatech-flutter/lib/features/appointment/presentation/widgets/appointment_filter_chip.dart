@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AppointmentFilterChip extends StatelessWidget {
   final String label;
@@ -17,8 +18,8 @@ class AppointmentFilterChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      margin: const EdgeInsets.only(right: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: AppSpacing.sm),
       decoration: BoxDecoration(
         color: isSelected
             ? AppColors.backgroundWhite

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"backend/constants"
 	"backend/models"
 	"backend/services"
 	"backend/utils"
@@ -21,8 +22,8 @@ func NewMedicalResultController(service services.MedicalResultService) *MedicalR
 func (c *MedicalResultController) GetAll(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
-	pageStr := ctx.DefaultQuery("page", "1")
-	limitStr := ctx.DefaultQuery("limit", "10")
+	pageStr := ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage)
+	limitStr := ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit)
 	page, _ := strconv.Atoi(pageStr)
 	limit, _ := strconv.Atoi(limitStr)
 	offset := (page - 1) * limit
@@ -39,7 +40,7 @@ func (c *MedicalResultController) GetAll(ctx *gin.Context) {
 		userID = uint(userIDFloat.(float64))
 	}
 
-	results, totalCount, err := c.service.GetAllMedicalResults(search, filter, userID, role, limit, offset)
+	results, totalCount, err := c.service.GetAllMedicalResults(ctx.Request.Context(), search, filter, userID, role, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -50,12 +51,12 @@ func (c *MedicalResultController) GetAll(ctx *gin.Context) {
 func (c *MedicalResultController) GetUserResults(ctx *gin.Context) {
 	userIDFloat, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized", nil))
 		return
 	}
 	userID := uint(userIDFloat.(float64))
 
-	results, err := c.service.GetUserMedicalResults(userID)
+	results, err := c.service.GetUserMedicalResults(ctx.Request.Context(), userID)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -65,9 +66,9 @@ func (c *MedicalResultController) GetUserResults(ctx *gin.Context) {
 
 func (c *MedicalResultController) GetByID(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
-	result, err := c.service.GetMedicalResultByID(uint(id))
+	result, err := c.service.GetMedicalResultByID(ctx.Request.Context(), uint(id))
 	if err != nil {
-		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, err.Error()))
+		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, err.Error(), nil))
 		return
 	}
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", result))
@@ -82,13 +83,13 @@ func (c *MedicalResultController) Create(ctx *gin.Context) {
 
 	var req models.MedicalResult
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
-	result, err := c.service.CreateMedicalResult(&req)
+	result, err := c.service.CreateMedicalResult(ctx.Request.Context(), &req)
 	if err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
@@ -100,14 +101,14 @@ func (c *MedicalResultController) Update(ctx *gin.Context) {
 
 	var req models.MedicalResult
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 	req.ID = uint(id)
 
-	result, err := c.service.UpdateMedicalResult(&req)
+	result, err := c.service.UpdateMedicalResult(ctx.Request.Context(), &req)
 	if err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
@@ -116,8 +117,8 @@ func (c *MedicalResultController) Update(ctx *gin.Context) {
 
 func (c *MedicalResultController) Delete(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
-	if err := c.service.DeleteMedicalResult(uint(id)); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+	if err := c.service.DeleteMedicalResult(ctx.Request.Context(), uint(id)); err != nil {
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 

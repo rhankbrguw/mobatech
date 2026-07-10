@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/glass_status_chip.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class HistoryCard extends StatelessWidget {
   final String title;
@@ -20,8 +22,6 @@ class HistoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
 
 
-    final statusColor = AppColors.getStatusColor(status);
-
     return Card(
       elevation: 0,
       color: AppColors.transparent,
@@ -34,7 +34,7 @@ class HistoryCard extends StatelessWidget {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 14),
               decoration: BoxDecoration(
                 color: AppColors.primaryLight.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(16),
@@ -45,7 +45,7 @@ class HistoryCard extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(AppSpacing.sm12),
                     decoration: BoxDecoration(
                       color: AppColors.backgroundWhite,
                       shape: BoxShape.circle,
@@ -83,24 +83,7 @@ class HistoryCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: statusColor.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      status,
-                      style: TextStyle(
-                        color: statusColor,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  GlassStatusChip(status: status, fontSize: 11),
                 ],
               ),
             ),

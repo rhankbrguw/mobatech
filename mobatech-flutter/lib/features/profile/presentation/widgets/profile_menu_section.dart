@@ -4,10 +4,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../providers/profile_provider.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ProfileMenuSection extends ConsumerWidget {
   const ProfileMenuSection({super.key});
@@ -44,7 +46,7 @@ class ProfileMenuSection extends ConsumerWidget {
                 ...menuItems.map(
                   (item) => ListTile(
                     leading: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(AppSpacing.sm),
                       decoration: BoxDecoration(
                         color: AppColors.primaryLight,
                         borderRadius: BorderRadius.circular(10),
@@ -80,7 +82,7 @@ class ProfileMenuSection extends ConsumerWidget {
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         CustomSnackbar.showInfo(
                           context,
-                          'Menu ${item['title']} segera hadir!',
+                          ProfileStrings.menuComingSoon(item['title'] as String),
                         );
                       }
                     },
@@ -89,7 +91,7 @@ class ProfileMenuSection extends ConsumerWidget {
                 const Divider(height: 1),
                 ListTile(
                   leading: Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(AppSpacing.sm),
                     decoration: BoxDecoration(
                       color: AppColors.errorRed.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
@@ -104,6 +106,8 @@ class ProfileMenuSection extends ConsumerWidget {
                     ),
                   ),
                   onTap: () async {
+                    const secureStorage = FlutterSecureStorage();
+                    await secureStorage.delete(key: 'jwt_token');
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.clear();
                     globalAuthToken = null;

@@ -4,6 +4,7 @@ import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 from apscheduler.schedulers.background import BackgroundScheduler
+from typing import Any
 
 from services.anonymizer import AnonymizationEngine
 from services.rag_search import VectorSearchEngine
@@ -26,8 +27,8 @@ sync_engine = SyncEngine(data_path, backend_env_path)
 
 scheduler = BackgroundScheduler()
 
-@scheduler.scheduled_job(const.SCHEDULER_CRON_TRIGGER, minute=const.SCHEDULER_CRON_MINUTE) # Runs every hour at minute 0
-def automated_daily_sync():
+@scheduler.scheduled_job(const.SCHEDULER_CRON_TRIGGER, minute=const.SCHEDULER_CRON_MINUTE)
+def automated_daily_sync() -> None:
     logging.info(const.MSG_RUNNING_SYNC)
     if sync_engine.sync_database():
         vector_search.build_index()
@@ -47,7 +48,7 @@ class ChatResponse(BaseModel):
     context_used: int
 
 @app.post(const.API_SYNC_ENDPOINT)
-def sync_rag():
+def sync_rag() -> dict[str, str]:
     if not sync_engine.sync_database():
         return {const.KEY_STATUS: const.RESPONSE_STATUS_ERROR, const.KEY_MESSAGE: const.MSG_DB_SYNC_FAILED}
     if not vector_search.build_index():
@@ -55,7 +56,7 @@ def sync_rag():
     return {const.KEY_STATUS: const.RESPONSE_STATUS_SUCCESS, const.KEY_MESSAGE: const.MSG_SYNC_SUCCESS}
 
 @app.get(const.API_STATUS_ENDPOINT)
-def get_rag_status():
+def get_rag_status() -> dict[str, Any]:
     return {
         const.KEY_STATUS: const.RESPONSE_STATUS_ACTIVE,
         const.KEY_VECTOR_COUNT: vector_search.index.ntotal,
@@ -63,13 +64,13 @@ def get_rag_status():
     }
 
 @app.post(const.API_CONTEXT_ENDPOINT, response_model=RAGResponse)
-def get_rag_context(req: PromptRequest):
+def get_rag_context(req: PromptRequest) -> RAGResponse:
     safe_query = anonymizer.anonymize(req.query)
     context_chunks = vector_search.search(safe_query, top_k=const.API_SEARCH_TOP_K)
     return RAGResponse(anonymized_query=safe_query, context=context_chunks)
 
 @app.post(const.API_CHAT_ENDPOINT, response_model=ChatResponse)
-def get_rag_chat(req: PromptRequest):
+def get_rag_chat(req: PromptRequest) -> ChatResponse:
     safe_query = anonymizer.anonymize(req.query)
     context_chunks = vector_search.search(safe_query, top_k=const.API_SEARCH_TOP_K)
     

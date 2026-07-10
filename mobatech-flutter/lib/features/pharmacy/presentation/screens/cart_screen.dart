@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../providers/pharmacy_provider.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 part 'cart_screen_widgets.dart';
 part 'cart_bottom_bar.dart';

@@ -21,7 +21,8 @@ export function ImageUpload({ imageUrl, setImageUrl, label = "Upload Gambar / Fo
     
     try {
       setUploadingImage(true);
-      const res = await fetch("http://127.0.0.1:8080/api/upload", {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+      const res = await fetch(`${API_BASE_URL}/api/upload`, {
         method: "POST",
         body: formData,
       });
@@ -29,12 +30,12 @@ export function ImageUpload({ imageUrl, setImageUrl, label = "Upload Gambar / Fo
       
       if (res.ok) {
         setImageUrl(data.url);
-        setToast({ isOpen: true, message: "Gambar berhasil diunggah", type: "success" });
+        setToast({ isOpen: true, message: APP_STRINGS.common.imageUploadSuccess, type: "success" });
       } else {
         setToast({ isOpen: true, message: data.error || "Gagal mengunggah gambar", type: "error" });
       }
     } catch {
-      setToast({ isOpen: true, message: "Terjadi kesalahan jaringan saat mengunggah", type: "error" });
+      setToast({ isOpen: true, message: APP_STRINGS.common.imageUploadError, type: "error" });
     } finally {
       setUploadingImage(false);
     }
@@ -70,7 +71,7 @@ export function ImageUpload({ imageUrl, setImageUrl, label = "Upload Gambar / Fo
       <div className="flex gap-4 items-start">
         {/* Preview Box */}
         <div 
-          className={`shrink-0 w-24 h-24 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center overflow-hidden relative group transition-colors duration-200 cursor-pointer ${dragActive ? 'border-primary bg-primary/5' : 'border-glass-border hover:border-primary/50 bg-black/5 dark:bg-white/5'}`}
+          className={`shrink-0 w-24 h-24 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center overflow-hidden relative group transition-colors duration-200 cursor-pointer ${dragActive ? 'border-primary bg-primary/5' : 'border-glass-border hover:border-primary/50 bg-overlay-dark dark:bg-overlay-light'}`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
@@ -86,7 +87,7 @@ export function ImageUpload({ imageUrl, setImageUrl, label = "Upload Gambar / Fo
             <>
               <img src={imageUrl} alt="Preview" className="w-full h-full object-cover group-hover:opacity-60 transition-opacity" />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <UploadCloud className="text-white drop-shadow-md" size={24} />
+                <UploadCloud className="text-surface-primary drop-shadow-md" size={24} />
               </div>
             </>
           ) : (

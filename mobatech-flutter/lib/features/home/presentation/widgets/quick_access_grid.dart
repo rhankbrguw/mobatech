@@ -9,6 +9,7 @@ import '../../../../core/widgets/skeleton_loader.dart';
 import '../../../services/presentation/providers/service_provider.dart';
 import 'quick_access_item.dart';
 import 'quick_access_more_menu.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class QuickAccessGrid extends ConsumerWidget {
   const QuickAccessGrid({super.key});
@@ -97,7 +98,7 @@ class QuickAccessGrid extends ConsumerWidget {
 
   Widget _buildGrid(BuildContext context, List<Widget> items) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,7 +106,7 @@ class QuickAccessGrid extends ConsumerWidget {
             .map(
               (item) => Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
                   child: item,
                 ),
               ),

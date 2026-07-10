@@ -9,6 +9,7 @@ import '../../../../core/widgets/skeleton_loader.dart';
 import '../../providers/appointment_provider.dart';
 import '../widgets/doctor_detail_content.dart';
 import '../widgets/doctor_detail_app_bar.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class DoctorDetailScreen extends ConsumerStatefulWidget {
   final int doctorId;
@@ -52,7 +53,7 @@ class _DoctorDetailScreenState extends ConsumerState<DoctorDetailScreen> {
     try {
       final repository = ref.read(appointmentRepositoryProvider);
       await repository.bookAppointment(
-        _selectedScheduleId!,
+        _selectedScheduleId ?? 0,
         _symptomsController.text,
       );
       if (mounted) {
@@ -119,7 +120,7 @@ class _DoctorDetailScreenState extends ConsumerState<DoctorDetailScreen> {
             );
           },
           loading: () => const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
             child: CardSkeletonLoader(count: 2),
           ),
           error: (e, stack) => Center(child: Text(ErrorHandler.getMessage(e))),

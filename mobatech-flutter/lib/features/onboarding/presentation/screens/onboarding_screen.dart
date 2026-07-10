@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_constants.dart';
 
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 part 'onboarding_widgets.dart';
 
 class OnboardingScreen extends StatefulWidget {

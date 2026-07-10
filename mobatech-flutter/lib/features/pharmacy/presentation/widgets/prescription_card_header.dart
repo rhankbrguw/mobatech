@@ -26,24 +26,7 @@ class PrescriptionCardHeader extends ConsumerWidget {
   }
 
   Widget _buildStatusBadge() {
-    final isPending = prescription.status == 'Pending';
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: isPending
-            ? AppColors.iconOrange.withValues(alpha: 0.1)
-            : AppColors.primaryLight,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        prescription.status,
-        style: TextStyle(
-          color: isPending ? AppColors.iconOrange : AppColors.primary,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
+    return GlassStatusChip(status: prescription.status, fontSize: 12);
   }
 
   Widget _buildDeleteButton(BuildContext context, WidgetRef ref) {

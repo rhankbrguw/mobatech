@@ -35,7 +35,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
       {/* Backdrop Backdrop Overlay */}
       <div 
         onClick={onClose}
-        className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm transition-opacity duration-300" 
+        className="fixed inset-0 bg-foreground/40 dark:bg-foreground/60 backdrop-blur-sm transition-opacity duration-300" 
       />
 
       {/* Modal Wrapper Frame */}
@@ -44,7 +44,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
           <h2 className="text-lg font-bold text-foreground">{title}</h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 text-foreground/60 hover:text-foreground transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg hover:bg-overlay-dark dark:hover:bg-overlay-light text-foreground/60 hover:text-foreground transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

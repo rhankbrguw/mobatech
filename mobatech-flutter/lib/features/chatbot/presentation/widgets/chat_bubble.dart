@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'chat_bubble_parts.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ChatBubble extends StatelessWidget {
   final String text;
@@ -28,8 +29,8 @@ class ChatBubble extends StatelessWidget {
       children: [
         if (!isUser) ...[
           Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(8),
+            margin: const EdgeInsets.only(bottom: AppSpacing.sm12),
+            padding: const EdgeInsets.all(AppSpacing.sm),
             decoration: const BoxDecoration(
               color: AppColors.primaryLight,
               shape: BoxShape.circle,
@@ -61,7 +62,7 @@ class ChatBubble extends StatelessWidget {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppSpacing.md),
                   color: isUser
                       ? AppColors.primary.withValues(alpha: 0.85)
                       : AppColors.backgroundWhite.withValues(alpha: 0.85),
@@ -69,9 +70,9 @@ class ChatBubble extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (imagePath != null)
-                        ChatBubbleImage(imagePath: imagePath!),
+                        ChatBubbleImage(imagePath: imagePath ?? ''),
                       if (filePath != null)
-                        ChatBubbleFile(filePath: filePath!, isUser: isUser),
+                        ChatBubbleFile(filePath: filePath ?? '', isUser: isUser),
                       if (isLoading)
                         const ChatBubbleLoader()
                       else
@@ -100,7 +101,7 @@ class ChatBubble extends StatelessWidget {
         if (isUser) ...[
           const SizedBox(width: 8),
           Container(
-            margin: const EdgeInsets.only(bottom: 12),
+            margin: const EdgeInsets.only(bottom: AppSpacing.sm12),
             width: 36,
             height: 36,
             decoration: const BoxDecoration(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/medical_result.dart';
 import 'detail_row_widget.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class MedicalResultHeader extends StatelessWidget {
   final MedicalResult result;
@@ -13,7 +14,6 @@ class MedicalResultHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(24),
@@ -32,24 +32,27 @@ class MedicalResultHeader extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                result.testName,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textDark,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  result.testName,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textDark,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              DetailRowWidget(label: 'Tanggal', value: result.date),
-              DetailRowWidget(label: 'Status', value: result.status),
-              DetailRowWidget(label: 'Rumah Sakit', value: result.hospitalName),
-              if (result.doctorName != null)
-                DetailRowWidget(label: 'Dokter', value: result.doctorName!),
-            ],
+                const SizedBox(height: 16),
+                DetailRowWidget(label: 'Tanggal', value: result.date),
+                DetailRowWidget(label: 'Status', value: result.status),
+                DetailRowWidget(label: 'Rumah Sakit', value: result.hospitalName),
+                if (result.doctorName != null)
+                  DetailRowWidget(label: 'Dokter', value: result.doctorName ?? ''),
+              ],
+            ),
           ),
         ),
       ),
@@ -93,7 +96,7 @@ class MedicalResultDetailsBox extends StatelessWidget {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Container(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(AppSpacing.lg),
                 decoration: BoxDecoration(
                   color: AppColors.primaryLight.withValues(alpha: 0.3),
                   border: Border.all(color: AppColors.primaryLight),

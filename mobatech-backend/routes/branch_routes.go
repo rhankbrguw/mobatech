@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/constants"
 	"backend/controllers"
 	"backend/middleware"
 
@@ -10,12 +11,12 @@ import (
 
 func SetupBranchRoutes(r *gin.Engine, db *gorm.DB) {
 	branchCtrl := controllers.NewBranchController(db)
-	r.GET("/api/branches", branchCtrl.GetBranches)
-	r.GET("/api/branches/:id", branchCtrl.GetBranchByID)
-	
-	admin := r.Group("/api/admin")
+	r.GET(constants.RouteApiBranches, branchCtrl.GetBranches)
+	r.GET(constants.RouteApiBranchesParamId, branchCtrl.GetBranchByID)
+
+	admin := r.Group(constants.RouteApiAdmin)
 	admin.Use(middleware.AuthMiddleware())
-	admin.POST("/branches", branchCtrl.CreateBranch)
-	admin.PUT("/branches/:id", branchCtrl.UpdateBranch)
-	admin.DELETE("/branches/:id", branchCtrl.DeleteBranch)
+	admin.POST(constants.RouteBranches, branchCtrl.CreateBranch)
+	admin.PUT(constants.RouteBranchesParamId, branchCtrl.UpdateBranch)
+	admin.DELETE(constants.RouteBranchesParamId, branchCtrl.DeleteBranch)
 }

@@ -9,9 +9,9 @@ export function DashboardRightPanel({ stats }: { stats: DashboardStats }) {
       <div className="glass-panel rounded-2xl border p-5 shadow-sm space-y-4">
         <h2 className="font-semibold text-sm">Status Antrean</h2>
         {[
-          { label: "Menunggu",  value: stats.pendingAppointments,   total: stats.totalAppointments || 1, color: "bg-yellow-500" },
-          { label: "Selesai",   value: stats.completedAppointments, total: stats.totalAppointments || 1, color: "bg-green-500"  },
-          { label: "Lainnya",   value: stats.totalAppointments - stats.pendingAppointments - stats.completedAppointments, total: stats.totalAppointments || 1, color: "bg-gray-400" },
+          { label: "Menunggu",  value: stats.pendingAppointments,   total: stats.totalAppointments || 1, color: "bg-warning" },
+          { label: "Selesai",   value: stats.completedAppointments, total: stats.totalAppointments || 1, color: "bg-success"  },
+          { label: "Lainnya",   value: stats.totalAppointments - stats.pendingAppointments - stats.completedAppointments, total: stats.totalAppointments || 1, color: "bg-neutral" },
         ].map((item) => (
           <div key={item.label}>
             <div className="flex justify-between text-xs mb-1.5">
@@ -81,7 +81,7 @@ export function DashboardRightPanel({ stats }: { stats: DashboardStats }) {
           ) : (
             stats.recentSchedules?.map((s) => (
               <div key={s.id} className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full bg-teal-500/15 flex items-center justify-center text-xs font-bold text-teal-600 flex-shrink-0">
+                <div className="w-7 h-7 rounded-full bg-teal-muted flex items-center justify-center text-xs font-bold text-teal flex-shrink-0">
                   🩺
                 </div>
                 <div className="min-w-0">

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'profile_avatar_picker.dart';
 import 'edit_profile_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class EditProfileForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -40,7 +41,7 @@ class EditProfileForm extends StatelessWidget {
       key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: ListView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         physics: const BouncingScrollPhysics(),
         children: [
           ProfileAvatarPicker(imagePath: imagePath, onPickImage: onPickImage),

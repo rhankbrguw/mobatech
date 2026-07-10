@@ -1,3 +1,4 @@
+
 part of 'cart_screen.dart';
 
 class _CartBottomBar extends StatelessWidget {
@@ -7,7 +8,7 @@ class _CartBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         boxShadow: [
@@ -53,7 +54,7 @@ class _CartBottomBar extends StatelessWidget {
       onPressed: () => context.push('/pharmacy/checkout'),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: const Text(

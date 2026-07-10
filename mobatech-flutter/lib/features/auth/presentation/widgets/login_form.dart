@@ -40,7 +40,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   }
 
   void _handleLogin() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!(_formKey.currentState?.validate() ?? false)) return;
     try {
       await ref
           .read(authStateProvider.notifier)

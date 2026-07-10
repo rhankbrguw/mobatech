@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class GlassStatusChip extends StatelessWidget {
   final String status;
@@ -11,48 +12,52 @@ class GlassStatusChip extends StatelessWidget {
     super.key,
     required this.status,
     this.fontSize = 12,
-    this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    this.padding = const EdgeInsets.symmetric(horizontal: AppSpacing.sm12, vertical: 6),
   });
 
   @override
   Widget build(BuildContext context) {
-    Color baseColor;
+    Color baseColor = AppColors.getStatusColor(status);
     String label;
 
     switch (status.toLowerCase()) {
       case 'pending':
-      case 'menunggu':
-      case 'menunggu hasil':
-        baseColor = AppColors.iconOrange;
         label = 'Menunggu';
         break;
       case 'approved':
-      case 'disetujui':
-        baseColor = AppColors.iconBlue;
         label = 'Disetujui';
         break;
+      case 'processing':
+        label = 'Diproses';
+        break;
+      case 'ready':
+        label = 'Siap Diambil';
+        break;
       case 'completed':
-      case 'selesai':
-        baseColor = AppColors.successGreen;
         label = 'Selesai';
         break;
       case 'cancelled':
-      case 'dibatalkan':
-        baseColor = AppColors.errorRed;
         label = 'Dibatalkan';
         break;
+      case 'active':
+        label = 'Aktif';
+        break;
+      case 'redeemed':
+        label = 'Ditebus';
+        break;
       case 'available':
-      case 'tersedia':
-        baseColor = AppColors.primary;
         label = 'Tersedia';
         break;
       case 'unavailable':
-      case 'tidak tersedia':
-        baseColor = AppColors.errorRed;
         label = 'Tidak Tersedia';
         break;
+      case 'dispatched':
+        label = 'Menuju Lokasi';
+        break;
+      case 'arrived':
+        label = 'Tiba';
+        break;
       default:
-        baseColor = AppColors.textGrey;
         label = status.toUpperCase();
     }
 

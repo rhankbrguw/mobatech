@@ -6,6 +6,7 @@ import '../../../appointment/data/models/appointment.dart';
 import 'agenda_schedule_info.dart';
 
 import 'agenda_card_components.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AgendaCard extends StatelessWidget {
   final Appointment appointment;
@@ -18,7 +19,7 @@ class AgendaCard extends StatelessWidget {
         context.push('/appointment/user-appointments');
       },
       child: Container(
-        margin: const EdgeInsets.only(top: 12, left: 24, right: 24),
+        margin: const EdgeInsets.only(top: AppSpacing.sm12, left: AppSpacing.lg, right: AppSpacing.lg),
         decoration: _buildDecoration(),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),

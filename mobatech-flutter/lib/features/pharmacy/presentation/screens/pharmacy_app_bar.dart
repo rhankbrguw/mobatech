@@ -1,3 +1,4 @@
+
 part of 'pharmacy_main_screen.dart';
 
 class _PharmacyAppBar extends StatelessWidget {
@@ -46,7 +47,7 @@ class _PharmacyAppBar extends StatelessWidget {
             right: 8,
             top: 8,
             child: Container(
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(AppSpacing.xs),
               decoration: const BoxDecoration(
                 color: AppColors.errorRed,
                 shape: BoxShape.circle,

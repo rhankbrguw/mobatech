@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobatech_app/core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AppTextField extends StatelessWidget {
   final String label;
@@ -71,15 +72,15 @@ class AppTextField extends StatelessWidget {
                     data: IconThemeData(
                       color: AppColors.getTextSecondary(isDark),
                     ),
-                    child: prefixIcon!,
+                    child: prefixIcon ?? const SizedBox(),
                   )
                 : null,
             suffixIcon: suffixIcon,
             filled: true,
             fillColor: AppColors.getGlassBackground(isDark),
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm12,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

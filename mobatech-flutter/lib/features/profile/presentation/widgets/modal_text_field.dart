@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ModalTextField extends StatelessWidget {
   final String label;
@@ -53,7 +54,7 @@ class ModalTextField extends StatelessWidget {
                 fontWeight: FontWeight.normal,
               ),
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
+                horizontal: AppSpacing.md,
                 vertical: 14,
               ),
             ),

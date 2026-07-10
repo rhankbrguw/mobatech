@@ -1,5 +1,7 @@
 package models
+
 import "gorm.io/gorm"
+
 type Promo struct {
 	gorm.Model
 	Title      string `json:"title"`

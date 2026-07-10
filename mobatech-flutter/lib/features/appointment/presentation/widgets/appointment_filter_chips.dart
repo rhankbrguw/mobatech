@@ -1,3 +1,4 @@
+
 part of 'appointment_header_widgets.dart';
 
 class AppointmentFilterChips extends ConsumerWidget {
@@ -10,7 +11,7 @@ class AppointmentFilterChips extends ConsumerWidget {
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       physics: const AlwaysScrollableScrollPhysics(
         parent: BouncingScrollPhysics(),
       ),

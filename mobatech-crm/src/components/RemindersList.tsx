@@ -34,10 +34,10 @@ export function RemindersList({
           {reminders.map((r) => (
             <div
               key={r.id}
-              className="p-4 flex items-start justify-between gap-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              className="p-4 flex items-start justify-between gap-3 hover:bg-overlay-dark dark:hover:bg-overlay-light transition-colors"
             >
               <div className="flex items-start gap-3">
-                <div className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${r.is_read ? "bg-gray-300" : "bg-primary"}`} />
+                <div className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${r.is_read ? "bg-neutral" : "bg-primary"}`} />
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-semibold text-sm">{r.title}</span>

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ChatTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -23,7 +24,7 @@ class ChatTextField extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Container(
           height: 48,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           decoration: BoxDecoration(
             color: AppColors.white85,
             borderRadius: BorderRadius.circular(24),

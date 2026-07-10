@@ -42,7 +42,7 @@ export function DoctorProfileView({
             <Button onClick={() => openSchedules(doctor)} size="sm" icon={<Calendar size={14} />} className="flex-1 sm:flex-none justify-center h-10 shadow-sm">
               Kelola Jadwal
             </Button>
-            <Button onClick={() => openForm(doctor)} size="sm" variant="outline" icon={<Edit size={14} />} className="flex-1 sm:flex-none justify-center h-10 border-glass-border shadow-sm hover:bg-black/5 dark:hover:bg-white/5">
+            <Button onClick={() => openForm(doctor)} size="sm" variant="outline" icon={<Edit size={14} />} className="flex-1 sm:flex-none justify-center h-10 border-glass-border shadow-sm hover:bg-overlay-dark dark:hover:bg-overlay-light">
               Ubah Profil
             </Button>
           </div>

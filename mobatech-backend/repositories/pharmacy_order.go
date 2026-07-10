@@ -2,125 +2,137 @@ package repositories
 
 import (
 	"backend/models"
+	"context"
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-func (r *pharmacyRepository) GetPrescriptionsByUserID(userID uint) ([]models.Prescription, error) {
+func (r *pharmacyRepository) GetPrescriptionsByUserID(ctx context.Context, userID uint, limit int, offset int) ([]models.Prescription, int64, error) {
 	var prescriptions []models.Prescription
-	err := r.db.Preload("Items").Preload("Items.Medicine").
-		Where("user_id = ?", userID).Order("created_at desc").Find(&prescriptions).Error
-	return prescriptions, err
+	var totalCount int64
+	query := r.db.Model(&models.Prescription{}).Where("user_id = ?", userID)
+	if err := query.Count(&totalCount).Error; err != nil {
+		return nil, 0, fmt.Errorf("pharmacyRepository.GetPrescriptionsByUserID: %w", err)
+	}
+	if limit > 0 {
+		query = query.Limit(limit).Offset(offset)
+	}
+	if err := query.Preload("Items").Preload("Items.Medicine").Order("created_at desc").Find(&prescriptions).Error; err != nil {
+		return nil, 0, fmt.Errorf("pharmacyRepository.GetPrescriptionsByUserID: %w", err)
+	}
+	return prescriptions, totalCount, nil
 }
-
-func (r *pharmacyRepository) GetPrescriptionByID(id uint) (*models.Prescription, error) {
+func (r *pharmacyRepository) GetPrescriptionByID(ctx context.Context, id uint) (*models.Prescription, error) {
 	var prescription models.Prescription
-	err := r.db.Preload("Items").Preload("Items.Medicine").First(&prescription, id).Error
-	return &prescription, err
+	if err := r.db.Preload("Items").Preload("Items.Medicine").First(&prescription, id).Error; err != nil {
+		return nil, fmt.Errorf("pharmacyRepository.GetPrescriptionByID: %w", err)
+	}
+	return &prescription, nil
 }
-
-func (r *pharmacyRepository) GetAllPrescriptions() ([]models.Prescription, error) {
+func (r *pharmacyRepository) GetAllPrescriptions(ctx context.Context, limit int, offset int) ([]models.Prescription, int64, error) {
 	var prescriptions []models.Prescription
-	err := r.db.Preload("Items").Preload("Items.Medicine").Order("created_at desc").Find(&prescriptions).Error
-	return prescriptions, err
+	var totalCount int64
+	query := r.db.Model(&models.Prescription{})
+	if err := query.Count(&totalCount).Error; err != nil {
+		return nil, 0, fmt.Errorf("pharmacyRepository.GetAllPrescriptions: %w", err)
+	}
+	if limit > 0 {
+		query = query.Limit(limit).Offset(offset)
+	}
+	if err := query.Preload("Items").Preload("Items.Medicine").Order("created_at desc").Find(&prescriptions).Error; err != nil {
+		return nil, 0, fmt.Errorf("pharmacyRepository.GetAllPrescriptions: %w", err)
+	}
+	return prescriptions, totalCount, nil
 }
-
-func (r *pharmacyRepository) CreatePrescription(p *models.Prescription) error {
+func (r *pharmacyRepository) CreatePrescription(ctx context.Context, p *models.Prescription) error {
 	return r.db.Create(p).Error
 }
-
-func (r *pharmacyRepository) DeletePrescription(id uint) error {
+func (r *pharmacyRepository) DeletePrescription(ctx context.Context, id uint) error {
 	return r.db.Delete(&models.Prescription{}, id).Error
 }
-
-func (r *pharmacyRepository) UpdatePrescriptionStatus(id uint, status string) error {
+func (r *pharmacyRepository) UpdatePrescriptionStatus(ctx context.Context, id uint, status string) error {
 	return r.db.Model(&models.Prescription{}).Where("id = ?", id).Update("status", status).Error
 }
-
-func (r *pharmacyRepository) GetOrdersByUserID(userID uint) ([]models.PharmacyOrder, error) {
+func (r *pharmacyRepository) GetOrdersByUserID(ctx context.Context, userID uint) ([]models.PharmacyOrder, error) {
 	var orders []models.PharmacyOrder
 	err := r.db.Preload("Items").Preload("Items.Medicine").
 		Where("user_id = ?", userID).Order("created_at desc").Find(&orders).Error
-	return orders, err
+	if err != nil {
+		return nil, fmt.Errorf("pharmacyRepository.GetOrdersByUserID: %w", err)
+	}
+	return orders, nil
 }
-
-func (r *pharmacyRepository) GetOrderByID(id uint) (*models.PharmacyOrder, error) {
+func (r *pharmacyRepository) GetOrderByID(ctx context.Context, id uint) (*models.PharmacyOrder, error) {
 	var order models.PharmacyOrder
-	err := r.db.Preload("Items").Preload("Items.Medicine").First(&order, id).Error
-	return &order, err
+	if err := r.db.Preload("Items").Preload("Items.Medicine").First(&order, id).Error; err != nil {
+		return nil, fmt.Errorf("pharmacyRepository.GetOrderByID: %w", err)
+	}
+	return &order, nil
 }
-
-func (r *pharmacyRepository) GetAllOrders(search string, filter string, limit int, offset int) ([]models.PharmacyOrder, int64, error) {
+func (r *pharmacyRepository) GetAllOrders(ctx context.Context, search string, filter string, limit int, offset int) ([]models.PharmacyOrder, int64, error) {
 	var orders []models.PharmacyOrder
 	var totalCount int64
 	query := r.db.Model(&models.PharmacyOrder{}).Joins("LEFT JOIN users ON pharmacy_orders.user_id = users.id")
-
 	if search != "" {
 		searchTerm := "%" + search + "%"
 		query = query.Where("users.full_name LIKE ? OR pharmacy_orders.delivery_address LIKE ?", searchTerm, searchTerm)
 	}
-
 	if filter != "" {
 		query = query.Where("pharmacy_orders.status = ?", filter)
 	}
-
 	if err := query.Count(&totalCount).Error; err != nil {
-		return nil, 0, err
+		return nil, 0, fmt.Errorf("pharmacyRepository.GetAllOrders: %w", err)
 	}
-
 	if limit > 0 {
 		query = query.Limit(limit).Offset(offset)
 	}
-
-	err := query.Preload("Items").Preload("Items.Medicine").Order("pharmacy_orders.created_at desc").Find(&orders).Error
-	return orders, totalCount, err
+	if err := query.Preload("Items").Preload("Items.Medicine").Order("pharmacy_orders.created_at desc").Find(&orders).Error; err != nil {
+		return nil, 0, fmt.Errorf("pharmacyRepository.GetAllOrders: %w", err)
+	}
+	return orders, totalCount, nil
 }
-
-func (r *pharmacyRepository) CreateOrder(order *models.PharmacyOrder) error {
+func (r *pharmacyRepository) processOrderItems(ctx context.Context, tx *gorm.DB, order *models.PharmacyOrder) (float64, error) {
+	var total float64
+	for i, item := range order.Items {
+		var med models.Medicine
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&med, item.MedicineID).Error; err != nil {
+			return 0, fmt.Errorf("medicine %d not found", item.MedicineID)
+		}
+		if med.Stock < item.Quantity {
+			return 0, fmt.Errorf("insufficient stock for %s", med.Name)
+		}
+		med.Stock -= item.Quantity
+		if err := tx.Save(&med).Error; err != nil {
+			return 0, fmt.Errorf("pharmacyRepository.processOrderItems: %w", err)
+		}
+		order.Items[i].Price = med.Price
+		order.Items[i].Subtotal = med.Price * float64(item.Quantity)
+		total += order.Items[i].Subtotal
+	}
+	return total, nil
+}
+func (r *pharmacyRepository) CreateOrder(ctx context.Context, order *models.PharmacyOrder) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
-		var total float64
-		for i, item := range order.Items {
-			var med models.Medicine
-			// Lock row for update to prevent race conditions during checkout
-			if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&med, item.MedicineID).Error; err != nil {
-				return fmt.Errorf("medicine %d not found", item.MedicineID)
-			}
-			if med.Stock < item.Quantity {
-				return fmt.Errorf("insufficient stock for %s", med.Name)
-			}
-			
-			// Deduct stock atomically
-			med.Stock -= item.Quantity
-			if err := tx.Save(&med).Error; err != nil {
-				return err
-			}
-			
-			order.Items[i].Price = med.Price
-			order.Items[i].Subtotal = med.Price * float64(item.Quantity)
-			total += order.Items[i].Subtotal
+		total, err := r.processOrderItems(ctx, tx, order)
+		if err != nil {
+			return fmt.Errorf("pharmacyRepository.CreateOrder: %w", err)
 		}
-		
 		order.TotalPrice = total
-
 		if err := tx.Create(order).Error; err != nil {
-			return err
+			return fmt.Errorf("pharmacyRepository.CreateOrder: %w", err)
 		}
-
 		if order.PrescriptionID != nil {
 			if err := tx.Model(&models.Prescription{}).Where("id = ?", *order.PrescriptionID).Update("status", "Redeemed").Error; err != nil {
-				return err
+				return fmt.Errorf("pharmacyRepository.CreateOrder: %w", err)
 			}
 		}
-
 		return nil
 	})
 }
-
-func (r *pharmacyRepository) UpdateOrderStatus(id uint, status string) error {
+func (r *pharmacyRepository) UpdateOrderStatus(ctx context.Context, id uint, status string) error {
 	return r.db.Model(&models.PharmacyOrder{}).Where("id = ?", id).Update("status", status).Error
 }
-
-func (r *pharmacyRepository) UpdateOrderPayment(id uint, paymentStatus string) error {
+func (r *pharmacyRepository) UpdateOrderPayment(ctx context.Context, id uint, paymentStatus string) error {
 	return r.db.Model(&models.PharmacyOrder{}).Where("id = ?", id).Update("payment_status", paymentStatus).Error
 }

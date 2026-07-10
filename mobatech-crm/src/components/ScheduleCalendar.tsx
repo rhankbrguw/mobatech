@@ -29,16 +29,16 @@ export function ScheduleCalendar({ groupedSchedules }: Props) {
   return (
     <div className="space-y-6">
       {/* Kalender Grid */}
-      <div className="border border-glass-border bg-black/5 dark:bg-white/5 rounded-2xl p-4 md:p-6 backdrop-blur-md">
+      <div className="border border-glass-border bg-overlay-dark dark:bg-overlay-light rounded-2xl p-4 md:p-6 backdrop-blur-md">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold text-primary">
             {Formatters.date(currentDate, "long")}
           </h2>
           <div className="flex gap-2">
-            <button onClick={handlePrevMonth} className="p-2 rounded-xl hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
+            <button onClick={handlePrevMonth} className="p-2 rounded-xl hover:bg-overlay-dark dark:hover:bg-overlay-light transition-colors">
               <ChevronLeft size={20} />
             </button>
-            <button onClick={handleNextMonth} className="p-2 rounded-xl hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
+            <button onClick={handleNextMonth} className="p-2 rounded-xl hover:bg-overlay-dark dark:hover:bg-overlay-light transition-colors">
               <ChevronRight size={20} />
             </button>
           </div>
@@ -62,11 +62,11 @@ export function ScheduleCalendar({ groupedSchedules }: Props) {
               <button
                 key={i}
                 onClick={() => setSelectedDateStr(dStr)}
-                className={`relative aspect-square rounded-xl flex items-center justify-center transition-all ${isSelected ? "bg-primary text-primary-foreground shadow-md scale-105" : "hover:bg-black/5 dark:hover:bg-white/5 bg-background border border-glass-border"} ${isToday && !isSelected ? "ring-2 ring-primary ring-offset-1 ring-offset-background" : ""}`}
+                className={`relative aspect-square rounded-xl flex items-center justify-center transition-all ${isSelected ? "bg-primary text-primary-foreground shadow-md scale-105" : "hover:bg-overlay-dark dark:hover:bg-overlay-light bg-background border border-glass-border"} ${isToday && !isSelected ? "ring-2 ring-primary ring-offset-1 ring-offset-background" : ""}`}
               >
                 <span className="text-sm sm:text-base font-semibold">{d.getDate()}</span>
                 {hasSchedules && (
-                  <div className={`absolute -top-1.5 -right-1.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full text-[9px] font-bold px-1 ring-2 ring-background shadow-sm ${isSelected ? "bg-emerald-400 text-emerald-950" : "bg-primary text-primary-foreground"}`}>
+                  <div className={`absolute -top-1.5 -right-1.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full text-[9px] font-bold px-1 ring-2 ring-background shadow-sm ${isSelected ? "bg-success text-success-foreground" : "bg-primary text-primary-foreground"}`}>
                     {schedCount}
                   </div>
                 )}
@@ -84,7 +84,7 @@ export function ScheduleCalendar({ groupedSchedules }: Props) {
           </h3>
           
           {selectedSchedules.length === 0 ? (
-            <div className="text-center py-12 text-foreground/50 bg-black/5 dark:bg-white/5 rounded-2xl border border-dashed border-glass-border">
+            <div className="text-center py-12 text-foreground/50 bg-overlay-dark dark:bg-overlay-light rounded-2xl border border-dashed border-glass-border">
               Tidak ada jadwal dokter pada tanggal ini.
             </div>
           ) : (
@@ -94,7 +94,7 @@ export function ScheduleCalendar({ groupedSchedules }: Props) {
                 const progressPercentage = Math.min((s.booked / s.quota) * 100, 100) || 0;
                 
                 return (
-                  <div key={s.id} className="group relative p-5 rounded-2xl border border-glass-border bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 flex flex-col gap-4 hover:border-primary/40 hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer">
+                  <div key={s.id} className="group relative p-5 rounded-2xl border border-glass-border bg-overlay-dark dark:bg-overlay-light hover:bg-overlay-dark dark:hover:bg-overlay-light flex flex-col gap-4 hover:border-primary/40 hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer">
                     <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none transition-colors group-hover:bg-primary/10"></div>
                     
                     <div className="flex items-start justify-between z-10">
@@ -128,7 +128,7 @@ export function ScheduleCalendar({ groupedSchedules }: Props) {
                         <span className="text-foreground/70 font-medium">Tersedia: <span className="text-foreground font-bold">{s.quota - s.booked}</span></span>
                         <span className="text-foreground/50 text-[10px]">Terisi {s.booked}/{s.quota}</span>
                       </div>
-                      <div className="h-1.5 w-full bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-1.5 w-full bg-overlay-dark dark:bg-overlay-light rounded-full overflow-hidden">
                         <div 
                           className={`h-full rounded-full transition-all duration-1000 ${isAvailable ? 'bg-primary' : 'bg-destructive'}`}
                           style={{ width: `${progressPercentage}%` }}

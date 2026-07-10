@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../models/pharmacy_order.dart';
+import '../../../../core/widgets/glass_status_chip.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:mobatech_app/core/utils/formatters.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class OrderCard extends StatelessWidget {
   final PharmacyOrder order;
@@ -14,7 +16,7 @@ class OrderCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.push('/pharmacy/tracking', extra: order),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
           color: AppColors.backgroundWhite,
           borderRadius: BorderRadius.circular(16),
@@ -44,21 +46,7 @@ class OrderCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.getStatusBgColor(order.status),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    order.status,
-                    style: TextStyle(
-                      color: AppColors.getStatusColor(order.status),
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                GlassStatusChip(status: order.status, fontSize: 12),
               ],
             ),
             const SizedBox(height: 12),

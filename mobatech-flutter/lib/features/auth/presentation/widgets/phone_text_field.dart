@@ -3,6 +3,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/phone_prefix_formatter.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class PhoneTextField extends StatelessWidget {
   final TextEditingController? controller;
@@ -19,7 +20,7 @@ class PhoneTextField extends StatelessWidget {
       validator: validator,
       inputFormatters: [PhonePrefixFormatter()],
       prefixIcon: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

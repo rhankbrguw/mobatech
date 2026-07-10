@@ -28,7 +28,7 @@ export function DashboardRecentAppointments({ stats }: { stats: DashboardStats }
           <div className="px-5 py-8 text-center text-foreground/40 text-sm">Belum ada antrean.</div>
         ) : (
           stats.recentAppointments.map((a) => (
-            <div key={a.id} className="px-5 py-3 flex items-center gap-3 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+            <div key={a.id} className="px-5 py-3 flex items-center gap-3 hover:bg-overlay-dark dark:hover:bg-overlay-light transition-colors">
               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary flex-shrink-0">
                 #{a.id}
               </div>

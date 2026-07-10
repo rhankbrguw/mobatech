@@ -38,7 +38,7 @@ export function LoginForm({ showToast }: { showToast: (msg: string, type: "succe
       const res = await api.post<LoginResponseData>("/api/auth/login", { email, password });
       
       if (res.data.user.role === 'patient') {
-        showToast("Akses ditolak: Pasien tidak memiliki izin masuk ke portal Admin.", "error");
+        showToast(APP_STRINGS.common.loginPatientError, "error");
         setLoading(false);
         return;
       }

@@ -91,7 +91,7 @@ class EditProfileFormFields extends StatelessWidget {
             onSurface: AppColors.textDark,
           ),
         ),
-        child: child!,
+        child: child ?? const SizedBox(),
       ),
     );
     if (date != null) {

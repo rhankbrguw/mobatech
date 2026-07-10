@@ -6,6 +6,7 @@ import '../../../../core/utils/error_handler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/doctor_schedule.dart';
 import 'schedules_card_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SchedulesCard extends StatelessWidget {
   final AsyncValue<List<DoctorSchedule>> schedulesAsync;
@@ -22,7 +23,7 @@ class SchedulesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
@@ -39,7 +40,7 @@ class SchedulesCard extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             color: AppColors.backgroundWhite.withValues(alpha: 0.85),
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(AppSpacing.md20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -73,7 +74,7 @@ class SchedulesCard extends StatelessWidget {
                         final todaySchedules = schedules.where((s) {
                           if (s.date == null) return false;
                           // Pastikan date di-parse ke local untuk perbandingan
-                          final localDate = s.date!.toLocal();
+                          final localDate = (s.date?.toLocal() ?? DateTime.now());
                           return localDate.year == now.year &&
                               localDate.month == now.month &&
                               localDate.day == now.day;

@@ -4,6 +4,7 @@ import 'package:mobatech_app/core/constants/strings/appointment_strings.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../providers/chat_provider.dart';
 import 'chatbot_rename_dialog.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SessionItem extends ConsumerWidget {
   final Map<String, dynamic> session;
@@ -14,7 +15,7 @@ class SessionItem extends ConsumerWidget {
     return Card(
       elevation: 0,
       color: AppColors.transparent,
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(color: AppColors.textGrey.withValues(alpha: 0.2)),
@@ -30,8 +31,8 @@ class SessionItem extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 4,
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.xs,
             ),
             leading: const CircleAvatar(
               backgroundColor: AppColors.primaryLight,
@@ -63,7 +64,7 @@ class SessionItem extends ConsumerWidget {
                         color: AppColors.primary,
                         size: 20,
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
                       constraints: const BoxConstraints(),
                       onPressed: () => showDialog(
                         context: context,
@@ -81,7 +82,7 @@ class SessionItem extends ConsumerWidget {
                         color: AppColors.errorRed,
                         size: 20,
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
                       constraints: const BoxConstraints(),
                       onPressed: () => ref
                           .read(chatMessagesProvider.notifier)

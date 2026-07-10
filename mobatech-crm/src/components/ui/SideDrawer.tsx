@@ -39,7 +39,7 @@ export function SideDrawer({
     <div className="fixed inset-0 z-50 flex justify-end">
       {/* Overlay */}
       <div
-        className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ease-out ${
+        className={`absolute inset-0 bg-foreground/40 backdrop-blur-sm transition-opacity duration-300 ease-out ${
           isVisible ? "opacity-100" : "opacity-0"
         }`}
         onClick={onClose}
@@ -47,15 +47,15 @@ export function SideDrawer({
       
       {/* Drawer */}
       <div 
-        className={`relative w-full max-w-md h-full bg-white/90 dark:bg-[#113C2B]/90 backdrop-blur-xl saturate-150 border-l border-glass-border shadow-2xl flex flex-col transition-transform duration-300 ease-out transform ${
+        className={`relative w-full max-w-md h-full bg-surface-primary/90 dark:bg-primary/90 backdrop-blur-xl saturate-150 border-l border-glass-border shadow-2xl flex flex-col transition-transform duration-300 ease-out transform ${
           isVisible ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between p-6 border-b border-glass-border/50 bg-black/5 dark:bg-white/5">
+        <div className="flex items-center justify-between p-6 border-b border-glass-border/50 bg-overlay-dark dark:bg-overlay-light">
           <h2 className="text-xl font-bold text-foreground">{title}</h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-full bg-white/50 dark:bg-black/20 hover:bg-black/10 dark:hover:bg-white/10 transition-colors focus:outline-none"
+            className="p-2 rounded-full bg-surface-primary/50 dark:bg-foreground/20 hover:bg-overlay-dark dark:hover:bg-overlay-light transition-colors focus:outline-none"
           >
             <X size={20} className="text-foreground/80" />
           </button>

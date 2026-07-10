@@ -74,7 +74,7 @@ export function Sidebar() {
       {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-20 lg:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-foreground/50 z-20 lg:hidden backdrop-blur-sm"
           onClick={closeSidebar}
         />
       )}
@@ -105,7 +105,7 @@ export function Sidebar() {
                 className={`flex items-center gap-3 px-4 h-11 rounded-xl text-sm font-medium transition-all duration-200 active:scale-[0.98] cursor-pointer ${
                   isActive
                     ? "bg-primary text-primary-foreground shadow-md"
-                    : "text-foreground/75 hover:bg-black/5 dark:hover:bg-white/5 hover:text-foreground"
+                    : "text-foreground/75 hover:bg-overlay-dark dark:hover:bg-overlay-light hover:text-foreground"
                 }`}
               >
                 <span className={isActive ? "text-primary-foreground" : "text-foreground/60"}>{item.icon}</span>
@@ -118,7 +118,7 @@ export function Sidebar() {
         <div className="p-4 border-t border-glass-border">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 h-11 rounded-xl text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 transition-all duration-200 cursor-pointer"
+            className="w-full flex items-center gap-3 px-4 h-11 rounded-xl text-sm font-medium text-error dark:text-error hover:bg-error-muted transition-all duration-200 cursor-pointer"
           >
             <LogOut size={20} />
             <span>{APP_STRINGS.sidebar.logout}</span>

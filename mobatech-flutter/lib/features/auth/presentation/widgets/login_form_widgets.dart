@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import 'social_login_button.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class LoginSubmitButton extends StatelessWidget {
   final bool isLoading;
@@ -44,7 +45,7 @@ class LoginFooter extends StatelessWidget {
               child: Divider(color: AppColors.dividerGrey, thickness: 1.5),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: Text(
                 CoreStrings.orContinueWith,
                 style: TextStyle(

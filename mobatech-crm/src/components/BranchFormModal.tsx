@@ -44,7 +44,7 @@ export function BranchFormModal({
       address,
       latitude,
       longitude,
-      image_url: imageUrl || `https://placehold.co/400x400/1E5E44/FFFFFF/png?text=${encodeURIComponent(name)}`,
+      image_url: imageUrl || `https://placehold.co/400x400/1e5e44/FFFFFF/png?text=${encodeURIComponent(name)}`,
       gmaps_link: gmapsLink,
     };
 

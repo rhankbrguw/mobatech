@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../models/pharmacy_order.dart';
 import '../widgets/order_tracking_header.dart';
 import '../widgets/order_tracking_timeline.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class OrderTrackingScreen extends StatelessWidget {
   final PharmacyOrder? order;
@@ -62,7 +63,7 @@ class OrderTrackingScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           children: [
             OrderTrackingHeader(
@@ -87,7 +88,7 @@ class OrderTrackingScreen extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

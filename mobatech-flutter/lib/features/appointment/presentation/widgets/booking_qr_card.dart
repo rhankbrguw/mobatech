@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glass_status_chip.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class BookingQRCard extends StatelessWidget {
   final dynamic appointment;
@@ -10,7 +11,7 @@ class BookingQRCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,

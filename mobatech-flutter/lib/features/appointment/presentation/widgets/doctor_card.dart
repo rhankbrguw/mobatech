@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/models/doctor.dart';
 import '../../../../core/utils/formatters.dart';
 import 'doctor_card_parts.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class DoctorCard extends StatelessWidget {
   final Doctor doctor;
@@ -14,7 +15,7 @@ class DoctorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
@@ -34,7 +35,7 @@ class DoctorCard extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSpacing.md),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

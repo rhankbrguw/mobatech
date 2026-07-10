@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"net/http"
-	"strconv"
+	"backend/constants"
 	"backend/models"
 	"backend/utils"
+	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -21,9 +22,9 @@ func NewBranchController(db *gorm.DB) *BranchController {
 func (ctrl *BranchController) GetBranches(c *gin.Context) {
 	search := c.Query("search")
 	filter := c.Query("filter")
-	
-	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
+
+	page, _ := strconv.Atoi(c.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
+	limit, _ := strconv.Atoi(c.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
 	offset := (page - 1) * limit
 
 	var branches []models.Branch

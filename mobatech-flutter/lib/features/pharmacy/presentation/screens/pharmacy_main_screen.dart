@@ -10,6 +10,7 @@ import '../widgets/orders_tab_view.dart';
 import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:mobatech_app/core/constants/strings/appointment_strings.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 part 'pharmacy_app_bar.dart';
 
 class PharmacyMainScreen extends ConsumerStatefulWidget {

@@ -24,7 +24,7 @@ mixin EmergencyWsMixin on AutoDisposeNotifier<EmergencyScreenState> {
       _channel = WebSocketChannel.connect(
         Uri.parse('$baseWsUrl/emergencies/$emergencyId/track'),
       );
-      _wsSubscription = _channel!.stream.listen(
+      _wsSubscription = _channel?.stream.listen(
         _onWsMessage,
         onError: (_) => simulateTracking(),
       );

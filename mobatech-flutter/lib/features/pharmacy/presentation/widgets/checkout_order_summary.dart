@@ -4,6 +4,7 @@ import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../models/cart.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class CheckoutOrderSummary extends StatelessWidget {
   final String pickupMethod;
@@ -18,7 +19,7 @@ class CheckoutOrderSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(20),
@@ -34,7 +35,7 @@ class CheckoutOrderSummary extends StatelessWidget {
         children: [
           ...cart.items.map(
             (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 12.0),
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

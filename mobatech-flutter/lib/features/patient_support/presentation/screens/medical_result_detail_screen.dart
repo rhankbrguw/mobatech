@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/medical_result.dart';
 import 'medical_result_detail_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class MedicalResultDetailScreen extends StatelessWidget {
   final MedicalResult result;
@@ -15,14 +16,14 @@ class MedicalResultDetailScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundScreen,
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MedicalResultHeader(result: result),
             const SizedBox(height: 24),
             if (result.resultDetails != null)
-              MedicalResultDetailsBox(details: result.resultDetails!),
+              MedicalResultDetailsBox(details: result.resultDetails ?? ''),
           ],
         ),
       ),

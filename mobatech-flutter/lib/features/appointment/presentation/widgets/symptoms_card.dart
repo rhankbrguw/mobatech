@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SymptomsCard extends StatelessWidget {
   final TextEditingController controller;
@@ -10,7 +11,7 @@ class SymptomsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
@@ -27,7 +28,7 @@ class SymptomsCard extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             color: AppColors.backgroundWhite.withValues(alpha: 0.85),
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(AppSpacing.md20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -59,7 +60,7 @@ class SymptomsCard extends StatelessWidget {
                         fontSize: 14,
                       ),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(16),
+                      contentPadding: EdgeInsets.all(AppSpacing.md),
                     ),
                   ),
                 ),

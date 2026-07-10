@@ -6,6 +6,7 @@ import 'doctor_profile_card.dart';
 import 'schedules_card.dart';
 import 'symptoms_card.dart';
 import 'booking_bottom_bar.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class DoctorDetailContent extends StatelessWidget {
   final Doctor doctor;
@@ -40,7 +41,7 @@ class DoctorDetailContent extends StatelessWidget {
               child: onRefresh == null
                   ? _buildScrollableContent()
                   : RefreshIndicator(
-                      onRefresh: onRefresh!,
+                      onRefresh: onRefresh ?? () async {},
                       child: _buildScrollableContent(),
                     ),
             ),
@@ -56,7 +57,7 @@ class DoctorDetailContent extends StatelessWidget {
       physics: const AlwaysScrollableScrollPhysics(
         parent: BouncingScrollPhysics(),
       ),
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

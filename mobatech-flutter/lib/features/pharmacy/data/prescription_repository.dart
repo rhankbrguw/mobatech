@@ -6,7 +6,7 @@ class PrescriptionRepository {
 
   PrescriptionRepository(this._dio);
 
-  Future<List<Prescription>> getMyPrescriptions({
+  Future<(List<Prescription>, bool)> getMyPrescriptions({
     int page = 1,
     int limit = 10,
   }) async {
@@ -15,14 +15,24 @@ class PrescriptionRepository {
         '/pharmacy/prescriptions',
         queryParameters: {'page': page, 'limit': limit},
       );
-      final responseData = response.data;
+      final dynamic responseData = response.data;
       final List<dynamic> data =
           responseData is Map && responseData.containsKey('data')
           ? responseData['data']
           : (responseData as List? ?? []);
-      return data.map((e) => Prescription.fromJson(e)).toList();
+          
+      final meta = responseData is Map && responseData.containsKey('meta')
+          ? responseData['meta'] as Map<String, dynamic>?
+          : response.extra['meta'] as Map<String, dynamic>?;
+
+      final prescriptions = data.map((e) => Prescription.fromJson(e)).toList();
+      
+      final currentPage = meta?['current_page'] as int? ?? 1;
+      final totalPages = meta?['total_pages'] as int? ?? 1;
+
+      return (prescriptions, currentPage < totalPages);
     } catch (e) {
-      return [];
+      return (<Prescription>[], false);
     }
   }
 

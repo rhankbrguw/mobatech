@@ -5,40 +5,59 @@ import { Button } from "@/components/ui/Button";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
+import { Pagination } from "@/components/ui/Pagination";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { Pill, CheckCircle } from "lucide-react";
+import { StatusPill } from "@/components/StatusPill";
+import { SideDrawer } from "@/components/ui/SideDrawer";
+import { Pill, CheckCircle, Eye, ChevronRight } from "lucide-react";
 import { Prescription } from "@/types/api";
 import { Formatters } from "@/lib/formatters";
+import { PharmacyPrescriptionRow } from "./PharmacyPrescriptionRow";
+import { PrescriptionDetailDrawer } from "./PrescriptionDetailDrawer";
+import { APP_STRINGS } from "@/lib/constants";
+
+const TH_CLASS = "align-middle whitespace-nowrap py-3 px-4 text-xs font-bold uppercase tracking-wider text-foreground/50";
 
 export function PharmacyPrescriptions() {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [toast, setToast] = useState<{isOpen: boolean, message: string, type: "success"|"error"}>({ isOpen: false, message: "", type: "success" });
+  const [viewingPrescription, setViewingPrescription] = useState<Prescription | null>(null);
 
   const load = async () => {
     try {
-      const res = await api.get<Prescription[]>("/api/admin/pharmacy/prescriptions");
+      const queryParams = new URLSearchParams();
+      if (searchQuery) queryParams.append("search", searchQuery);
+      if (statusFilter) queryParams.append("status", statusFilter);
+      queryParams.append("page", String(currentPage));
+      queryParams.append("limit", "10");
+      const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
+      const res = await api.get<Prescription[]>(`/api/admin/pharmacy/prescriptions${qs}`);
       setPrescriptions(res.data || []);
+      if (res.meta?.total_pages) setTotalPages(res.meta.total_pages);
     } catch (e) {
       console.error(e);
-      setToast({ isOpen: true, message: "Gagal memuat resep", type: "error" });
+      setToast({ isOpen: true, message: APP_STRINGS.pharmacy.loadError, type: "error" });
     } finally {
       setLoading(false);
     }
   };
 
-   
-  useEffect(() => { load(); }, []);
+  useEffect(() => { setCurrentPage(1); }, [searchQuery, statusFilter]);
+  useEffect(() => { load(); }, [searchQuery, statusFilter, currentPage]);
 
   const handleProcess = async (id: number) => {
     try {
-      await api.post(`/api/admin/pharmacy/prescriptions/${id}/process`, {});
-      setToast({ isOpen: true, message: "Resep berhasil diproses ke pesanan", type: "success" });
+      await api.put(`/api/admin/pharmacy/prescriptions/${id}/status`, { status: "completed" });
+      setToast({ isOpen: true, message: APP_STRINGS.pharmacy.processSuccess, type: "success" });
+      setViewingPrescription(null);
       load();
     } catch {
-      setToast({ isOpen: true, message: "Gagal memproses resep", type: "error" });
+      setToast({ isOpen: true, message: APP_STRINGS.pharmacy.processError, type: "error" });
     }
   };
 
@@ -81,51 +100,41 @@ export function PharmacyPrescriptions() {
 
       <Card noPadding>
         <div className="w-full overflow-x-auto">
-        <table className="w-full text-left border-collapse text-sm">
+        <table className="w-full border-collapse text-sm">
           <thead>
-            <tr className="border-b border-glass-border bg-black/5 dark:bg-white/5 font-semibold text-center">
-              <th className="py-2 px-4">Tanggal</th>
-              <th className="py-2 px-4">ID Pasien</th>
-              <th className="py-2 px-4">Dokter</th>
-              <th className="py-2 px-4">Diagnosa</th>
-              <th className="py-2 px-4">Status</th>
-              <th className="py-2 px-4">Aksi</th>
+            <tr className="border-b border-glass-border bg-overlay-dark] dark:bg-overlay-light]">
+              <th className={`${TH_CLASS} text-center`}>Tanggal</th>
+              <th className={`${TH_CLASS} text-center`}>ID Pasien</th>
+              <th className={`${TH_CLASS} text-center`}>Dokter</th>
+              <th className={`${TH_CLASS} text-center`}>Diagnosa</th>
+              <th className={`${TH_CLASS} text-center`}>Status</th>
+              <th className={`${TH_CLASS} text-center`}>Aksi</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map(p => (
-              <tr key={p.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 text-center">
-                <td className="py-3 px-4 font-medium text-xs">{Formatters.date(p.created_at, "datetime")}</td>
-                <td className="py-3 px-4 text-xs font-semibold">RES-{p.id}</td>
-                <td className="py-3 px-4 font-semibold">{p.doctor_name || "Anonim"}</td>
-                <td className="py-3 px-4">
-                  <span className="bg-primary/10 text-primary px-2.5 py-1 rounded-lg text-xs font-bold">
-                    {p.items?.length || 0} Obat
-                  </span>
-                </td>
-                <td className="py-3 px-4">
-                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${p.status === 'pending' ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'}`}>
-                    {p.status}
-                  </span>
-                </td>
-                <td className="py-3 px-4">
-                  {p.status === "pending" ? (
-                    <Button size="sm" variant="outline" className="text-blue-600 border-blue-500/30 hover:bg-blue-500/10 shadow-sm" onClick={() => handleProcess(p.id)} icon={<Pill size={14}/>}>
-                      Proses
-                    </Button>
-                  ) : (
-                    <span className="text-xs font-bold text-emerald-600 flex items-center justify-center gap-1 bg-emerald-500/10 px-3 py-1.5 rounded-xl w-max mx-auto"><CheckCircle size={14}/> Tuntas</span>
-                  )}
-                </td>
-              </tr>
+              <PharmacyPrescriptionRow 
+                key={p.id} 
+                prescription={p} 
+                onView={setViewingPrescription} 
+                onProcess={handleProcess} 
+              />
             ))}
             {filtered.length === 0 && (
-              <tr><td colSpan={6} className="py-4 text-center text-foreground/50">Tidak ada E-Resep saat ini</td></tr>
+              <tr><td colSpan={6} className="py-12 text-center text-foreground/50">Tidak ada E-Resep saat ini</td></tr>
             )}
           </tbody>
         </table>
       </div>
       </Card>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+
+      <PrescriptionDetailDrawer
+        prescription={viewingPrescription}
+        onClose={() => setViewingPrescription(null)}
+        onProcess={handleProcess}
+      />
+
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast(t => ({...t, isOpen: false}))} />
     </div>
   );

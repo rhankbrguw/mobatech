@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/constants"
 	"fmt"
 	"net/http"
 	"time"
@@ -11,7 +12,7 @@ import (
 func SetupMiscRoutes(r *gin.Engine) {
 	r.Static("/uploads", "./uploads")
 
-	r.POST("/api/upload", func(c *gin.Context) {
+	r.POST(constants.RouteApiUpload, func(c *gin.Context) {
 		file, err := c.FormFile("file")
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "No file uploaded"})
@@ -28,7 +29,7 @@ func SetupMiscRoutes(r *gin.Engine) {
 		})
 	})
 
-	r.GET("/ping", func(c *gin.Context) {
+	r.GET(constants.RoutePing, func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "pong"})
 	})
 }

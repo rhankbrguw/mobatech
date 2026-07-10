@@ -43,7 +43,7 @@ export function DeleteModal({
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div
-        className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+        className="fixed inset-0 bg-foreground/40 dark:bg-foreground/60 backdrop-blur-sm transition-opacity duration-300"
         onClick={onClose}
       />
       <div className="w-full max-w-sm glass-card rounded-2xl shadow-2xl p-6 relative z-[101] animate-slide-in">

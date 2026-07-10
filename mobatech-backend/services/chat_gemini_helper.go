@@ -21,18 +21,18 @@ func (s *chatService) setupGemini(ctx context.Context) (*genai.GenerativeModel, 
 	}
 
 	model := client.GenerativeModel("gemini-2.5-flash")
-	
+
 	loc, _ := time.LoadLocation("Asia/Jakarta")
 	currentTime := time.Now().In(loc).Format("15:04 WIB, Monday, 02 January 2006")
 	formattedPrompt := fmt.Sprintf(constants.GeminiSystemPrompt, currentTime)
-	
+
 	model.SystemInstruction = &genai.Content{
 		Parts: []genai.Part{genai.Text(formattedPrompt)},
 	}
 	return model, client, nil
 }
 
-func (s *chatService) populateHistory(cs *genai.ChatSession, historyMsg []models.ChatMessage, lastUserMsg string) {
+func (s *chatService) populateHistory(ctx context.Context, cs *genai.ChatSession, historyMsg []models.ChatMessage, lastUserMsg string) {
 	for _, msg := range historyMsg {
 		if msg.Role == "user" && msg.Content == lastUserMsg {
 			continue
@@ -48,7 +48,7 @@ func (s *chatService) populateHistory(cs *genai.ChatSession, historyMsg []models
 	}
 }
 
-func (s *chatService) processStream(iter *genai.GenerateContentResponseIterator, outChan chan<- string, errChan chan<- error, sessionID uint) {
+func (s *chatService) processStream(ctx context.Context, iter *genai.GenerateContentResponseIterator, outChan chan<- string, errChan chan<- error, sessionID uint) {
 	var fullResponse string
 	for {
 		resp, err := iter.Next()
@@ -71,7 +71,7 @@ func (s *chatService) processStream(iter *genai.GenerateContentResponseIterator,
 		}
 	}
 
-	s.repo.AddMessage(&models.ChatMessage{
+	s.repo.AddMessage(ctx, &models.ChatMessage{
 		SessionID: sessionID,
 		Role:      "model",
 		Content:   fullResponse,

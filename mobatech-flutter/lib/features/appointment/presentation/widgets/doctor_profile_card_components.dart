@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/doctor.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class DoctorImageWidget extends StatelessWidget {
   final Doctor doctor;
@@ -68,7 +69,7 @@ class DoctorInfoWidget extends StatelessWidget {
 
   Widget _buildBadge(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSpacing.xs),
       decoration: BoxDecoration(
         color: AppColors.primaryLight,
         borderRadius: BorderRadius.circular(12),
@@ -96,7 +97,7 @@ class DoctorAboutWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
           child: Divider(height: 1, color: AppColors.backgroundScreen),
         ),
         const Text(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glass_status_chip.dart';
 import '../../data/models/medical_result.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ResultCard extends StatelessWidget {
   final MedicalResult result;
@@ -13,7 +14,7 @@ class ResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(20),
@@ -35,7 +36,7 @@ class ResultCard extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(AppSpacing.md20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -93,7 +94,7 @@ class ResultCard extends StatelessWidget {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              result.doctorName!,
+                              result.doctorName ?? '',
                               style: const TextStyle(
                                 color: AppColors.textGrey,
                                 fontSize: 14,

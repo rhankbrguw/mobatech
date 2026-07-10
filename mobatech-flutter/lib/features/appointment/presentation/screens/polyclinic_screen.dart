@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -5,12 +6,36 @@ import '../../../../core/utils/error_handler.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../../providers/polyclinic_provider.dart';
 import '../widgets/polyclinic_card.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
-class PolyclinicScreen extends ConsumerWidget {
+class PolyclinicScreen extends ConsumerStatefulWidget {
   const PolyclinicScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PolyclinicScreen> createState() => _PolyclinicScreenState();
+}
+
+class _PolyclinicScreenState extends ConsumerState<PolyclinicScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+        ref.read(polyclinicsProvider.notifier).fetchNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final polyclinicsAsync = ref.watch(polyclinicsProvider);
 
     return Scaffold(
@@ -32,6 +57,7 @@ class PolyclinicScreen extends ConsumerWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 800),
             child: CustomScrollView(
+              controller: _scrollController,
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverAppBar(
@@ -78,7 +104,7 @@ class PolyclinicScreen extends ConsumerWidget {
                   ),
                 ),
                 SliverPadding(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(AppSpacing.lg),
                   sliver: polyclinicsAsync.when(
                     data: (polys) {
                       if (polys.isEmpty) {
@@ -91,11 +117,18 @@ class PolyclinicScreen extends ConsumerWidget {
                           ),
                         );
                       }
+                      final isFetchingNextPage = ref.read(polyclinicsProvider.notifier).isFetchingNextPage;
                       return SliverList(
                         delegate: SliverChildBuilderDelegate((context, index) {
+                          if (index == polys.length) {
+                            return const Padding(
+                              padding: EdgeInsets.all(AppSpacing.md),
+                              child: Center(child: CupertinoActivityIndicator(radius: 14)),
+                            );
+                          }
                           final poly = polys[index];
                           return PolyclinicCard(poly: poly);
-                        }, childCount: polys.length),
+                        }, childCount: polys.length + (isFetchingNextPage ? 1 : 0)),
                       );
                     },
                     loading: () => const SliverToBoxAdapter(

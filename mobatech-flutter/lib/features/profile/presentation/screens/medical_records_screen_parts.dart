@@ -1,3 +1,4 @@
+
 part of 'medical_records_screen.dart';
 
 class _MedicalRecordsAppBar extends StatelessWidget
@@ -57,7 +58,7 @@ class _AppointmentsList extends StatelessWidget {
           return const SliverToBoxAdapter(
             child: Center(
               child: Padding(
-                padding: EdgeInsets.all(24),
+                padding: EdgeInsets.all(AppSpacing.lg),
                 child: Text(
                   ProfileStrings.extBelumadariwayatmedis,
                   style: TextStyle(color: AppColors.textGrey),
@@ -74,21 +75,21 @@ class _AppointmentsList extends StatelessWidget {
           });
 
         return SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
               final appt = sorted[index];
               final isDone = appt.status.toLowerCase() == 'completed';
               final dateStr = appt.schedule?.date != null
                   ? Formatters.formatDateID(
-                      appt.schedule!.date ?? DateTime.now(),
+                      appt.schedule?.date ?? DateTime.now(),
                     )
                   : '-';
               final docSpec = appt.doctor?.specialization ?? 'Umum';
               final docName = appt.doctor?.name ?? 'Dokter Tidak Diketahui';
 
               return Padding(
-                padding: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.only(bottom: AppSpacing.md),
                 child: MedicalRecordCard(
                   date: dateStr,
                   type: 'Konsultasi $docSpec',
@@ -104,7 +105,7 @@ class _AppointmentsList extends StatelessWidget {
       },
       loading: () => const SliverToBoxAdapter(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           child: Column(
             children: [
               SkeletonLoader(

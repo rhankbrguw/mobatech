@@ -37,4 +37,5 @@ class ProfileStrings {
   static const String extHasilpemeriksaan = 'Hasil Pemeriksaan';
   static const String extDetailartikel = 'Detail Artikel';
   static const String extKeluardariakun = 'Keluar (Logout)';
+  static String menuComingSoon(String menuName) => 'Menu $menuName segera hadir!';
 }

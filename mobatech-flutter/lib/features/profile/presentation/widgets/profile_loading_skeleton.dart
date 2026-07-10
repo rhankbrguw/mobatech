@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ProfileLoadingSkeleton extends StatelessWidget {
   const ProfileLoadingSkeleton({super.key});
@@ -25,7 +26,7 @@ class ProfileLoadingSkeleton extends StatelessWidget {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(AppSpacing.lg),
                 child: Column(
                   children: [
                     const SkeletonLoader(

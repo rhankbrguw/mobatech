@@ -1,6 +1,7 @@
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class GenderSelection extends StatelessWidget {
   final String? selectedGender;
@@ -18,7 +19,7 @@ class GenderSelection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.only(left: 4, bottom: 8),
+          padding: EdgeInsets.only(left: AppSpacing.xs, bottom: AppSpacing.sm),
           child: Text(
             CoreStrings.extJeniskelamin,
             style: TextStyle(
@@ -45,7 +46,7 @@ class GenderSelection extends StatelessWidget {
       onTap: () => onChanged(gender),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primary

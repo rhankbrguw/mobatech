@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class DetailRowWidget extends StatelessWidget {
   final String label;
@@ -10,7 +11,7 @@ class DetailRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

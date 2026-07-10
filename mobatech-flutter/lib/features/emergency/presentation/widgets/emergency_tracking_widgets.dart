@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class TrackingTopBar extends StatelessWidget {
   const TrackingTopBar({super.key});
@@ -9,7 +10,7 @@ class TrackingTopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(
-        20,
+        AppSpacing.md20,
         MediaQuery.of(context).padding.top + 12,
         20,
         16,
@@ -24,7 +25,7 @@ class TrackingTopBar extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(AppSpacing.sm),
             decoration: BoxDecoration(
               color: AppColors.backgroundWhite.withAlpha(50),
               borderRadius: BorderRadius.circular(12),
@@ -47,7 +48,7 @@ class TrackingTopBar extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm12, vertical: 6),
             decoration: BoxDecoration(
               color: AppColors.successGreen,
               borderRadius: BorderRadius.circular(20),

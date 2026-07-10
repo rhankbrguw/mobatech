@@ -1,27 +1,40 @@
 import '../../../core/network/dio_client.dart';
 
 class PrescriptionItem {
-  final int medicineId;
+  final int? medicineId;
   final String medicineName;
+  final String customMedicine;
   final String dosageInstruction;
   final String duration;
   final int quantity;
 
   PrescriptionItem({
-    required this.medicineId,
+    this.medicineId,
     required this.medicineName,
+    required this.customMedicine,
     required this.dosageInstruction,
     required this.duration,
     required this.quantity,
   });
 
+  String get displayName {
+    if (medicineName.isNotEmpty) return medicineName;
+    if (customMedicine.isNotEmpty) return customMedicine;
+    return 'Obat Manual';
+  }
+
   factory PrescriptionItem.fromJson(Map<String, dynamic> json) {
+    final medId = json['medicine_id'] as int?;
+    final medName =
+        (json['medicine'] != null ? json['medicine']['name'] : '')
+            as String? ??
+        '';
+    final customMed = json['custom_medicine'] as String? ?? '';
+
     return PrescriptionItem(
-      medicineId: json['medicine_id'] as int? ?? 0,
-      medicineName:
-          (json['medicine'] != null ? json['medicine']['name'] : '')
-              as String? ??
-          'Obat',
+      medicineId: medId,
+      medicineName: medName,
+      customMedicine: customMed,
       dosageInstruction: json['dosage_instruction'] as String? ?? '',
       duration: json['duration'] as String? ?? '',
       quantity: json['quantity'] as int? ?? 1,

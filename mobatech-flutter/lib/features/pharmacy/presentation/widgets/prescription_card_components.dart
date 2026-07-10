@@ -3,6 +3,8 @@ import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import '../../models/prescription.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 
 
 
@@ -14,14 +16,14 @@ class PrescriptionRedeemButton extends StatelessWidget {
   Widget build(BuildContext context) {
     if (prescription.status != 'Pending') return const SizedBox.shrink();
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
+      padding: const EdgeInsets.only(top: AppSpacing.md),
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () {
             CustomSnackbar.showSuccess(
               context,
-              'Obat berhasil ditambahkan ke keranjang!',
+              PharmacyStrings.addedToCartMessage,
             );
           },
           style: ElevatedButton.styleFrom(
@@ -30,7 +32,7 @@ class PrescriptionRedeemButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm12),
           ),
           child: const Text(
             'Tebus Obat',

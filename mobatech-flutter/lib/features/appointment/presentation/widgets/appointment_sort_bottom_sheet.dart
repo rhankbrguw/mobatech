@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../providers/appointment_provider.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AppointmentSortBottomSheet extends ConsumerWidget {
   const AppointmentSortBottomSheet({super.key});
@@ -21,7 +22,7 @@ class AppointmentSortBottomSheet extends ConsumerWidget {
       color: AppColors.backgroundScreen,
       borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

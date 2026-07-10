@@ -9,6 +9,7 @@ import '../../../../core/widgets/skeleton_loader.dart';
 import '../../../../core/utils/error_handler.dart';
 import '../../../appointment/providers/appointment_provider.dart';
 import 'history_card.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AppointmentsTab extends ConsumerStatefulWidget {
   const AppointmentsTab({super.key});
@@ -52,13 +53,13 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
             .isFetchingNextPage;
         return ListView.separated(
           controller: _scrollController,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md20),
           itemCount: appointments.length + (isFetchingNextPage ? 1 : 0),
           separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             if (index == appointments.length) {
               return const Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(AppSpacing.md),
                 child: Center(child: CupertinoActivityIndicator(radius: 14)),
               );
             }
@@ -67,7 +68,7 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                 '${AppointmentStrings.appointmentWith} ${appt.doctor?.name ?? AppointmentStrings.defaultDoctorName}';
             final status = appt.status.toUpperCase();
             final date = appt.schedule?.date != null
-                ? Formatters.formatDateID(appt.schedule!.date!)
+                ? Formatters.formatDateID((appt.schedule?.date ?? DateTime.now()))
                 : '-';
             return HistoryCard(
               title: title,
@@ -86,7 +87,7 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
   Widget _buildErrorState(String message) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(AppSpacing.xl),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

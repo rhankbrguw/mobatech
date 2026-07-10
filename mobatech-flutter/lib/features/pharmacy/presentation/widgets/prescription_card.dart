@@ -3,6 +3,7 @@ import 'package:mobatech_app/core/constants/strings/error_strings.dart';
 import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/widgets/glass_status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -10,6 +11,7 @@ import '../../models/prescription.dart';
 import '../../providers/pharmacy_provider.dart';
 import 'prescription_items_list.dart';
 import 'prescription_card_components.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 part 'prescription_card_header.dart';
 
@@ -19,9 +21,9 @@ class PrescriptionCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
           color: AppColors.backgroundWhite.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(16),

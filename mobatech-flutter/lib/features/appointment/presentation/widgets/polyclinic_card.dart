@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/models/polyclinic.dart';
 import '../../providers/appointment_provider.dart';
 import 'polyclinic_card_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class PolyclinicCard extends ConsumerWidget {
   final Polyclinic poly;
@@ -14,7 +15,7 @@ class PolyclinicCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
@@ -37,8 +38,8 @@ class PolyclinicCard extends ConsumerWidget {
               ).copyWith(dividerColor: AppColors.transparent),
               child: ExpansionTile(
                 tilePadding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
+                  horizontal: AppSpacing.md20,
+                  vertical: AppSpacing.sm,
                 ),
                 title: Text(
                   poly.name,
@@ -49,7 +50,7 @@ class PolyclinicCard extends ConsumerWidget {
                   ),
                 ),
                 subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 4),
+                  padding: const EdgeInsets.only(top: AppSpacing.xs),
                   child: Text(
                     poly.description,
                     maxLines: 2,
@@ -64,7 +65,7 @@ class PolyclinicCard extends ConsumerWidget {
                   Container(
                     width: double.infinity,
                     color: AppColors.primaryLight.withValues(alpha: 0.5),
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(AppSpacing.md20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

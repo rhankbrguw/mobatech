@@ -78,10 +78,10 @@ export function PharmacyMedicines({ initialMedicines, categories }: { initialMed
   const handleSaveCategory = async (payload: { name: string; description: string }) => {
     try {
       await api.post(`/api/admin/pharmacy/categories`, payload);
-      showToast("Kategori berhasil ditambahkan", "success");
+      showToast(APP_STRINGS.common.categoryAddSuccess, "success");
       setIsCategoryModalOpen(false);
       loadCategories();
-    } catch { showToast("Gagal menambahkan kategori", "error"); }
+    } catch { showToast(APP_STRINGS.common.categoryAddError, "error"); }
   };
 
   const confirmDelete = (id: number, name: string) => {

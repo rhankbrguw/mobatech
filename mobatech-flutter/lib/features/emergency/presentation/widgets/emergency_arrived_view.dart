@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import 'emergency_arrived_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class EmergencyArrivedView extends StatefulWidget {
   const EmergencyArrivedView({super.key});
@@ -64,7 +65,7 @@ class _EmergencyArrivedViewState extends State<EmergencyArrivedView>
               );
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

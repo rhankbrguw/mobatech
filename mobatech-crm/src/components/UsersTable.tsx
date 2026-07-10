@@ -3,6 +3,9 @@ import { Formatters } from "@/lib/formatters";
 import { ShieldAlert, Eye, Edit, Trash2 } from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 
+const TH_CLASS = "align-middle whitespace-nowrap py-3 px-4 text-xs font-bold uppercase tracking-wider text-foreground/50";
+const TD_CLASS = "align-middle whitespace-nowrap py-4 px-4 border-b border-glass-border/50";
+
 interface UsersTableProps {
   users: User[];
   loading: boolean;
@@ -15,40 +18,40 @@ interface UsersTableProps {
 export function UsersTable({ users, loading, authUser, onView, onEdit, onDelete }: UsersTableProps) {
   return (
     <div className="w-full overflow-x-auto">
-      <table className="w-full text-center border-collapse text-sm">
+      <table className="w-full border-collapse text-sm">
         <thead>
-          <tr className="border-b border-glass-border bg-black/5 dark:bg-white/5 font-semibold">
-            <th className="text-center align-middle whitespace-nowrap py-3 px-6 text-sm">Pengguna</th>
-            <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Kontak</th>
-            <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Peran (Role)</th>
-            <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Aksi</th>
+          <tr className="border-b border-glass-border bg-overlay-dark] dark:bg-overlay-light]">
+            <th className={`${TH_CLASS} text-center`}>Pengguna</th>
+            <th className={`${TH_CLASS} text-center`}>Kontak</th>
+            <th className={`${TH_CLASS} text-center`}>Peran (Role)</th>
+            <th className={`${TH_CLASS} text-center`}>Aksi</th>
           </tr>
         </thead>
         <tbody>
           {loading ? (
-            <tr><td colSpan={4} className="p-8 text-center text-foreground/50">Memuat data...</td></tr>
+            <tr><td colSpan={4} className={`${TD_CLASS} text-center p-8 text-foreground/50 font-normal`}>Memuat data...</td></tr>
           ) : users.length === 0 ? (
-            <tr><td colSpan={4} className="p-8 text-center text-foreground/50">Tidak ada pengguna ditemukan.</td></tr>
+            <tr><td colSpan={4} className={`${TD_CLASS} text-center p-8 text-foreground/50 font-normal`}>Tidak ada pengguna ditemukan.</td></tr>
           ) : (
             users.map((u) => (
-              <tr key={u.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                <td className="text-left align-middle whitespace-nowrap py-3 px-6 text-sm">
+              <tr key={u.id} className="hover:bg-overlay-dark] dark:hover:bg-overlay-light] transition-colors group">
+                <td className={`${TD_CLASS} text-center font-medium text-foreground`}>
                   <div className="flex items-center justify-start gap-3">
-                    <img src={u.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.full_name)}&background=113c2b&color=fff`} alt={u.full_name} className="w-8 h-8 rounded-full object-cover border border-glass-border" />
-                    <div className="text-left"><div className="font-semibold">{u.full_name}</div><div className="text-xs text-foreground/50">ID: {u.id}</div></div>
+                    <img src={u.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.full_name)}&background=1e5e44&color=fff`} alt={u.full_name} className="w-8 h-8 rounded-full object-cover border border-glass-border" />
+                    <div className="text-left"><div>{u.full_name}</div><div className="text-xs text-foreground/50 font-normal">ID: {u.id}</div></div>
                   </div>
                 </td>
-                <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                  <div className="font-medium">{u.email}</div>
-                  <div className="text-xs text-foreground/50">{Formatters.phone(u.phone_number)}</div>
+                <td className={`${TD_CLASS} text-center font-medium text-foreground`}>
+                  <div>{u.email}</div>
+                  <div className="text-xs text-foreground/50 font-normal">{Formatters.phone(u.phone_number)}</div>
                 </td>
-                <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold ${u.role === "admin" ? "bg-rose-100 text-rose-700" : u.role === "doctor" ? "bg-blue-100 text-blue-700" : u.role === "pharmacist" ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"}`}>
+                <td className={`${TD_CLASS} text-center font-medium text-foreground`}>
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold ${u.role === "admin" ? "bg-error-muted text-error" : u.role === "doctor" ? "bg-info-muted text-info" : u.role === "pharmacist" ? "bg-warning-muted text-warning" : "bg-success-muted text-success"}`}>
                     {u.role === "admin" && <ShieldAlert size={12} />}
                     {u.role.toUpperCase()}
                   </span>
                 </td>
-                <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
+                <td className={`${TD_CLASS} text-center font-medium text-foreground`}>
                   <div className="flex justify-center">
                     <ActionMenu
                       items={[

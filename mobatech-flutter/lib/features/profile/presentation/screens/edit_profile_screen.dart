@@ -72,14 +72,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     if (user == null) {
       return;
     }
-    if (!_formKey.currentState!.validate()) return;
+    if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() => _isLoading = true);
 
     try {
       final userAsync = ref.read(userProfileProvider);
       final user = userAsync.value;
       String? pathForUpload =
-          (_imagePath != null && _imagePath!.startsWith('http'))
+          (_imagePath != null && (_imagePath?.startsWith('http') ?? false))
           ? null
           : _imagePath;
 

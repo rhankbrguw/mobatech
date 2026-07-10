@@ -3,6 +3,7 @@ import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../providers/chat_provider.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ChatbotHeader extends ConsumerWidget {
   final VoidCallback onShowHistory;
@@ -33,7 +34,7 @@ class ChatbotHeader extends ConsumerWidget {
           SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md20),
               child: Row(
                 children: [
                   Container(

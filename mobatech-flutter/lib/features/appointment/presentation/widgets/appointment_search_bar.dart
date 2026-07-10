@@ -1,3 +1,4 @@
+
 part of 'appointment_header_widgets.dart';
 
 class AppointmentSearchBar extends ConsumerWidget {
@@ -8,7 +9,7 @@ class AppointmentSearchBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Row(
         children: [
           Expanded(child: _buildSearchInput(ref)),

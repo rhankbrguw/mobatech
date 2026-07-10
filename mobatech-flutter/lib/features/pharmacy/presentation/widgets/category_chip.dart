@@ -1,3 +1,4 @@
+
 part of 'catalog_widgets.dart';
 
 class CategoryChip extends StatelessWidget {
@@ -15,7 +16,7 @@ class CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
+      padding: const EdgeInsets.only(right: AppSpacing.sm),
       child: ChoiceChip(
         label: Text(label),
         selected: isSelected,

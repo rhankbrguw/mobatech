@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../appointment/providers/appointment_provider.dart';
 import 'search_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SearchDoctorResults extends ConsumerWidget {
   final String query;
@@ -31,7 +32,7 @@ class SearchDoctorResults extends ConsumerWidget {
           return const SearchEmptyState(msg: 'Dokter tidak ditemukan');
         }
         return ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.md),
           itemCount: filtered.length,
           itemBuilder: (context, i) => SearchItem(
             icon: Icons.person,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ScheduleDetailsCard extends StatelessWidget {
   final dynamic appointment;
@@ -11,7 +12,7 @@ class ScheduleDetailsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.md20),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(20),
@@ -46,7 +47,7 @@ class ScheduleDetailsCard extends StatelessWidget {
               Text(
                 appointment.schedule?.date != null
                     ? Formatters.formatDateWithDayID(
-                        appointment.schedule!.date!,
+                        (appointment.schedule?.date ?? DateTime.now()),
                       )
                     : '-',
                 style: const TextStyle(color: AppColors.textDark),

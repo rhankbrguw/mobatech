@@ -8,6 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../../patient_support/providers/patient_support_provider.dart';
 import 'home_header_parts.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class HomeHeader extends ConsumerWidget {
   const HomeHeader({super.key});
@@ -41,7 +42,7 @@ class HomeHeader extends ConsumerWidget {
           SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -53,10 +54,10 @@ class HomeHeader extends ConsumerWidget {
                           alpha: 0.2,
                         ),
                         backgroundImage: userProfile?.imagePath != null
-                            ? (userProfile!.imagePath!.startsWith('http')
-                                  ? NetworkImage(userProfile.imagePath!)
+                            ? ((userProfile?.imagePath?.startsWith('http') ?? false)
+                                  ? NetworkImage(userProfile?.imagePath ?? '')
                                         as ImageProvider
-                                  : FileImage(File(userProfile.imagePath!)))
+                                  : FileImage(File(userProfile?.imagePath ?? '')))
                             : null,
                         child: userProfile?.imagePath == null
                             ? const Icon(
@@ -106,18 +107,18 @@ class HomeHeader extends ConsumerWidget {
                                 onPressed: () => context.push('/notifications'),
                               ),
                               if (unreadCountAsync.valueOrNull != null &&
-                                  unreadCountAsync.valueOrNull! > 0)
+                                  (unreadCountAsync.valueOrNull ?? 0) > 0)
                                 Positioned(
                                   right: 6,
                                   top: 6,
                                   child: Container(
-                                    padding: const EdgeInsets.all(4),
+                                    padding: const EdgeInsets.all(AppSpacing.xs),
                                     decoration: const BoxDecoration(
                                       color: AppColors.errorRed,
                                       shape: BoxShape.circle,
                                     ),
                                     child: Text(
-                                      unreadCountAsync.valueOrNull!.toString(),
+                                      (unreadCountAsync.valueOrNull?.toString() ?? '0'),
                                       style: const TextStyle(
                                         color: AppColors.textWhite,
                                         fontSize: 10,

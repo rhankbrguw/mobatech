@@ -9,6 +9,7 @@ import '../widgets/appointment_card.dart';
 import '../widgets/user_appointments_app_bar.dart';
 import '../widgets/user_appointments_empty.dart';
 import '../widgets/cancel_appointment_dialog.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class UserAppointmentsScreen extends ConsumerStatefulWidget {
   const UserAppointmentsScreen({super.key});
@@ -77,13 +78,13 @@ class _UserAppointmentsScreenState
                         SliverFillRemaining(child: EmptyAppointments())
                       else
                         SliverPadding(
-                          padding: const EdgeInsets.all(24),
+                          padding: const EdgeInsets.all(AppSpacing.lg),
                           sliver: SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (context, index) {
                                 if (index == appointments.length) {
                                   return const Padding(
-                                    padding: EdgeInsets.all(16.0),
+                                    padding: EdgeInsets.all(AppSpacing.md),
                                     child: Center(
                                       child: CupertinoActivityIndicator(
                                         radius: 14,

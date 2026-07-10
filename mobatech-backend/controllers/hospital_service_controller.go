@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"backend/constants"
 	"backend/models"
 	"backend/services"
 	"backend/utils"
@@ -21,7 +22,7 @@ func NewHospitalServiceController(service services.HospitalServiceService) *Hosp
 func (c *HospitalServiceController) GetAll(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
-	services, err := c.service.GetAll(search, filter)
+	services, err := c.service.GetAll(ctx.Request.Context(), search, filter)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -33,9 +34,9 @@ func (c *HospitalServiceController) GetByID(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, _ := strconv.Atoi(idStr)
 
-	service, err := c.service.GetByID(uint(id))
+	service, err := c.service.GetByID(ctx.Request.Context(), uint(id))
 	if err != nil {
-		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, "Service not found"))
+		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, constants.MsgServiceNotFound, nil))
 		return
 	}
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", service))
@@ -44,11 +45,11 @@ func (c *HospitalServiceController) GetByID(ctx *gin.Context) {
 func (c *HospitalServiceController) Create(ctx *gin.Context) {
 	var req models.HospitalService
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
-	if err := c.service.Create(&req); err != nil {
+	if err := c.service.Create(ctx.Request.Context(), &req); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -59,18 +60,18 @@ func (c *HospitalServiceController) Update(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, _ := strconv.Atoi(idStr)
 
-	service, err := c.service.GetByID(uint(id))
+	service, err := c.service.GetByID(ctx.Request.Context(), uint(id))
 	if err != nil {
-		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, "Service not found"))
+		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, constants.MsgServiceNotFound, nil))
 		return
 	}
 
 	if err := ctx.ShouldBindJSON(&service); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
-	if err := c.service.Update(service); err != nil {
+	if err := c.service.Update(ctx.Request.Context(), service); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -81,7 +82,7 @@ func (c *HospitalServiceController) Delete(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, _ := strconv.Atoi(idStr)
 
-	if err := c.service.Delete(uint(id)); err != nil {
+	if err := c.service.Delete(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}

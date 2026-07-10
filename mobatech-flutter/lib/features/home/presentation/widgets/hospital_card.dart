@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/dio_client.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'hospital_card_components.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class HospitalCard extends StatelessWidget {
   final String name;
@@ -22,8 +23,8 @@ class HospitalCard extends StatelessWidget {
   });
 
   void _launchMaps() async {
-    final url = (gmapsLink != null && gmapsLink!.isNotEmpty)
-        ? Uri.parse(gmapsLink!)
+    final url = ((gmapsLink?.isNotEmpty ?? false))
+        ? Uri.parse(gmapsLink ?? '')
         : Uri.parse(
             'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent('$name $address')}',
           );
@@ -36,7 +37,7 @@ class HospitalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 16, left: 24, right: 24),
+      margin: const EdgeInsets.only(top: AppSpacing.md, left: AppSpacing.lg, right: AppSpacing.lg),
       decoration: _buildDecoration(),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -44,7 +45,7 @@ class HospitalCard extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             color: AppColors.backgroundWhite.withValues(alpha: 0.85),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -87,9 +88,9 @@ class HospitalCard extends StatelessWidget {
   }
 
   Widget _buildImageContainer() {
-    final bool hasImage = imageUrl != null && imageUrl!.isNotEmpty;
+    final bool hasImage = (imageUrl?.isNotEmpty ?? false);
     final String fullImageUrl = hasImage
-        ? (imageUrl!.startsWith('http') ? imageUrl! : '$baseMediaUrl$imageUrl')
+        ? ((imageUrl?.startsWith('http') ?? false) ? (imageUrl ?? '') : '$baseMediaUrl${imageUrl ?? ''}')
         : '';
 
     return Container(

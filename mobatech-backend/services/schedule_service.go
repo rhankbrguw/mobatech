@@ -1,6 +1,10 @@
 package services
 
 import (
+	"fmt"
+
+	"context"
+
 	"backend/models"
 	"backend/repositories"
 	"bytes"
@@ -9,11 +13,11 @@ import (
 )
 
 type ScheduleService interface {
-	GetUpcomingSchedules(limit int) ([]models.DoctorSchedule, error)
-	GetDoctorSchedules(doctorID uint) ([]models.DoctorSchedule, error)
-	CreateSchedule(schedule *models.DoctorSchedule) error
-	UpdateSchedule(id uint, input *models.DoctorSchedule) (*models.DoctorSchedule, error)
-	DeleteSchedule(id uint) error
+	GetUpcomingSchedules(ctx context.Context, limit int) ([]models.DoctorSchedule, error)
+	GetDoctorSchedules(ctx context.Context, doctorID uint) ([]models.DoctorSchedule, error)
+	CreateSchedule(ctx context.Context, schedule *models.DoctorSchedule) error
+	UpdateSchedule(ctx context.Context, id uint, input *models.DoctorSchedule) (*models.DoctorSchedule, error)
+	DeleteSchedule(ctx context.Context, id uint) error
 }
 
 type scheduleService struct {
@@ -24,8 +28,8 @@ func NewScheduleService(scheduleRepo repositories.ScheduleRepository) ScheduleSe
 	return &scheduleService{scheduleRepo}
 }
 
-func (s *scheduleService) GetUpcomingSchedules(limit int) ([]models.DoctorSchedule, error) {
-	return s.scheduleRepo.FindUpcomingSchedules(limit)
+func (s *scheduleService) GetUpcomingSchedules(ctx context.Context, limit int) ([]models.DoctorSchedule, error) {
+	return s.scheduleRepo.FindUpcomingSchedules(ctx, limit)
 }
 
 func triggerRAGSync() {
@@ -38,26 +42,26 @@ func triggerRAGSync() {
 	}()
 }
 
-func (s *scheduleService) GetDoctorSchedules(doctorID uint) ([]models.DoctorSchedule, error) {
+func (s *scheduleService) GetDoctorSchedules(ctx context.Context, doctorID uint) ([]models.DoctorSchedule, error) {
 	now := time.Now()
 	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
-	return s.scheduleRepo.FindByDoctorID(doctorID, today)
+	return s.scheduleRepo.FindByDoctorID(ctx, doctorID, today)
 }
 
-func (s *scheduleService) CreateSchedule(schedule *models.DoctorSchedule) error {
+func (s *scheduleService) CreateSchedule(ctx context.Context, schedule *models.DoctorSchedule) error {
 	schedule.IsAvailable = true
 	schedule.Booked = 0
-	err := s.scheduleRepo.Create(schedule)
+	err := s.scheduleRepo.Create(ctx, schedule)
 	if err == nil {
 		triggerRAGSync()
 	}
-	return err
+	return fmt.Errorf("scheduleService.CreateSchedule: %w", err)
 }
 
-func (s *scheduleService) UpdateSchedule(id uint, input *models.DoctorSchedule) (*models.DoctorSchedule, error) {
-	schedule, err := s.scheduleRepo.FindByID(id)
+func (s *scheduleService) UpdateSchedule(ctx context.Context, id uint, input *models.DoctorSchedule) (*models.DoctorSchedule, error) {
+	schedule, err := s.scheduleRepo.FindByID(ctx, id)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("scheduleService.UpdateSchedule: %w", err)
 	}
 
 	if !input.Date.IsZero() {
@@ -73,19 +77,19 @@ func (s *scheduleService) UpdateSchedule(id uint, input *models.DoctorSchedule) 
 		schedule.Quota = input.Quota
 	}
 
-	err = s.scheduleRepo.Update(schedule)
+	err = s.scheduleRepo.Update(ctx, schedule)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("scheduleService.UpdateSchedule: %w", err)
 	}
 
 	triggerRAGSync()
 	return schedule, nil
 }
 
-func (s *scheduleService) DeleteSchedule(id uint) error {
-	err := s.scheduleRepo.Delete(id)
+func (s *scheduleService) DeleteSchedule(ctx context.Context, id uint) error {
+	err := s.scheduleRepo.Delete(ctx, id)
 	if err == nil {
 		triggerRAGSync()
 	}
-	return err
+	return fmt.Errorf("scheduleService.DeleteSchedule: %w", err)
 }

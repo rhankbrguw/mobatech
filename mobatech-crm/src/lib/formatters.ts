@@ -33,10 +33,14 @@ export const Formatters = {
         return d.toLocaleDateString("id-ID", { month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
       case "weekday":
         return d.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
-      case "datetime":
-        return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
-      case "datetimesec":
-        return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "Asia/Jakarta" });
+      case "datetime": {
+        const dt = d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
+        return dt.replace(',', '').replace(/\./g, ':');
+      }
+      case "datetimesec": {
+        const dts = d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "Asia/Jakarta" });
+        return dts.replace(',', '').replace(/\./g, ':');
+      }
       default:
         return d.toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" });
     }

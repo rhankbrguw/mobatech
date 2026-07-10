@@ -3,6 +3,7 @@ import 'package:mobatech_app/core/constants/strings/auth_strings.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/register_form.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -49,7 +50,7 @@ class RegisterScreen extends StatelessWidget {
         ),
       ),
       body: const SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
         child: RegisterForm(),
       ),
     );

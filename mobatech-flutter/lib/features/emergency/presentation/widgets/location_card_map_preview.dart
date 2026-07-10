@@ -60,7 +60,7 @@ class LocationCardMapPreview extends StatelessWidget {
       return FlutterMap(
         mapController: mapController,
         options: MapOptions(
-          initialCenter: LatLng(userLat!, userLng!),
+          initialCenter: LatLng(userLat ?? 0.0, userLng ?? 0.0),
           initialZoom: 16.0,
           interactionOptions: const InteractionOptions(
             flags: InteractiveFlag.none,
@@ -74,7 +74,7 @@ class LocationCardMapPreview extends StatelessWidget {
           MarkerLayer(
             markers: [
               Marker(
-                point: LatLng(userLat!, userLng!),
+                point: LatLng(userLat ?? 0.0, userLng ?? 0.0),
                 width: 50,
                 height: 50,
                 child: const PulsingLocationDot(),

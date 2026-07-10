@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../models/pharmacy_order.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class OrderTrackingHeader extends StatelessWidget {
   final PharmacyOrder? order;
@@ -17,7 +18,7 @@ class OrderTrackingHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(16),

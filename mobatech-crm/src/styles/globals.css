@@ -11,6 +11,43 @@
   --primary-hover: #1e5e44;
   --primary-foreground: #ffffff;
   
+  /* Semantic Tokens */
+  --success: #10b981;
+  --success-foreground: #ffffff;
+  --success-muted: rgba(16, 185, 129, 0.1);
+  --success-hover: rgba(16, 185, 129, 0.2);
+
+  --error: #f43f5e;
+  --error-foreground: #ffffff;
+  --error-muted: rgba(244, 63, 94, 0.1);
+  --error-hover: rgba(244, 63, 94, 0.2);
+
+  --warning: #f59e0b;
+  --warning-foreground: #ffffff;
+  --warning-muted: rgba(245, 158, 11, 0.1);
+  --warning-hover: rgba(245, 158, 11, 0.2);
+
+  --info: #3b82f6;
+  --info-foreground: #ffffff;
+  --info-muted: rgba(59, 130, 246, 0.1);
+  --info-hover: rgba(59, 130, 246, 0.2);
+
+  --neutral: #64748b;
+  --neutral-muted: rgba(100, 116, 139, 0.1);
+
+  --accent: #a855f7;
+  --accent-foreground: #ffffff;
+  --accent-muted: rgba(168, 85, 247, 0.1);
+
+  --teal: #14b8a6;
+  --teal-foreground: #ffffff;
+  --teal-muted: rgba(20, 184, 166, 0.1);
+
+  --surface-primary: #ffffff;
+  --surface-secondary: #f1f5f9;
+  --overlay-light: rgba(255, 255, 255, 0.95);
+  --overlay-dark: rgba(0, 0, 0, 0.05);
+  
   /* Glassmorphism settings for light mode */
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(17, 60, 43, 0.08);
@@ -30,6 +67,11 @@
   --primary-hover: #2d825f;
   --primary-foreground: #ffffff;
   
+  --surface-primary: #091a13;
+  --surface-secondary: #0f2b1f;
+  --overlay-light: rgba(9, 26, 19, 0.95);
+  --overlay-dark: rgba(255, 255, 255, 0.05);
+  
   /* Glassmorphism settings for dark mode */
   --glass-bg: rgba(9, 26, 19, 0.8);
   --glass-border: rgba(255, 255, 255, 0.08);
@@ -47,6 +89,43 @@
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
+  
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-muted: var(--success-muted);
+  --color-success-hover: var(--success-hover);
+
+  --color-error: var(--error);
+  --color-error-foreground: var(--error-foreground);
+  --color-error-muted: var(--error-muted);
+  --color-error-hover: var(--error-hover);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-muted: var(--warning-muted);
+  --color-warning-hover: var(--warning-hover);
+
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-muted: var(--info-muted);
+  --color-info-hover: var(--info-hover);
+
+  --color-neutral: var(--neutral);
+  --color-neutral-muted: var(--neutral-muted);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-muted: var(--accent-muted);
+
+  --color-teal: var(--teal);
+  --color-teal-foreground: var(--teal-foreground);
+  --color-teal-muted: var(--teal-muted);
+
+  --color-surface-primary: var(--surface-primary);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-overlay-light: var(--overlay-light);
+  --color-overlay-dark: var(--overlay-dark);
+  
   --color-glass-bg: var(--glass-bg);
   --color-glass-border: var(--glass-border);
   --color-card-bg: var(--card-bg);

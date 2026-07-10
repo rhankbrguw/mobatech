@@ -6,6 +6,7 @@ import '../../../../core/utils/formatters.dart';
 import 'family_member_card_widgets.dart';
 
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 part 'family_member_card_parts.dart';
 
 class FamilyMemberCard extends ConsumerWidget {
@@ -61,7 +62,7 @@ class FamilyMemberCard extends ConsumerWidget {
               onTap: () {},
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
+                  horizontal: AppSpacing.md,
                   vertical: 14,
                 ),
                 child: Row(
@@ -88,7 +89,7 @@ class FamilyMemberCard extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    if (!isPrimary && id != null) FamilyMemberMenu(id: id!),
+                    if (!isPrimary && id != null) FamilyMemberMenu(id: id ?? 0),
                   ],
                 ),
               ),

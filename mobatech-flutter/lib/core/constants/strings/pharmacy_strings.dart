@@ -20,4 +20,6 @@ class PharmacyStrings {
   static const String extEresepberhasildihapus = 'E-Resep berhasil dihapus';
   static const String extStokhabis = 'Stok Habis';
   static const String extRp = 'Rp';
+  static const String extEresepberhasildiunggah = 'E-Resep berhasil diunggah!';
+  static const String addedToCartMessage = 'Obat berhasil ditambahkan ke keranjang!';
 }

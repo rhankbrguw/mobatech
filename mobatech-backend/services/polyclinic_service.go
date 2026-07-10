@@ -1,23 +1,28 @@
 package services
 
 import (
-	"errors"
+	"fmt"
+
+	"backend/constants"
+
+	"context"
+
 	"backend/models"
 	"backend/repositories"
 	"backend/utils"
 )
 
 type PolyclinicService interface {
-	GetAllPolyclinics(search string, filter string, limit int, offset int) ([]models.Polyclinic, int64, error)
-	GetPolyclinicByID(id uint) (*models.Polyclinic, error)
-	CreatePolyclinic(polyclinic *models.Polyclinic) error
-	UpdatePolyclinic(polyclinic *models.Polyclinic) error
-	DeletePolyclinic(id uint) error
+	GetAllPolyclinics(ctx context.Context, search string, filter string, limit int, offset int) ([]models.Polyclinic, int64, error)
+	GetPolyclinicByID(ctx context.Context, id uint) (*models.Polyclinic, error)
+	CreatePolyclinic(ctx context.Context, polyclinic *models.Polyclinic) error
+	UpdatePolyclinic(ctx context.Context, polyclinic *models.Polyclinic) error
+	DeletePolyclinic(ctx context.Context, id uint) error
 
-	GetSchedules(polyclinicID uint) ([]models.PolyclinicSchedule, error)
-	CreateSchedule(schedule *models.PolyclinicSchedule) error
-	UpdateSchedule(schedule *models.PolyclinicSchedule) error
-	DeleteSchedule(id uint) error
+	GetSchedules(ctx context.Context, polyclinicID uint) ([]models.PolyclinicSchedule, error)
+	CreateSchedule(ctx context.Context, schedule *models.PolyclinicSchedule) error
+	UpdateSchedule(ctx context.Context, schedule *models.PolyclinicSchedule) error
+	DeleteSchedule(ctx context.Context, id uint) error
 }
 
 type polyclinicService struct {
@@ -28,71 +33,71 @@ func NewPolyclinicService(repo repositories.PolyclinicRepository) PolyclinicServ
 	return &polyclinicService{repo}
 }
 
-func (s *polyclinicService) GetAllPolyclinics(search string, filter string, limit int, offset int) ([]models.Polyclinic, int64, error) {
-	return s.repo.FindAll(search, filter, limit, offset)
+func (s *polyclinicService) GetAllPolyclinics(ctx context.Context, search string, filter string, limit int, offset int) ([]models.Polyclinic, int64, error) {
+	return s.repo.FindAll(ctx, search, filter, limit, offset)
 }
 
-func (s *polyclinicService) GetPolyclinicByID(id uint) (*models.Polyclinic, error) {
-	return s.repo.FindByID(id)
+func (s *polyclinicService) GetPolyclinicByID(ctx context.Context, id uint) (*models.Polyclinic, error) {
+	return s.repo.FindByID(ctx, id)
 }
 
-func (s *polyclinicService) CreatePolyclinic(polyclinic *models.Polyclinic) error {
-	err := s.repo.Create(polyclinic)
+func (s *polyclinicService) CreatePolyclinic(ctx context.Context, polyclinic *models.Polyclinic) error {
+	err := s.repo.Create(ctx, polyclinic)
 	if err == nil {
 		utils.TriggerAsyncRAGSync()
 	}
-	return err
+	return fmt.Errorf("polyclinicService.CreatePolyclinic: %w", err)
 }
 
-func (s *polyclinicService) UpdatePolyclinic(polyclinic *models.Polyclinic) error {
-	err := s.repo.Update(polyclinic)
+func (s *polyclinicService) UpdatePolyclinic(ctx context.Context, polyclinic *models.Polyclinic) error {
+	err := s.repo.Update(ctx, polyclinic)
 	if err == nil {
 		utils.TriggerAsyncRAGSync()
 	}
-	return err
+	return fmt.Errorf("polyclinicService.UpdatePolyclinic: %w", err)
 }
 
-func (s *polyclinicService) DeletePolyclinic(id uint) error {
-	polyclinic, err := s.repo.FindByID(id)
+func (s *polyclinicService) DeletePolyclinic(ctx context.Context, id uint) error {
+	polyclinic, err := s.repo.FindByID(ctx, id)
 	if err != nil {
-		return err
+		return fmt.Errorf("polyclinicService.DeletePolyclinic: %w", err)
 	}
 
 	if len(polyclinic.Doctors) > 0 {
-		return errors.New("Tidak bisa menghapus poliklinik karena masih ada dokter yang terdaftar di dalamnya. Pindahkan dokternya terlebih dahulu.")
+		return fmt.Errorf("polyclinicService.DeletePolyclinic: %w", constants.ErrCannotDeletePolyclinic)
 	}
 
-	err = s.repo.Delete(id)
+	err = s.repo.Delete(ctx, id)
 	if err == nil {
 		utils.TriggerAsyncRAGSync()
 	}
-	return err
+	return fmt.Errorf("polyclinicService.DeletePolyclinic: %w", err)
 }
 
-func (s *polyclinicService) GetSchedules(polyclinicID uint) ([]models.PolyclinicSchedule, error) {
-	return s.repo.FindSchedulesByPolyclinic(polyclinicID)
+func (s *polyclinicService) GetSchedules(ctx context.Context, polyclinicID uint) ([]models.PolyclinicSchedule, error) {
+	return s.repo.FindSchedulesByPolyclinic(ctx, polyclinicID)
 }
 
-func (s *polyclinicService) CreateSchedule(schedule *models.PolyclinicSchedule) error {
-	err := s.repo.CreateSchedule(schedule)
+func (s *polyclinicService) CreateSchedule(ctx context.Context, schedule *models.PolyclinicSchedule) error {
+	err := s.repo.CreateSchedule(ctx, schedule)
 	if err == nil {
 		utils.TriggerAsyncRAGSync()
 	}
-	return err
+	return fmt.Errorf("polyclinicService.CreateSchedule: %w", err)
 }
 
-func (s *polyclinicService) UpdateSchedule(schedule *models.PolyclinicSchedule) error {
-	err := s.repo.UpdateSchedule(schedule)
+func (s *polyclinicService) UpdateSchedule(ctx context.Context, schedule *models.PolyclinicSchedule) error {
+	err := s.repo.UpdateSchedule(ctx, schedule)
 	if err == nil {
 		utils.TriggerAsyncRAGSync()
 	}
-	return err
+	return fmt.Errorf("polyclinicService.UpdateSchedule: %w", err)
 }
 
-func (s *polyclinicService) DeleteSchedule(id uint) error {
-	err := s.repo.DeleteSchedule(id)
+func (s *polyclinicService) DeleteSchedule(ctx context.Context, id uint) error {
+	err := s.repo.DeleteSchedule(ctx, id)
 	if err == nil {
 		utils.TriggerAsyncRAGSync()
 	}
-	return err
+	return fmt.Errorf("polyclinicService.DeleteSchedule: %w", err)
 }

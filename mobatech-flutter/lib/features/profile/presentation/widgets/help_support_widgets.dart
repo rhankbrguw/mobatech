@@ -4,6 +4,7 @@ import '../../../../core/utils/custom_snackbar.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ContactCard extends StatelessWidget {
   const ContactCard({super.key});
@@ -27,7 +28,7 @@ class ContactCard extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             color: AppColors.primaryLight.withValues(alpha: 0.5),
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(AppSpacing.md20),
             child: Column(
               children: [
                 const Icon(
@@ -67,7 +68,7 @@ class ContactCard extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: AppColors.backgroundWhite,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -89,7 +90,7 @@ class ContactCard extends StatelessWidget {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.primary,
                           side: const BorderSide(color: AppColors.primary),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),

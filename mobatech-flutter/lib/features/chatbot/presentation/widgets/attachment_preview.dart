@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AttachmentPreview extends StatelessWidget {
   final XFile? selectedImage;
@@ -23,8 +24,8 @@ class AttachmentPreview extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm12),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(16),
@@ -36,7 +37,7 @@ class AttachmentPreview extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.file(
-                File(selectedImage!.path),
+                File(selectedImage?.path ?? ''),
                 width: 50,
                 height: 50,
                 fit: BoxFit.cover,

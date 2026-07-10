@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../appointment/providers/appointment_provider.dart';
 import '../../../appointment/providers/polyclinic_provider.dart';
 import 'search_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SearchAllResults extends ConsumerWidget {
   final String query;
@@ -21,7 +22,7 @@ class SearchAllResults extends ConsumerWidget {
     final polyclinicsAsync = ref.watch(polyclinicsProvider);
 
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm12, vertical: AppSpacing.sm),
       children: [
         const SearchSectionHeader(title: 'Dokter'),
         doctorsAsync.when(
@@ -32,7 +33,7 @@ class SearchAllResults extends ConsumerWidget {
                 .toList();
             if (filtered.isEmpty) {
               return const Padding(
-                padding: EdgeInsets.only(bottom: 16),
+                padding: EdgeInsets.only(bottom: AppSpacing.md),
                 child: Text(CoreStrings.extTidakditemukan),
               );
             }
@@ -62,7 +63,7 @@ class SearchAllResults extends ConsumerWidget {
                 .toList();
             if (filtered.isEmpty) {
               return const Padding(
-                padding: EdgeInsets.only(bottom: 16),
+                padding: EdgeInsets.only(bottom: AppSpacing.md),
                 child: Text(CoreStrings.extTidakditemukan),
               );
             }

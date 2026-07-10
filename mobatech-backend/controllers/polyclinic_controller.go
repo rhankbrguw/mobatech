@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"backend/constants"
 	"backend/models"
 	"backend/services"
 	"backend/utils"
@@ -21,12 +22,12 @@ func NewPolyclinicController(service services.PolyclinicService) *PolyclinicCont
 func (c *PolyclinicController) GetPolyclinics(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
-	
-	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
-	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+
+	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
+	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
 	offset := (page - 1) * limit
 
-	polys, totalCount, err := c.service.GetAllPolyclinics(search, filter, limit, offset)
+	polys, totalCount, err := c.service.GetAllPolyclinics(ctx.Request.Context(), search, filter, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -36,9 +37,9 @@ func (c *PolyclinicController) GetPolyclinics(ctx *gin.Context) {
 
 func (c *PolyclinicController) GetPolyclinicByID(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
-	poly, err := c.service.GetPolyclinicByID(uint(id))
+	poly, err := c.service.GetPolyclinicByID(ctx.Request.Context(), uint(id))
 	if err != nil {
-		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, "Polyclinic not found"))
+		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, "Polyclinic not found", nil))
 		return
 	}
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", poly))
@@ -47,10 +48,10 @@ func (c *PolyclinicController) GetPolyclinicByID(ctx *gin.Context) {
 func (c *PolyclinicController) CreatePolyclinic(ctx *gin.Context) {
 	var req models.Polyclinic
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
-	if err := c.service.CreatePolyclinic(&req); err != nil {
+	if err := c.service.CreatePolyclinic(ctx.Request.Context(), &req); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -61,11 +62,11 @@ func (c *PolyclinicController) UpdatePolyclinic(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	var req models.Polyclinic
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 	req.ID = uint(id)
-	if err := c.service.UpdatePolyclinic(&req); err != nil {
+	if err := c.service.UpdatePolyclinic(ctx.Request.Context(), &req); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -74,9 +75,9 @@ func (c *PolyclinicController) UpdatePolyclinic(ctx *gin.Context) {
 
 func (c *PolyclinicController) DeletePolyclinic(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
-	if err := c.service.DeletePolyclinic(uint(id)); err != nil {
+	if err := c.service.DeletePolyclinic(ctx.Request.Context(), uint(id)); err != nil {
 		if err.Error() == "Tidak bisa menghapus poliklinik karena masih ada dokter yang terdaftar di dalamnya. Pindahkan dokternya terlebih dahulu." {
-			ctx.Error(utils.NewAppError(utils.ErrConflict, http.StatusConflict, err.Error()))
+			ctx.Error(utils.NewAppError(utils.ErrConflict, http.StatusConflict, err.Error(), nil))
 			return
 		}
 		ctx.Error(utils.NewInternalError(err.Error()))
@@ -89,11 +90,11 @@ func (c *PolyclinicController) CreateSchedule(ctx *gin.Context) {
 	polyID, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	var req models.PolyclinicSchedule
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 	req.PolyclinicID = uint(polyID)
-	if err := c.service.CreateSchedule(&req); err != nil {
+	if err := c.service.CreateSchedule(ctx.Request.Context(), &req); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -104,11 +105,11 @@ func (c *PolyclinicController) UpdateSchedule(ctx *gin.Context) {
 	schedID, _ := strconv.ParseUint(ctx.Param("sched_id"), 10, 32)
 	var req models.PolyclinicSchedule
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 	req.ID = uint(schedID)
-	if err := c.service.UpdateSchedule(&req); err != nil {
+	if err := c.service.UpdateSchedule(ctx.Request.Context(), &req); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -117,7 +118,7 @@ func (c *PolyclinicController) UpdateSchedule(ctx *gin.Context) {
 
 func (c *PolyclinicController) DeleteSchedule(ctx *gin.Context) {
 	schedID, _ := strconv.ParseUint(ctx.Param("sched_id"), 10, 32)
-	if err := c.service.DeleteSchedule(uint(schedID)); err != nil {
+	if err := c.service.DeleteSchedule(ctx.Request.Context(), uint(schedID)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}

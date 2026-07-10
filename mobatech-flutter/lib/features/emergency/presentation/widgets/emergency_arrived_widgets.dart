@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:mobatech_app/core/constants/strings/home_strings.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ArrivedCheckmark extends StatelessWidget {
   const ArrivedCheckmark({super.key});
@@ -64,8 +65,8 @@ class ArrivedDriverCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite.withAlpha(25),
         borderRadius: BorderRadius.circular(16),
@@ -117,7 +118,7 @@ class BackToHomeButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.backgroundWhite,
           foregroundColor: AppColors.arrivedGreen2,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),

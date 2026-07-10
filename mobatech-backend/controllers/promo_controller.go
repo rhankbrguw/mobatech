@@ -1,13 +1,18 @@
 package controllers
+
 import (
+	"backend/constants"
 	"backend/models"
 	"backend/utils"
 	"net/http"
 	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
-type PromoController struct { DB *gorm.DB }
+
+type PromoController struct{ DB *gorm.DB }
+
 func NewPromoController(db *gorm.DB) *PromoController { return &PromoController{DB: db} }
 
 func (c *PromoController) GetPromos(ctx *gin.Context) {
@@ -17,23 +22,23 @@ func (c *PromoController) GetPromos(ctx *gin.Context) {
 }
 
 func (c *PromoController) GetAllPromos(ctx *gin.Context) {
-	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
-	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
+	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
 	offset := (page - 1) * limit
 
 	var promos []models.Promo
 	var totalCount int64
 	query := c.DB.Model(&models.Promo{})
-	
+
 	if err := query.Count(&totalCount).Error; err != nil {
 		ctx.JSON(http.StatusInternalServerError, utils.BuildError(utils.ErrInternal, "Failed to count promos", nil))
 		return
 	}
-	
+
 	if limit > 0 {
 		query = query.Limit(limit).Offset(offset)
 	}
-	
+
 	query.Find(&promos)
 	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", promos, page, limit, totalCount))
 }

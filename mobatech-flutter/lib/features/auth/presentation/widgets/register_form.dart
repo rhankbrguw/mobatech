@@ -45,7 +45,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   }
 
   void _handleRegister() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!(_formKey.currentState?.validate() ?? false)) return;
     if (_phoneController.text.length < 8) {
       _showError(ErrorStrings.phoneMinError);
       return;

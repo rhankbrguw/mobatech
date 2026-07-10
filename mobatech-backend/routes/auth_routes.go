@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/constants"
 	"backend/controllers"
 	"backend/repositories"
 	"backend/services"
@@ -17,27 +18,27 @@ func SetupAuthRoutes(r *gin.Engine, db *gorm.DB) {
 	authController := controllers.NewAuthController(service)
 	profileController := controllers.NewProfileController(service)
 
-	authGroup := r.Group("/api/auth")
+	authGroup := r.Group(constants.RouteApiAuth)
 	{
-		authGroup.POST("/register", authController.Register)
-		authGroup.POST("/login", authController.Login)
-		authGroup.GET("/me", middleware.AuthMiddleware(), authController.Me)
+		authGroup.POST(constants.RouteRegister, authController.Register)
+		authGroup.POST(constants.RouteLogin, authController.Login)
+		authGroup.GET(constants.RouteMe, middleware.AuthMiddleware(), authController.Me)
 	}
 
-	userGroup := r.Group("/api/users")
+	userGroup := r.Group(constants.RouteApiUsers)
 	userGroup.Use(middleware.AuthMiddleware())
 	{
-		userGroup.PUT("/profile", profileController.UpdateProfile)
-		userGroup.POST("/family-members", profileController.AddFamilyMember)
-		userGroup.DELETE("/family-members/:id", profileController.DeleteFamilyMember)
+		userGroup.PUT(constants.RouteProfile, profileController.UpdateProfile)
+		userGroup.POST(constants.RouteFamilyMembers, profileController.AddFamilyMember)
+		userGroup.DELETE(constants.RouteFamilyMembersParamId, profileController.DeleteFamilyMember)
 	}
 
-	adminGroup := r.Group("/api/admin")
+	adminGroup := r.Group(constants.RouteApiAdmin)
 	adminGroup.Use(middleware.AdminMiddleware())
 	{
-		adminGroup.GET("/users", authController.GetAllUsers)
-		adminGroup.POST("/users", authController.AdminCreateUser)
-		adminGroup.PUT("/users/:id", authController.AdminUpdateUser)
-		adminGroup.DELETE("/users/:id", authController.AdminDeleteUser)
+		adminGroup.GET(constants.RouteUsers, authController.GetAllUsers)
+		adminGroup.POST(constants.RouteUsers, authController.AdminCreateUser)
+		adminGroup.PUT(constants.RouteUsersParamId, authController.AdminUpdateUser)
+		adminGroup.DELETE(constants.RouteUsersParamId, authController.AdminDeleteUser)
 	}
 }

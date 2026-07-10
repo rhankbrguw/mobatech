@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/constants"
 	"backend/controllers"
 	"backend/repositories"
 	"backend/services"
@@ -15,16 +16,16 @@ func SetupHospitalServiceRoutes(r *gin.Engine, db *gorm.DB) {
 	controller := controllers.NewHospitalServiceController(service)
 
 	// Public API for mobile
-	publicGroup := r.Group("/api/services")
+	publicGroup := r.Group(constants.RouteApiServices)
 	{
 		publicGroup.GET("", controller.GetAll)
-		publicGroup.GET("/:id", controller.GetByID)
+		publicGroup.GET(constants.RouteParamId, controller.GetByID)
 	}
 
-	adminGroup := r.Group("/api/admin/services")
+	adminGroup := r.Group(constants.RouteApiAdminServices)
 	{
 		adminGroup.POST("", controller.Create)
-		adminGroup.PUT("/:id", controller.Update)
-		adminGroup.DELETE("/:id", controller.Delete)
+		adminGroup.PUT(constants.RouteParamId, controller.Update)
+		adminGroup.DELETE(constants.RouteParamId, controller.Delete)
 	}
 }

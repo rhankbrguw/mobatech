@@ -9,6 +9,7 @@ import 'emergency_form_field.dart';
 import 'emergency_form_widgets.dart';
 import 'emergency_submit_button.dart';
 import '../../../../core/utils/validators.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class EmergencyFormView extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -53,7 +54,7 @@ class EmergencyFormView extends StatelessWidget {
               child: Form(
                 key: formKey,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.md20, AppSpacing.md, AppSpacing.md20, AppSpacing.xxl),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [

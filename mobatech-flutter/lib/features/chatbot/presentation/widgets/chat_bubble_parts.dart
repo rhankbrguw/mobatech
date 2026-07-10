@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ChatBubbleImage extends StatelessWidget {
   final String imagePath;
@@ -12,7 +13,7 @@ class ChatBubbleImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: Image.file(File(imagePath), fit: BoxFit.cover),
@@ -34,8 +35,8 @@ class ChatBubbleFile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8.0),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.sm12),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),
@@ -76,12 +77,12 @@ class ChatBubbleLoader extends StatelessWidget {
         SkeletonLoader(
           height: 14,
           width: 200,
-          margin: const EdgeInsets.only(bottom: 8),
+          margin: const EdgeInsets.only(bottom: AppSpacing.sm),
         ),
         SkeletonLoader(
           height: 14,
           width: 150,
-          margin: const EdgeInsets.only(bottom: 8),
+          margin: const EdgeInsets.only(bottom: AppSpacing.sm),
         ),
         SkeletonLoader(height: 14, width: 180),
       ],
@@ -118,9 +119,9 @@ class ChatBubbleText extends StatelessWidget {
           height: 1.4,
           fontWeight: FontWeight.w500,
         ),
-        pPadding: const EdgeInsets.only(bottom: 8),
+        pPadding: const EdgeInsets.only(bottom: AppSpacing.sm),
         listBullet: const TextStyle(color: AppColors.textDark),
-        listBulletPadding: const EdgeInsets.only(right: 8),
+        listBulletPadding: const EdgeInsets.only(right: AppSpacing.sm),
         strong: const TextStyle(
           color: AppColors.textDark,
           fontWeight: FontWeight.bold,

@@ -79,6 +79,8 @@ class ProfileNullUserView extends ConsumerWidget {
               foregroundColor: AppColors.backgroundWhite,
             ),
             onPressed: () async {
+              const secureStorage = FlutterSecureStorage();
+              await secureStorage.delete(key: 'jwt_token');
               final prefs = await SharedPreferences.getInstance();
               await prefs.clear();
               globalAuthToken = null;

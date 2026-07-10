@@ -1,7 +1,7 @@
 import { UsersClient } from "@/components/UsersClient";
 
 export const metadata = {
-  title: "Manajemen Pengguna - Mobatech CRM",
+  title: "Manajemen Pengguna | Hermina CRM",
 };
 
 export default function UsersPage() {

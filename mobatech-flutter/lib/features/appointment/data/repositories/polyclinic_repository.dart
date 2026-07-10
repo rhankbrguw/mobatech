@@ -6,7 +6,7 @@ class PolyclinicRepository {
 
   PolyclinicRepository(this._dio);
 
-  Future<List<Polyclinic>> getPolyclinics({
+  Future<(List<Polyclinic>, bool)> getPolyclinics({
     int page = 1,
     int limit = 10,
   }) async {
@@ -15,12 +15,22 @@ class PolyclinicRepository {
         '/polyclinics',
         queryParameters: {'page': page, 'limit': limit},
       );
-      final responseData = response.data;
+      final dynamic responseData = response.data;
       final List<dynamic> data =
           responseData is Map && responseData.containsKey('data')
           ? responseData['data']
           : (responseData as List? ?? []);
-      return data.map((json) => Polyclinic.fromJson(json)).toList();
+          
+      final meta = responseData is Map && responseData.containsKey('meta')
+          ? responseData['meta'] as Map<String, dynamic>?
+          : response.extra['meta'] as Map<String, dynamic>?;
+          
+      final polyclinics = data.map((json) => Polyclinic.fromJson(json)).toList();
+      
+      final currentPage = meta?['current_page'] as int? ?? 1;
+      final totalPages = meta?['total_pages'] as int? ?? 1;
+      
+      return (polyclinics, currentPage < totalPages);
     } catch (e) {
       rethrow;
     }

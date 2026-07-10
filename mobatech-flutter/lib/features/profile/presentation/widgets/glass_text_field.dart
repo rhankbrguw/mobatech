@@ -41,7 +41,7 @@ class GlassTextField extends StatelessWidget {
           if (prefixText != null) ...[
             const SizedBox(width: 8),
             Text(
-              prefixText!,
+              prefixText ?? '',
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
           ],

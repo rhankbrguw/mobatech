@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"backend/constants"
 	"backend/models"
 	"backend/services"
 	"backend/utils"
@@ -20,7 +21,7 @@ func NewScheduleController(scheduleService services.ScheduleService) *ScheduleCo
 
 func (c *ScheduleController) GetDoctorSchedules(ctx *gin.Context) {
 	doctorID, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
-	schedules, err := c.scheduleService.GetDoctorSchedules(uint(doctorID))
+	schedules, err := c.scheduleService.GetDoctorSchedules(ctx.Request.Context(), uint(doctorID))
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -29,8 +30,8 @@ func (c *ScheduleController) GetDoctorSchedules(ctx *gin.Context) {
 }
 
 func (c *ScheduleController) GetAllSchedules(ctx *gin.Context) {
-	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
-	schedules, err := c.scheduleService.GetUpcomingSchedules(limit)
+	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	schedules, err := c.scheduleService.GetUpcomingSchedules(ctx.Request.Context(), limit)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -41,11 +42,11 @@ func (c *ScheduleController) GetAllSchedules(ctx *gin.Context) {
 func (c *ScheduleController) CreateSchedule(ctx *gin.Context) {
 	var input models.DoctorSchedule
 	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
-	if err := c.scheduleService.CreateSchedule(&input); err != nil {
+	if err := c.scheduleService.CreateSchedule(ctx.Request.Context(), &input); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -57,11 +58,11 @@ func (c *ScheduleController) UpdateSchedule(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	var input models.DoctorSchedule
 	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
-	schedule, err := c.scheduleService.UpdateSchedule(uint(id), &input)
+	schedule, err := c.scheduleService.UpdateSchedule(ctx.Request.Context(), uint(id), &input)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -72,7 +73,7 @@ func (c *ScheduleController) UpdateSchedule(ctx *gin.Context) {
 
 func (c *ScheduleController) DeleteSchedule(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
-	if err := c.scheduleService.DeleteSchedule(uint(id)); err != nil {
+	if err := c.scheduleService.DeleteSchedule(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}

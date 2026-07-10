@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"backend/constants"
 	"backend/models"
 	"backend/services"
 	"backend/utils"
@@ -23,7 +24,7 @@ func NewProfileController(service services.AuthService) *ProfileController {
 func (c *ProfileController) UpdateProfile(ctx *gin.Context) {
 	userID, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
 		return
 	}
 
@@ -38,7 +39,7 @@ func (c *ProfileController) UpdateProfile(ctx *gin.Context) {
 
 	imagePath := c.handleImageUpload(ctx, userID)
 
-	user, err := c.service.UpdateProfile(uint(userID.(float64)), fullName, phone, imagePath, bloodType, height, weight, allergies, dob, gender)
+	user, err := c.service.UpdateProfile(ctx.Request.Context(), uint(userID.(float64)), fullName, phone, imagePath, bloodType, height, weight, allergies, dob, gender)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -63,18 +64,18 @@ func (c *ProfileController) handleImageUpload(ctx *gin.Context, userID any) stri
 func (c *ProfileController) AddFamilyMember(ctx *gin.Context) {
 	userID, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
 		return
 	}
 
 	var req models.FamilyMember
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
 	req.UserID = uint(userID.(float64))
-	if err := c.service.AddFamilyMember(&req); err != nil {
+	if err := c.service.AddFamilyMember(ctx.Request.Context(), &req); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -88,7 +89,7 @@ func (c *ProfileController) AddFamilyMember(ctx *gin.Context) {
 func (c *ProfileController) DeleteFamilyMember(ctx *gin.Context) {
 	_, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
 		return
 	}
 
@@ -99,7 +100,7 @@ func (c *ProfileController) DeleteFamilyMember(ctx *gin.Context) {
 		return
 	}
 
-	if err := c.service.DeleteFamilyMember(uint(id)); err != nil {
+	if err := c.service.DeleteFamilyMember(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}

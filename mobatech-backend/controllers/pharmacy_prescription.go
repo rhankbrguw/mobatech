@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"backend/constants"
 	"backend/models"
 	"backend/utils"
 	"fmt"
@@ -13,36 +14,39 @@ import (
 func (c *PharmacyController) GetMyPrescriptions(ctx *gin.Context) {
 	userIDVal, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized", nil))
 		return
 	}
 	userID := uint(userIDVal.(float64))
 
-	prescriptions, err := c.service.GetPrescriptionsByUserID(userID)
+	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
+	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+
+	prescriptions, totalCount, err := c.service.GetPrescriptionsByUserID(ctx.Request.Context(), userID, page, limit)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", prescriptions))
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", prescriptions, page, limit, totalCount))
 }
 
 func (c *PharmacyController) CreatePrescription(ctx *gin.Context) {
 	userIDVal, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized", nil))
 		return
 	}
 	userID := uint(userIDVal.(float64))
 
 	var req models.Prescription
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(utils.NewAppError(utils.ErrValidation, http.StatusUnprocessableEntity, err.Error()))
+		ctx.Error(utils.NewAppError(utils.ErrValidation, http.StatusUnprocessableEntity, err.Error(), nil))
 		return
 	}
 	req.UserID = userID
 	req.Status = "Pending"
 
-	if err := c.service.CreatePrescription(&req); err != nil {
+	if err := c.service.CreatePrescription(ctx.Request.Context(), &req); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -52,7 +56,7 @@ func (c *PharmacyController) CreatePrescription(ctx *gin.Context) {
 func (c *PharmacyController) DeletePrescription(ctx *gin.Context) {
 	userIDVal, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized", nil))
 		return
 	}
 	userID := uint(userIDVal.(float64))
@@ -60,7 +64,7 @@ func (c *PharmacyController) DeletePrescription(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, _ := strconv.Atoi(idStr)
 
-	if err := c.service.DeletePrescription(uint(id), &userID); err != nil {
+	if err := c.service.DeletePrescription(ctx.Request.Context(), uint(id), &userID); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -69,22 +73,22 @@ func (c *PharmacyController) DeletePrescription(ctx *gin.Context) {
 }
 
 func (c *PharmacyController) authorizePrescriptionAccess(ctx *gin.Context, id int) (*models.Prescription, error) {
-	prescription, err := c.service.GetPrescriptionByID(uint(id))
+	prescription, err := c.service.GetPrescriptionByID(ctx.Request.Context(), uint(id))
 	if err != nil {
-		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, "Prescription not found"))
+		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, "Prescription not found", nil))
 		return nil, err
 	}
 
 	userIDVal, exists := ctx.Get("user_id")
 	if !exists {
-		err = utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized")
+		err = utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized", nil)
 		ctx.Error(err)
 		return nil, err
 	}
 	userID := uint(userIDVal.(float64))
 	if prescription.UserID != userID {
 		err = fmt.Errorf("Access denied")
-		ctx.Error(utils.NewAppError(utils.ErrUnauthorized, http.StatusForbidden, err.Error()))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthorized, http.StatusForbidden, err.Error(), nil))
 		return nil, err
 	}
 	return prescription, nil

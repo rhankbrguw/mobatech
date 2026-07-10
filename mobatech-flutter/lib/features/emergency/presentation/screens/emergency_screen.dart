@@ -45,7 +45,7 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen> {
   }
 
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!(_formKey.currentState?.validate() ?? false)) return;
     try {
       await ref
           .read(emergencyControllerProvider.notifier)

@@ -11,6 +11,7 @@ import '../widgets/promo_banner_carousel.dart';
 import '../widgets/assistant_card.dart';
 import '../widgets/agenda_list_widget.dart';
 import '../widgets/hospitals_list_widget.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class HomeBody extends ConsumerWidget {
   const HomeBody({super.key});
@@ -73,7 +74,7 @@ class HomeBody extends ConsumerWidget {
   }
 
   Widget _buildSectionTitle(String title) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 24),
+    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
     child: Text(
       title,
       style: const TextStyle(

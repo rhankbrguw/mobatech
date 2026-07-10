@@ -5,6 +5,7 @@ import '../../../../core/providers/mock_ui_providers.dart';
 import '../widgets/offer_detail_app_bar.dart';
 import '../widgets/offer_card.dart';
 import '../widgets/offer_claim_button.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class OfferDetailScreen extends StatelessWidget {
   final SpecialOffer offer;
@@ -17,7 +18,7 @@ class OfferDetailScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundScreen,
       appBar: const OfferDetailAppBar(),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           children: [
             OfferCard(offer: offer),

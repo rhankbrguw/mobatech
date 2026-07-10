@@ -3,6 +3,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/glass_status_chip.dart';
 import '../../../appointment/data/models/appointment.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AgendaScheduleInfo extends StatelessWidget {
   final Appointment appointment;
@@ -12,7 +13,7 @@ class AgendaScheduleInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 10),
       decoration: const BoxDecoration(
         color: AppColors.agendaBackground,
         borderRadius: BorderRadius.only(
@@ -25,7 +26,7 @@ class AgendaScheduleInfo extends StatelessWidget {
         children: [
           Text(
             appointment.schedule?.date != null
-                ? '${Formatters.formatDateWithDayID(appointment.schedule!.date!)} • ${appointment.schedule!.startTime}'
+                ? '${Formatters.formatDateWithDayID((appointment.schedule?.date ?? DateTime.now()))} • ${(appointment.schedule?.startTime ?? '')}'
                 : 'Jadwal belum ditentukan',
             style: const TextStyle(
               fontSize: 13,
@@ -46,7 +47,7 @@ class AgendaScheduleInfo extends StatelessWidget {
                 fontSize: 10,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
-                  vertical: 4,
+                  vertical: AppSpacing.xs,
                 ),
               ),
             ],

@@ -53,10 +53,10 @@ export function UsersFormModal({ isOpen, onClose, user, onSuccess, setToast }: {
     try {
       if (user?.id) {
         await api.put(`/api/admin/users/${user.id}`, payload);
-        setToast({ isOpen: true, message: "Pengguna diperbarui", type: "success" });
+        setToast({ isOpen: true, message: APP_STRINGS.common.userUpdateSuccess, type: "success" });
       } else {
         await api.post("/api/admin/users", payload);
-        setToast({ isOpen: true, message: "Pengguna ditambahkan", type: "success" });
+        setToast({ isOpen: true, message: APP_STRINGS.common.userCreateSuccess, type: "success" });
       }
       onSuccess();
       onClose();

@@ -2,9 +2,10 @@ package controllers
 
 import (
 	"backend/utils"
-	"github.com/gin-gonic/gin"
 	"io"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (c *ChatController) StreamChat(ctx *gin.Context) {
@@ -17,7 +18,7 @@ func (c *ChatController) StreamChat(ctx *gin.Context) {
 		Message string `json:"message"`
 	}
 	if err := ctx.BindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 	outChan := make(chan string)

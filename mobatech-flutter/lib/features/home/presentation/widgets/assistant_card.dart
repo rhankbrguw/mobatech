@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AssistantCard extends StatelessWidget {
   const AssistantCard({super.key});
@@ -8,7 +9,7 @@ class AssistantCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 16, left: 24, right: 24),
+      margin: const EdgeInsets.only(top: AppSpacing.md, left: AppSpacing.lg, right: AppSpacing.lg),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -43,7 +44,7 @@ class AssistantCard extends StatelessWidget {
           ),
 
           Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(AppSpacing.lg),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -54,7 +55,7 @@ class AssistantCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
-                          vertical: 4,
+                          vertical: AppSpacing.xs,
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.backgroundWhite.withValues(
@@ -98,7 +99,7 @@ class AssistantCard extends StatelessWidget {
                           foregroundColor: AppColors.primary,
                           elevation: 0,
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
+                            horizontal: AppSpacing.md20,
                             vertical: 10,
                           ),
                           shape: RoundedRectangleBorder(

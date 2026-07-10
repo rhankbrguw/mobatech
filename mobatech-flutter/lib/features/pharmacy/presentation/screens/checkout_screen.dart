@@ -8,6 +8,7 @@ import '../widgets/checkout_payment_method.dart';
 import '../widgets/checkout_bottom_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/pharmacy_provider.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class CheckoutScreen extends ConsumerStatefulWidget {
   const CheckoutScreen({super.key});
@@ -69,7 +70,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             );
           }
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -114,7 +115,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm12),
       child: Text(
         title,
         style: const TextStyle(

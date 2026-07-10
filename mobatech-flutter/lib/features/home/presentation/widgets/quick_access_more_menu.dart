@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobatech_app/core/constants/strings/appointment_strings.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 void showQuickAccessMoreMenu(BuildContext context, List<Widget> items) {
   showModalBottomSheet(
@@ -9,7 +10,7 @@ void showQuickAccessMoreMenu(BuildContext context, List<Widget> items) {
     ),
     builder: (context) {
       return Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

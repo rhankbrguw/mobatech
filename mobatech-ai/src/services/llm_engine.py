@@ -1,8 +1,10 @@
 import os
+import logging
 from google import genai
 from dotenv import load_dotenv
 import datetime
 import locale
+from typing import Any, Optional
 import constants as const
 
 backend_env_path = os.path.join(os.path.dirname(__file__), const.LLM_BACKEND_ENV_PATH_REL)
@@ -10,8 +12,8 @@ load_dotenv(backend_env_path)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     
 class GenerativeEngine:
-    def __init__(self):
-        self.client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+    def __init__(self) -> None:
+        self.client: Optional[genai.Client] = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
         
     def generate_response(self, query: str, contexts: list[str]) -> str:
         if not self.client:
@@ -19,9 +21,10 @@ class GenerativeEngine:
             
         context_str = "\n".join([f"- {c}" for c in contexts])
         
-        # Inject Temporal Context
-        try: locale.setlocale(locale.LC_TIME, const.LOCALE_ID)
-        except: pass
+        try: 
+            locale.setlocale(locale.LC_TIME, const.LOCALE_ID)
+        except locale.Error as e:
+            logging.warning(const.ERR_LOCALE_FAILED.format(e=e))
         
         current_time_str = datetime.datetime.now().strftime(const.TIME_FORMAT)
         
@@ -38,4 +41,5 @@ class GenerativeEngine:
             )
             return response.text
         except Exception as e:
+            logging.error(const.ERR_LLM_EXCEPTION.format(error=str(e)))
             return const.ERR_LLM_EXCEPTION.format(error=str(e))

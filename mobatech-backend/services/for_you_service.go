@@ -32,24 +32,24 @@ func NewForYouService(chatRepo repositories.ChatRepository) ForYouService {
 }
 
 func (s *forYouService) GenerateRecommendations(ctx context.Context, userID string) ([]Article, error) {
-	chatContext := s.extractUserContext(userID)
-	prompt := s.buildPrompt(chatContext)
+	chatContext := s.extractUserContext(ctx, userID)
+	prompt := s.buildPrompt(ctx, chatContext)
 
 	jsonStr, err := s.fetchGeminiResponse(ctx, prompt)
 	if err != nil {
-		return s.getFallbackArticles(), nil
+		return s.getFallbackArticles(ctx), nil
 	}
 
 	var articles []Article
 	if err := json.Unmarshal([]byte(jsonStr), &articles); err != nil {
-		return s.getFallbackArticles(), nil
+		return s.getFallbackArticles(ctx), nil
 	}
 
 	return articles, nil
 }
 
-func (s *forYouService) extractUserContext(userID string) string {
-	sessions, err := s.chatRepo.GetUserSessions(userID)
+func (s *forYouService) extractUserContext(ctx context.Context, userID string) string {
+	sessions, err := s.chatRepo.GetUserSessions(ctx, userID)
 	if err != nil || len(sessions) == 0 {
 		return "Pengguna belum pernah konsultasi. Berikan saran kesehatan umum."
 	}
@@ -59,7 +59,7 @@ func (s *forYouService) extractUserContext(userID string) string {
 		if i >= 3 {
 			break
 		}
-		msgs, err := s.chatRepo.GetSessionMessages(session.ID)
+		msgs, err := s.chatRepo.GetSessionMessages(ctx, session.ID)
 		if err == nil {
 			for _, msg := range msgs {
 				if msg.Role == "user" {
@@ -75,7 +75,7 @@ func (s *forYouService) extractUserContext(userID string) string {
 	return chatContext
 }
 
-func (s *forYouService) buildPrompt(context string) string {
+func (s *forYouService) buildPrompt(ctx context.Context, context string) string {
 	return fmt.Sprintf(constants.GeminiForYouPrompt, context)
 }
 
@@ -83,7 +83,7 @@ func (s *forYouService) fetchGeminiResponse(ctx context.Context, prompt string) 
 	apiKey := os.Getenv("GEMINI_API_KEY")
 	client, err := genai.NewClient(ctx, option.WithAPIKey(apiKey))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("forYouService.fetchGeminiResponse: %w", err)
 	}
 	defer client.Close()
 
@@ -92,7 +92,7 @@ func (s *forYouService) fetchGeminiResponse(ctx context.Context, prompt string) 
 
 	resp, err := model.GenerateContent(ctx, genai.Text(prompt))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("forYouService.fetchGeminiResponse: %w", err)
 	}
 
 	var jsonStr string
@@ -106,7 +106,7 @@ func (s *forYouService) fetchGeminiResponse(ctx context.Context, prompt string) 
 	return jsonStr, nil
 }
 
-func (s *forYouService) getFallbackArticles() []Article {
+func (s *forYouService) getFallbackArticles(ctx context.Context) []Article {
 	return []Article{
 		{Title: "Menjaga Pola Makan", Category: "Kesehatan", ReadTime: "12 Menit", Content: "Menjaga pola makan sehat sangat penting bagi keseimbangan tubuh..."},
 		{Title: "Olahraga Ringan", Category: "Kebugaran", ReadTime: "8 Menit", Content: "Peregangan ringan selama 15 menit setiap pagi dapat melancarkan peredaran darah..."},

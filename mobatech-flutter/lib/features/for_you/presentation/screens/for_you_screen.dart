@@ -8,6 +8,7 @@ import '../../../../core/widgets/custom_bottom_nav_bar.dart';
 import '../../../../core/providers/mock_ui_providers.dart';
 
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 part 'for_you_screen_components.dart';
 
 class ForYouScreen extends ConsumerWidget {
@@ -41,8 +42,8 @@ class ForYouScreen extends ConsumerWidget {
                   },
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 20,
+                      horizontal: AppSpacing.lg,
+                      vertical: AppSpacing.md20,
                     ),
                     itemCount: articles.length,
                     separatorBuilder: (context, index) =>

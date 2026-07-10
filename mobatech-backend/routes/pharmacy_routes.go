@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/constants"
 	"backend/controllers"
 	"backend/middleware"
 	"backend/repositories"
@@ -21,43 +22,43 @@ func SetupPharmacyRoutes(r *gin.Engine, db *gorm.DB) {
 }
 
 func setupPharmacyPublicRoutes(r *gin.Engine, ctrl *controllers.PharmacyController) {
-	public := r.Group("/api/pharmacy")
-	public.GET("/categories", ctrl.GetCategories)
-	public.GET("/medicines", ctrl.GetMedicines)
-	public.GET("/medicines/:id", ctrl.GetMedicineDetail)
+	public := r.Group(constants.RouteApiPharmacy)
+	public.GET(constants.RouteCategories, ctrl.GetCategories)
+	public.GET(constants.RouteMedicines, ctrl.GetMedicines)
+	public.GET(constants.RouteMedicinesParamId, ctrl.GetMedicineDetail)
 }
 
 func setupPharmacyUserRoutes(r *gin.Engine, ctrl *controllers.PharmacyController) {
-	user := r.Group("/api/pharmacy")
+	user := r.Group(constants.RouteApiPharmacy)
 	user.Use(middleware.AuthMiddleware())
-	user.GET("/prescriptions", ctrl.GetMyPrescriptions)
-	user.GET("/prescriptions/:id", ctrl.GetPrescriptionDetail)
-	user.POST("/prescriptions", ctrl.CreatePrescription)
-	user.DELETE("/prescriptions/:id", ctrl.DeletePrescription)
-	user.POST("/orders", ctrl.CreateOrder)
-	user.GET("/orders", ctrl.GetMyOrders)
-	user.GET("/orders/:id", ctrl.GetOrderDetail)
-	user.PUT("/orders/:id/cancel", ctrl.CancelOrder)
-	user.GET("/cart", ctrl.GetCart)
-	user.POST("/cart", ctrl.AddToCart)
-	user.PUT("/cart/:id", ctrl.UpdateCartItem)
-	user.DELETE("/cart/:id", ctrl.RemoveFromCart)
+	user.GET(constants.RoutePrescriptions, ctrl.GetMyPrescriptions)
+	user.GET(constants.RoutePrescriptionsParamId, ctrl.GetPrescriptionDetail)
+	user.POST(constants.RoutePrescriptions, ctrl.CreatePrescription)
+	user.DELETE(constants.RoutePrescriptionsParamId, ctrl.DeletePrescription)
+	user.POST(constants.RouteOrders, ctrl.CreateOrder)
+	user.GET(constants.RouteOrders, ctrl.GetMyOrders)
+	user.GET(constants.RouteOrdersParamId, ctrl.GetOrderDetail)
+	user.PUT(constants.RouteOrdersParamIdCancel, ctrl.CancelOrder)
+	user.GET(constants.RouteCart, ctrl.GetCart)
+	user.POST(constants.RouteCart, ctrl.AddToCart)
+	user.PUT(constants.RouteCartParamId, ctrl.UpdateCartItem)
+	user.DELETE(constants.RouteCartParamId, ctrl.RemoveFromCart)
 }
 
 func setupPharmacyAdminRoutes(r *gin.Engine, ctrl *controllers.PharmacyController) {
-	admin := r.Group("/api/admin/pharmacy")
+	admin := r.Group(constants.RouteApiAdminPharmacy)
 	admin.Use(middleware.AdminMiddleware())
-	admin.POST("/categories", ctrl.AdminCreateCategory)
-	admin.PUT("/categories/:id", ctrl.AdminUpdateCategory)
-	admin.DELETE("/categories/:id", ctrl.AdminDeleteCategory)
-	admin.POST("/medicines", ctrl.AdminCreateMedicine)
-	admin.PUT("/medicines/:id", ctrl.AdminUpdateMedicine)
-	admin.DELETE("/medicines/:id", ctrl.AdminDeleteMedicine)
-	admin.POST("/prescriptions", ctrl.AdminCreatePrescription)
-	admin.GET("/prescriptions", ctrl.AdminGetAllPrescriptions)
-	admin.DELETE("/prescriptions/:id", ctrl.AdminDeletePrescription)
-	admin.PUT("/prescriptions/:id/status", ctrl.AdminUpdatePrescriptionStatus)
-	admin.GET("/orders", ctrl.AdminGetAllOrders)
-	admin.PUT("/orders/:id/status", ctrl.AdminUpdateOrderStatus)
-	admin.PUT("/orders/:id/payment", ctrl.AdminUpdateOrderPayment)
+	admin.POST(constants.RouteCategories, ctrl.AdminCreateCategory)
+	admin.PUT(constants.RouteCategoriesParamId, ctrl.AdminUpdateCategory)
+	admin.DELETE(constants.RouteCategoriesParamId, ctrl.AdminDeleteCategory)
+	admin.POST(constants.RouteMedicines, ctrl.AdminCreateMedicine)
+	admin.PUT(constants.RouteMedicinesParamId, ctrl.AdminUpdateMedicine)
+	admin.DELETE(constants.RouteMedicinesParamId, ctrl.AdminDeleteMedicine)
+	admin.POST(constants.RoutePrescriptions, ctrl.AdminCreatePrescription)
+	admin.GET(constants.RoutePrescriptions, ctrl.AdminGetAllPrescriptions)
+	admin.DELETE(constants.RoutePrescriptionsParamId, ctrl.AdminDeletePrescription)
+	admin.PUT(constants.RoutePrescriptionsParamIdStatus, ctrl.AdminUpdatePrescriptionStatus)
+	admin.GET(constants.RouteOrders, ctrl.AdminGetAllOrders)
+	admin.PUT(constants.RouteOrdersParamIdStatus, ctrl.AdminUpdateOrderStatus)
+	admin.PUT(constants.RouteOrdersParamIdPayment, ctrl.AdminUpdateOrderPayment)
 }

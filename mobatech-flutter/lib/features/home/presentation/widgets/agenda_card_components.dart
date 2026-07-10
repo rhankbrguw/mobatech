@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../appointment/data/models/appointment.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AgendaDoctorInfo extends StatelessWidget {
   final Appointment appointment;
@@ -9,7 +10,7 @@ class AgendaDoctorInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSpacing.sm12),
       child: Row(
         children: [
           Expanded(
@@ -31,7 +32,7 @@ class AgendaDoctorInfo extends StatelessWidget {
 
   Widget _buildDoctorName() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm12, vertical: AppSpacing.sm),
       decoration: BoxDecoration(
         color: AppColors.agendaHeader,
         borderRadius: BorderRadius.circular(20),
@@ -49,7 +50,7 @@ class AgendaDoctorInfo extends StatelessWidget {
 
   Widget _buildDoctorSpecialization() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm12, vertical: 6),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.borderGrey),
         borderRadius: BorderRadius.circular(20),
@@ -76,9 +77,9 @@ class AgendaDoctorImage extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child:
           appointment.doctor?.imageUrl != null &&
-              !appointment.doctor!.imageUrl.contains('.svg')
+              !(appointment.doctor?.imageUrl ?? '').contains('.svg')
           ? Image.network(
-              appointment.doctor!.imageUrl,
+              (appointment.doctor?.imageUrl ?? ''),
               width: 60,
               height: 60,
               fit: BoxFit.cover,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:mobatech_app/core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class BloodTypeDropdown extends StatelessWidget {
   final String value;
@@ -20,7 +21,7 @@ class BloodTypeDropdown extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           decoration: BoxDecoration(
             color: AppColors.backgroundWhite,
             borderRadius: BorderRadius.circular(16),

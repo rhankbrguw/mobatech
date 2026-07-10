@@ -3,6 +3,7 @@ import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import 'tracking_info_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class TrackingInfoSheet extends StatelessWidget {
   final int estimatedMinutes;
@@ -27,7 +28,7 @@ class TrackingInfoSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 12),
+            margin: const EdgeInsets.only(top: AppSpacing.sm12),
             width: 40,
             height: 4,
             decoration: BoxDecoration(
@@ -37,7 +38,7 @@ class TrackingInfoSheet extends StatelessWidget {
           ),
 
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.md20, AppSpacing.md20, AppSpacing.md20, AppSpacing.sm),
             child: Row(
               children: [
                 EstimatedTimeCircle(estimatedMinutes: estimatedMinutes),
@@ -72,7 +73,7 @@ class TrackingInfoSheet extends StatelessWidget {
           const Divider(height: 24),
 
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.md20, 0, AppSpacing.md20, AppSpacing.sm),
             child: Row(children: [const DriverInfoRow()]),
           ),
 

@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/constants"
 	"backend/controllers"
 	"backend/middleware"
 	"backend/repositories"
@@ -17,21 +18,21 @@ func SetupEmergencyRoutes(r *gin.Engine, db *gorm.DB) {
 	trackingController := controllers.NewTrackingController(service)
 
 	// WebSocket tracking route (no auth - WebSocket clients have trouble with auth headers)
-	r.GET("/api/emergencies/:id/track", trackingController.TrackAmbulance)
+	r.GET(constants.RouteApiEmergenciesParamIdTrack, trackingController.TrackAmbulance)
 
 	// User Routes (Protected)
-	userGroup := r.Group("/api/emergencies")
+	userGroup := r.Group(constants.RouteApiEmergencies)
 	userGroup.Use(middleware.AuthMiddleware())
 	{
 		userGroup.POST("", controller.SubmitRequest)
-		userGroup.GET("/history", controller.GetUserHistory)
+		userGroup.GET(constants.RouteHistory, controller.GetUserHistory)
 	}
 
 	// Admin Routes (Protected)
-	adminGroup := r.Group("/api/admin/emergencies")
+	adminGroup := r.Group(constants.RouteApiAdminEmergencies)
 	adminGroup.Use(middleware.AdminMiddleware())
 	{
 		adminGroup.GET("", controller.GetAllAdmin)
-		adminGroup.PUT("/:id/status", controller.UpdateStatusAdmin)
+		adminGroup.PUT(constants.RouteParamIdStatus, controller.UpdateStatusAdmin)
 	}
 }

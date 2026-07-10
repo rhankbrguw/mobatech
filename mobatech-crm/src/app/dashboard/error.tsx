@@ -26,8 +26,8 @@ export default function DashboardError({
 
   return (
     <div className="w-full h-[60vh] flex flex-col items-center justify-center animate-slide-in p-6">
-      <Card className="max-w-md w-full flex flex-col items-center text-center p-8 border-rose-500/20 bg-rose-500/5">
-        <div className="w-16 h-16 bg-rose-500/10 text-rose-500 flex items-center justify-center rounded-full mb-4">
+      <Card className="max-w-md w-full flex flex-col items-center text-center p-8 border-error-muted bg-error-muted">
+        <div className="w-16 h-16 bg-error-muted text-error flex items-center justify-center rounded-full mb-4">
           <AlertCircle size={32} />
         </div>
         <h2 className="text-xl font-bold mb-2">Sesi Tidak Valid atau Kedaluwarsa</h2>
@@ -38,7 +38,7 @@ export default function DashboardError({
           <Button onClick={() => reset()} variant="primary" className="w-full justify-center">
             Coba Lagi
           </Button>
-          <Button onClick={handleForceLogout} variant="outline" className="w-full justify-center text-rose-500 border-rose-500/20 hover:bg-rose-500/10">
+          <Button onClick={handleForceLogout} variant="outline" className="w-full justify-center text-error border-error-muted hover:bg-error-muted">
             Logout & Reset Sesi
           </Button>
         </div>

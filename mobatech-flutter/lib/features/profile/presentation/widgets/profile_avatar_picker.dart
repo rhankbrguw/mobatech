@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ProfileAvatarPicker extends StatelessWidget {
   final String? imagePath;
@@ -26,9 +27,9 @@ class ProfileAvatarPicker extends StatelessWidget {
               border: Border.all(color: AppColors.primary, width: 3),
               image: imagePath != null
                   ? DecorationImage(
-                      image: imagePath!.startsWith('http')
-                          ? NetworkImage(imagePath!) as ImageProvider
-                          : FileImage(File(imagePath!)),
+                      image: (imagePath?.startsWith('http') ?? false)
+                          ? NetworkImage(imagePath ?? '') as ImageProvider
+                          : FileImage(File(imagePath ?? '')),
                       fit: BoxFit.cover,
                     )
                   : null,
@@ -43,7 +44,7 @@ class ProfileAvatarPicker extends StatelessWidget {
             child: GestureDetector(
               onTap: onPickImage,
               child: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppSpacing.sm),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class CustomSnackbar {
   static void showSuccess(BuildContext context, String message) {
@@ -36,7 +37,7 @@ class CustomSnackbar {
         backgroundColor: backgroundColor,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.all(AppSpacing.md),
         duration: const Duration(seconds: 3),
       ),
     );

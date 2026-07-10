@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/constants"
 	"backend/controllers"
 	"backend/middleware"
 	"backend/repositories"
@@ -15,9 +16,9 @@ func SetupForYouRoutes(r *gin.Engine, db *gorm.DB) {
 	service := services.NewForYouService(chatRepo)
 	controller := controllers.NewForYouController(service)
 
-	group := r.Group("/api/for-you")
+	group := r.Group(constants.RouteApiForYou)
 	group.Use(middleware.AuthMiddleware())
 	{
-		group.GET("/recommendations", controller.GetRecommendations)
+		group.GET(constants.RouteRecommendations, controller.GetRecommendations)
 	}
 }

@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/constants"
 	"backend/controllers"
 	"backend/middleware"
 	"backend/repositories"
@@ -15,20 +16,20 @@ func SetupChatRoutes(r *gin.Engine, db *gorm.DB) {
 	service := services.NewChatService(repo)
 	controller := controllers.NewChatController(service)
 
-	chatGroup := r.Group("/api/chat")
+	chatGroup := r.Group(constants.RouteApiChat)
 	chatGroup.Use(middleware.AuthMiddleware())
 	{
-		chatGroup.GET("/sessions", controller.GetUserSessions)
-		chatGroup.POST("/sessions", controller.CreateSession)
-		chatGroup.GET("/sessions/:id/messages", controller.GetSessionMessages)
-		chatGroup.POST("/sessions/:id/stream", controller.StreamChat)
-		chatGroup.PUT("/sessions/:id", controller.RenameSession)
-		chatGroup.DELETE("/sessions/:id", controller.DeleteSession)
+		chatGroup.GET(constants.RouteSessions, controller.GetUserSessions)
+		chatGroup.POST(constants.RouteSessions, controller.CreateSession)
+		chatGroup.GET(constants.RouteSessionsParamIdMessages, controller.GetSessionMessages)
+		chatGroup.POST(constants.RouteSessionsParamIdStream, controller.StreamChat)
+		chatGroup.PUT(constants.RouteSessionsParamId, controller.RenameSession)
+		chatGroup.DELETE(constants.RouteSessionsParamId, controller.DeleteSession)
 	}
 
-	adminGroup := r.Group("/api/admin")
+	adminGroup := r.Group(constants.RouteApiAdmin)
 	adminGroup.Use(middleware.AdminMiddleware())
 	{
-		adminGroup.GET("/chats", controller.GetAllSessions)
+		adminGroup.GET(constants.RouteChats, controller.GetAllSessions)
 	}
 }

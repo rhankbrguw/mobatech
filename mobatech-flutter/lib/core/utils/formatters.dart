@@ -5,36 +5,44 @@ import 'package:intl/intl.dart';
 
 class Formatters {
   static String formatDate(DateTime date, {String format = 'dd MMM yyyy'}) {
-    return DateFormat(format).format(date);
+    return DateFormat(format).format(date.toLocal());
   }
 
-  static String getDayOfWeekID(DateTime d) => [
-    'Senin',
-    'Selasa',
-    'Rabu',
-    'Kamis',
-    'Jumat',
-    'Sabtu',
-    'Minggu',
-  ][d.weekday - 1];
+  static String getDayOfWeekID(DateTime d) {
+    final localD = d.toLocal();
+    return [
+      'Senin',
+      'Selasa',
+      'Rabu',
+      'Kamis',
+      'Jumat',
+      'Sabtu',
+      'Minggu',
+    ][localD.weekday - 1];
+  }
 
-  static String getMonthID(DateTime d) => [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'Mei',
-    'Jun',
-    'Jul',
-    'Agu',
-    'Sep',
-    'Okt',
-    'Nov',
-    'Des',
-  ][d.month - 1];
+  static String getMonthID(DateTime d) {
+    final localD = d.toLocal();
+    return [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Agu',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
+    ][localD.month - 1];
+  }
 
-  static String formatDateID(DateTime d) =>
-      '${d.day} ${getMonthID(d)} ${d.year}';
+  static String formatDateID(DateTime d) {
+    final localD = d.toLocal();
+    return '${localD.day.toString().padLeft(2, '0')} ${getMonthID(localD)} ${localD.year}';
+  }
 
   static String formatDateWithDayID(DateTime d) =>
       '${getDayOfWeekID(d)}, ${formatDateID(d)}';
@@ -50,9 +58,10 @@ class Formatters {
   }
 
   static String formatDateTimeID(DateTime d) {
+    final localD = d.toLocal();
     final timeStr =
-        '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';
-    return '${formatDateID(d)} $timeStr';
+        '${localD.hour.toString().padLeft(2, '0')}:${localD.minute.toString().padLeft(2, '0')}';
+    return '${formatDateID(localD)} $timeStr';
   }
 
   static String parseAndFormatDateTimeID(String dateStr) {
@@ -66,9 +75,10 @@ class Formatters {
   }
 
   static String formatDateTimeSecID(DateTime d) {
+    final localD = d.toLocal();
     final timeStr =
-        '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}:${d.second.toString().padLeft(2, '0')}';
-    return '${formatDateID(d)} $timeStr';
+        '${localD.hour.toString().padLeft(2, '0')}:${localD.minute.toString().padLeft(2, '0')}:${localD.second.toString().padLeft(2, '0')}';
+    return '${formatDateID(localD)} $timeStr';
   }
 
   static String parseAndFormatDateTimeSecID(String dateStr) {

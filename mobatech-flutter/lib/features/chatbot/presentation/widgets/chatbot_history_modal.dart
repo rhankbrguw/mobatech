@@ -7,6 +7,7 @@ import '../../../../core/utils/error_handler.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../providers/chat_provider.dart';
 import 'chatbot_history_modal_session_item.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ChatbotHistoryModal extends ConsumerWidget {
   const ChatbotHistoryModal({super.key});
@@ -17,7 +18,7 @@ class ChatbotHistoryModal extends ConsumerWidget {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.md20),
         height: MediaQuery.of(context).size.height * 0.6,
         decoration: BoxDecoration(
           color: AppColors.backgroundWhite.withValues(alpha: 0.85),

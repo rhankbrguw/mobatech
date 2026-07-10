@@ -1,6 +1,6 @@
 import RootRedirect from "@/components/RootRedirect";
 
-export const metadata = { title: "Home | Mobatech CRM", description: "Mobatech CRM Home Management" };
+export const metadata = { title: "Beranda | Hermina CRM", description: "Hermina CRM Beranda" };
 
 export default function RootPage() {
   return (

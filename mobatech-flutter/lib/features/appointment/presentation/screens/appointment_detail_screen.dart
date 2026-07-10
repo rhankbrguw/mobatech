@@ -4,6 +4,7 @@ import '../widgets/booking_qr_card.dart';
 import '../widgets/appointment_doctor_card.dart';
 import '../widgets/schedule_details_card.dart';
 import '../../data/models/appointment.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AppointmentDetailScreen extends StatelessWidget {
   final Appointment appointment;
@@ -49,7 +50,7 @@ class AppointmentDetailScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

@@ -58,4 +58,20 @@ Format output HARUS JSON array:
 	MsgAmbulanceArrived    = "Ambulans telah tiba di lokasi Anda"
 	StatusDispatched       = "Dispatched"
 	StatusArrived          = "Arrived"
+
+	// Standard Error Messages
+	MsgUnauthorized         = "Unauthorized"
+	MsgInternalServer       = "Terjadi kesalahan internal pada server"
+	MsgNotFound             = "Data tidak ditemukan"
+	MsgDoctorNotFound       = "Doctor not found"
+	MsgServiceNotFound      = "Service not found"
+	MsgMedicineNotFound     = "Medicine not found"
+	MsgOrderNotFound        = "Order not found"
+	MsgPrescriptionNotFound = "Prescription not found"
+	MsgPolyclinicNotFound   = "Polyclinic not found"
+	MsgEmergencyNotFound    = "Emergency request not found"
+	MsgEmailConflict        = "Email sudah terdaftar atau terjadi kesalahan server."
+	MsgLoginFailed          = "Email atau kata sandi salah."
+	MsgUserNotFound         = "User not found"
+	MsgCreateUserFailed     = "Gagal membuat pengguna."
 )

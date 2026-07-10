@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class EstimatedTimeCircle extends StatelessWidget {
   final int estimatedMinutes;
@@ -112,7 +113,7 @@ class DriverInfoRow extends StatelessWidget {
                 CustomSnackbar.showInfo(context, CoreStrings.contactingDriver);
               },
               child: const Padding(
-                padding: EdgeInsets.all(12),
+                padding: EdgeInsets.all(AppSpacing.sm12),
                 child: Icon(
                   Icons.phone,
                   color: AppColors.backgroundWhite,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glass_status_chip.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AppointmentCardTopSection extends StatelessWidget {
   final dynamic appointment;
@@ -11,7 +12,7 @@ class AppointmentCardTopSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm12),
       decoration: BoxDecoration(
         color: AppColors.backgroundScreen.withValues(alpha: 0.5),
         border: const Border(
@@ -30,7 +31,7 @@ class AppointmentCardTopSection extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                '${appointment.schedule?.date != null ? Formatters.formatDateID(appointment.schedule!.date!) : '-'} • ${appointment.schedule?.startTime ?? ''}',
+                '${appointment.schedule?.date != null ? Formatters.formatDateID((appointment.schedule?.date ?? DateTime.now())) : '-'} • ${appointment.schedule?.startTime ?? ''}',
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
@@ -62,7 +63,7 @@ class AppointmentCardBottomSection extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.md),
       child: SizedBox(
         width: double.infinity,
         child: OutlinedButton(
@@ -73,7 +74,7 @@ class AppointmentCardBottomSection extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm12),
           ),
           child: const Text(
             'Batalkan Janji Temu',

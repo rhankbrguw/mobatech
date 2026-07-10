@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class EmergencyAppBar extends StatelessWidget {
   const EmergencyAppBar({super.key});
@@ -57,7 +58,7 @@ class EmergencyWarningBanner extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: const Padding(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(AppSpacing.md),
             child: Row(
               children: [
                 Icon(

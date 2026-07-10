@@ -77,7 +77,7 @@ export function AdminDashboard() {
         </div>
         {stats.activeEmergencies > 0 && (
           <Link href="/dashboard/emergencies"
-            className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-600 border border-red-500/20 rounded-xl text-sm font-semibold hover:bg-red-500/20 transition-colors">
+            className="flex items-center gap-2 px-4 py-2 bg-error-muted text-error border border-error-muted rounded-xl text-sm font-semibold hover:bg-error-muted transition-colors">
             <Siren size={16} className="animate-pulse" />
             {stats.activeEmergencies} Darurat Aktif
           </Link>
@@ -115,18 +115,18 @@ export function AdminDashboard() {
 
       {/* Gawat Darurat Aktif */}
       {(stats.activeEmergencies > 0 || stats.recentEmergencies.length > 0) && (
-        <div className="glass-panel rounded-2xl border shadow-sm overflow-hidden border-red-500/20">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-glass-border bg-red-500/5">
+        <div className="glass-panel rounded-2xl border shadow-sm overflow-hidden border-error-muted">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-glass-border bg-error-muted">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block" />
-              <h2 className="font-semibold text-sm text-red-600">Gawat Darurat Terbaru</h2>
+              <span className="w-2 h-2 rounded-full bg-error animate-ping inline-block" />
+              <h2 className="font-semibold text-sm text-error">Gawat Darurat Terbaru</h2>
             </div>
-            <Link href="/dashboard/emergencies" className="text-xs text-red-600 hover:underline font-medium flex items-center gap-1">Lihat Semua <ArrowRight size={14}/></Link>
+            <Link href="/dashboard/emergencies" className="text-xs text-error hover:underline font-medium flex items-center gap-1">Lihat Semua <ArrowRight size={14}/></Link>
           </div>
           <div className="divide-y divide-glass-border">
             {stats.recentEmergencies.map((e: typeof stats.recentEmergencies[0]) => (
-              <div key={e.id} className="px-5 py-3 flex items-center gap-4 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-600 flex-shrink-0">
+              <div key={e.id} className="px-5 py-3 flex items-center gap-4 hover:bg-overlay-dark dark:hover:bg-overlay-light transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-error-muted flex items-center justify-center text-error flex-shrink-0">
                   <Siren size={20} />
                 </div>
                 <div className="flex-1">

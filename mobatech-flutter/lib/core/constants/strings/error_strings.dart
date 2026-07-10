@@ -45,4 +45,6 @@ class ErrorStrings {
   static const String extGagalmenghapuseresep = 'Gagal menghapus e-resep';
   static const String extGagalmemuatrumahsakit = 'Gagal memuat rumah sakit';
   static const String extGagalmemuatpromo = 'Gagal memuat promo:';
+  static const String extGagalmengunggahEresep = 'Gagal mengunggah E-Resep';
+  static const String extGagalmembuatpesanan = 'Gagal membuat pesanan';
 }

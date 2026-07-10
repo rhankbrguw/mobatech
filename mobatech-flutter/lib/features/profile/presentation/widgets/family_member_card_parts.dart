@@ -1,3 +1,4 @@
+
 part of 'family_member_card.dart';
 
 class _FamilyMemberHeader extends StatelessWidget {
@@ -32,7 +33,7 @@ class _FamilyMemberHeader extends StatelessWidget {
             ),
             if (isPrimary)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(12),
@@ -50,7 +51,7 @@ class _FamilyMemberHeader extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSpacing.xs),
           decoration: BoxDecoration(
             color: isPrimary
                 ? AppColors.primary

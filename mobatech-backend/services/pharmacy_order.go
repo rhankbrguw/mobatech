@@ -1,94 +1,96 @@
 package services
 
 import (
+	"backend/constants"
+
+	"context"
+
 	"backend/models"
-	"errors"
 	"fmt"
 	"time"
 )
 
-func (s *pharmacyService) GetPrescriptionsByUserID(userID uint) ([]models.Prescription, error) {
-	return s.repo.GetPrescriptionsByUserID(userID)
+func (s *pharmacyService) GetPrescriptionsByUserID(ctx context.Context, userID uint, limit int, offset int) ([]models.Prescription, int64, error) {
+	return s.repo.GetPrescriptionsByUserID(ctx, userID, limit, offset)
 }
 
-func (s *pharmacyService) GetPrescriptionByID(id uint) (*models.Prescription, error) {
-	return s.repo.GetPrescriptionByID(id)
+func (s *pharmacyService) GetPrescriptionByID(ctx context.Context, id uint) (*models.Prescription, error) {
+	return s.repo.GetPrescriptionByID(ctx, id)
 }
 
-func (s *pharmacyService) GetAllPrescriptions() ([]models.Prescription, error) {
-	return s.repo.GetAllPrescriptions()
+func (s *pharmacyService) GetAllPrescriptions(ctx context.Context, limit int, offset int) ([]models.Prescription, int64, error) {
+	return s.repo.GetAllPrescriptions(ctx, limit, offset)
 }
 
-func (s *pharmacyService) CreatePrescription(p *models.Prescription) error {
-	p.Status = "Active"
-	return s.repo.CreatePrescription(p)
+func (s *pharmacyService) CreatePrescription(ctx context.Context, p *models.Prescription) error {
+	p.Status = "pending"
+	return s.repo.CreatePrescription(ctx, p)
 }
 
-func (s *pharmacyService) DeletePrescription(id uint, userID *uint) error {
+func (s *pharmacyService) DeletePrescription(ctx context.Context, id uint, userID *uint) error {
 	if userID != nil {
-		p, err := s.repo.GetPrescriptionByID(id)
+		p, err := s.repo.GetPrescriptionByID(ctx, id)
 		if err != nil {
-			return err
+			return fmt.Errorf("pharmacyService.DeletePrescription: %w", err)
 		}
 		if p.UserID != *userID {
-			return errors.New("unauthorized to delete this prescription")
+			return fmt.Errorf("pharmacyService.DeletePrescription: %w", constants.ErrUnauthorizedToDeletePresc)
 		}
 	}
-	return s.repo.DeletePrescription(id)
+	return s.repo.DeletePrescription(ctx, id)
 }
 
-func (s *pharmacyService) UpdatePrescriptionStatus(id uint, status string) error {
-	return s.repo.UpdatePrescriptionStatus(id, status)
+func (s *pharmacyService) UpdatePrescriptionStatus(ctx context.Context, id uint, status string) error {
+	return s.repo.UpdatePrescriptionStatus(ctx, id, status)
 }
 
-func (s *pharmacyService) GetOrdersByUserID(userID uint) ([]models.PharmacyOrder, error) {
-	return s.repo.GetOrdersByUserID(userID)
+func (s *pharmacyService) GetOrdersByUserID(ctx context.Context, userID uint) ([]models.PharmacyOrder, error) {
+	return s.repo.GetOrdersByUserID(ctx, userID)
 }
 
-func (s *pharmacyService) GetOrderByID(id uint) (*models.PharmacyOrder, error) {
-	return s.repo.GetOrderByID(id)
+func (s *pharmacyService) GetOrderByID(ctx context.Context, id uint) (*models.PharmacyOrder, error) {
+	return s.repo.GetOrderByID(ctx, id)
 }
 
-func (s *pharmacyService) GetAllOrders(search string, filter string, limit int, offset int) ([]models.PharmacyOrder, int64, error) {
-	return s.repo.GetAllOrders(search, filter, limit, offset)
+func (s *pharmacyService) GetAllOrders(ctx context.Context, search string, filter string, limit int, offset int) ([]models.PharmacyOrder, int64, error) {
+	return s.repo.GetAllOrders(ctx, search, filter, limit, offset)
 }
 
-func (s *pharmacyService) CreateOrder(order *models.PharmacyOrder) error {
+func (s *pharmacyService) CreateOrder(ctx context.Context, order *models.PharmacyOrder) error {
 	if len(order.Items) == 0 {
-		return errors.New("order must have at least one item")
+		return fmt.Errorf("pharmacyService.CreateOrder: %w", constants.ErrOrderMustHaveItems)
 	}
 
 	order.OrderNumber = fmt.Sprintf("ORD-%d", time.Now().Unix())
 	order.Status = "Pending"
 	order.PaymentStatus = "Unpaid"
 
-	// All stock check, lock, price calculation, and order creation 
+	// All stock check, lock, price calculation, and order creation
 	// is now safely inside repo's atomic transaction to prevent race conditions.
-	return s.repo.CreateOrder(order)
+	return s.repo.CreateOrder(ctx, order)
 }
 
-func (s *pharmacyService) UpdateOrderStatus(id uint, status string) error {
-	order, err := s.repo.GetOrderByID(id)
+func (s *pharmacyService) UpdateOrderStatus(ctx context.Context, id uint, status string) error {
+	order, err := s.repo.GetOrderByID(ctx, id)
 	if err != nil {
-		return err
+		return fmt.Errorf("pharmacyService.UpdateOrderStatus: %w", err)
 	}
 
 	if status == "Cancelled" && order.Status != "Cancelled" {
 		for _, item := range order.Items {
 			// Increase stock back by item.Quantity
-			s.repo.UpdateMedicineStock(item.MedicineID, item.Quantity)
+			s.repo.UpdateMedicineStock(ctx, item.MedicineID, item.Quantity)
 		}
 	} else if order.Status == "Cancelled" && status != "Cancelled" {
 		// If order status is changed from Cancelled back to something else, deduct the stock again
 		for _, item := range order.Items {
-			s.repo.UpdateMedicineStock(item.MedicineID, -item.Quantity)
+			s.repo.UpdateMedicineStock(ctx, item.MedicineID, -item.Quantity)
 		}
 	}
 
-	return s.repo.UpdateOrderStatus(id, status)
+	return s.repo.UpdateOrderStatus(ctx, id, status)
 }
 
-func (s *pharmacyService) UpdateOrderPayment(id uint, paymentStatus string) error {
-	return s.repo.UpdateOrderPayment(id, paymentStatus)
+func (s *pharmacyService) UpdateOrderPayment(ctx context.Context, id uint, paymentStatus string) error {
+	return s.repo.UpdateOrderPayment(ctx, id, paymentStatus)
 }
-

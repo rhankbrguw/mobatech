@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SkeletonLoader extends StatelessWidget {
   final double width;
@@ -44,7 +45,7 @@ class CardSkeletonLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       itemCount: count,
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -52,7 +53,7 @@ class CardSkeletonLoader extends StatelessWidget {
         return SkeletonLoader(
           width: double.infinity,
           height: 120,
-          margin: const EdgeInsets.only(bottom: 16),
+          margin: const EdgeInsets.only(bottom: AppSpacing.md),
           borderRadius: 20,
         );
       },
@@ -68,7 +69,7 @@ class GridSkeletonLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,

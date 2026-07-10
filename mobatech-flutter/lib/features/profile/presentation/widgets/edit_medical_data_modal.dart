@@ -8,6 +8,7 @@ import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/profile_provider.dart';
 
 import 'edit_medical_data_form_fields.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 void showEditMedicalDataModal(
   BuildContext context,
@@ -59,7 +60,7 @@ class _EditMedicalDataModalContentState
       'O-',
     ];
     _selectedBloodType = validTypes.contains(widget.user.bloodType)
-        ? widget.user.bloodType!
+        ? (widget.user.bloodType as String)
         : 'O';
     _heightController = TextEditingController(
       text: widget.user.height?.toString() ?? '',
@@ -127,7 +128,7 @@ class _EditMedicalDataModalContentState
         color: AppColors.backgroundScreen,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(AppSpacing.lg),
           child: EditMedicalDataFormFields(
             selectedBloodType: _selectedBloodType,
             onBloodTypeChanged: (val) {

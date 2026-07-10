@@ -21,7 +21,7 @@ class ErrorHandler {
     }
 
     if (error.response?.data != null) {
-      final data = error.response!.data;
+      final data = error.response?.data;
       if (data is Map<String, dynamic>) {
         return _extractMessageFromMap(data);
       }

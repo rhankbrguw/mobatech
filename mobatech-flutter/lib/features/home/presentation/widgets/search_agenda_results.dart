@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../appointment/providers/appointment_provider.dart';
 import 'search_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SearchAgendaResults extends ConsumerWidget {
   final String query;
@@ -30,7 +31,7 @@ class SearchAgendaResults extends ConsumerWidget {
           return const SearchEmptyState(msg: 'Agenda tidak ditemukan');
         }
         return ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.md),
           itemCount: filtered.length,
           itemBuilder: (context, i) {
             final docName = filtered[i].doctor?.name ?? 'Dokter';

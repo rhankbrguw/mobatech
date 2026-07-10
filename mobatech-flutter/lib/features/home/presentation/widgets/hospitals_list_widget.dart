@@ -6,6 +6,7 @@ import 'package:mobatech_app/core/theme/app_colors.dart';
 import 'package:mobatech_app/core/widgets/skeleton_loader.dart';
 import '../providers/branch_provider.dart';
 import 'hospital_card.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class HospitalsListWidget extends ConsumerWidget {
   const HospitalsListWidget({super.key});
@@ -18,7 +19,7 @@ class HospitalsListWidget extends ConsumerWidget {
       data: (branches) {
         if (branches.isEmpty) {
           return const Padding(
-            padding: EdgeInsets.all(24.0),
+            padding: EdgeInsets.all(AppSpacing.lg),
             child: Text(
               AppointmentStrings.extTidakadarumahsakitterdekat,
               style: TextStyle(color: AppColors.textGrey),
@@ -40,11 +41,11 @@ class HospitalsListWidget extends ConsumerWidget {
         );
       },
       loading: () => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
         child: CardSkeletonLoader(count: 2),
       ),
       error: (err, stack) => const Padding(
-        padding: EdgeInsets.all(24.0),
+        padding: EdgeInsets.all(AppSpacing.lg),
         child: Text(
           ErrorStrings.extGagalmemuatrumahsakit,
           style: TextStyle(color: AppColors.errorRed),

@@ -1,20 +1,23 @@
 package services
 
 import (
+	"backend/constants"
+
+	"context"
+
 	"backend/models"
 	"backend/repositories"
-	"errors"
 	"fmt"
 	"time"
 )
 
 type AppointmentService interface {
-	GetAllAppointments(search string, filter string, userID uint, role string, limit, offset int) ([]models.Appointment, int64, error)
-	GetUserAppointments(userID uint, limit, offset int) ([]models.Appointment, int64, error)
-	BookAppointment(userID uint, req *models.Appointment) (*models.Appointment, error)
-	CancelAppointment(id uint, userID uint, isAdmin bool) error
-	ApproveAppointment(id uint) error
-	CompleteAppointment(id uint) error
+	GetAllAppointments(ctx context.Context, search string, filter string, userID uint, role string, limit, offset int) ([]models.Appointment, int64, error)
+	GetUserAppointments(ctx context.Context, userID uint, limit, offset int) ([]models.Appointment, int64, error)
+	BookAppointment(ctx context.Context, userID uint, req *models.Appointment) (*models.Appointment, error)
+	CancelAppointment(ctx context.Context, id uint, userID uint, isAdmin bool) error
+	ApproveAppointment(ctx context.Context, id uint) error
+	CompleteAppointment(ctx context.Context, id uint) error
 }
 
 type appointmentService struct {
@@ -26,45 +29,45 @@ func NewAppointmentService(appointmentRepo repositories.AppointmentRepository, s
 	return &appointmentService{appointmentRepo, scheduleRepo}
 }
 
-func (s *appointmentService) GetAllAppointments(search string, filter string, userID uint, role string, limit, offset int) ([]models.Appointment, int64, error) {
-	return s.appointmentRepo.FindAll(search, filter, userID, role, limit, offset)
+func (s *appointmentService) GetAllAppointments(ctx context.Context, search string, filter string, userID uint, role string, limit, offset int) ([]models.Appointment, int64, error) {
+	return s.appointmentRepo.FindAll(ctx, search, filter, userID, role, limit, offset)
 }
 
-func (s *appointmentService) GetUserAppointments(userID uint, limit, offset int) ([]models.Appointment, int64, error) {
-	return s.appointmentRepo.FindByUserID(userID, limit, offset)
+func (s *appointmentService) GetUserAppointments(ctx context.Context, userID uint, limit, offset int) ([]models.Appointment, int64, error) {
+	return s.appointmentRepo.FindByUserID(ctx, userID, limit, offset)
 }
 
-func (s *appointmentService) BookAppointment(userID uint, req *models.Appointment) (*models.Appointment, error) {
-	schedule, err := s.scheduleRepo.FindByID(req.DoctorScheduleID)
+func (s *appointmentService) BookAppointment(ctx context.Context, userID uint, req *models.Appointment) (*models.Appointment, error) {
+	schedule, err := s.scheduleRepo.FindByID(ctx, req.DoctorScheduleID)
 	if err != nil {
-		return nil, errors.New("schedule not found")
+		return nil, fmt.Errorf("appointmentService.BookAppointment: %w", constants.ErrScheduleNotFound)
 	}
 
 	if !schedule.IsAvailable || schedule.Booked >= schedule.Quota {
-		return nil, errors.New("schedule is full or not available")
+		return nil, fmt.Errorf("appointmentService.BookAppointment: %w", constants.ErrScheduleFullOrNotAvail)
 	}
 
-	if s.checkScheduleExpired(schedule) {
-		return nil, errors.New("schedule has already expired")
+	if s.checkScheduleExpired(ctx, schedule) {
+		return nil, fmt.Errorf("appointmentService.BookAppointment: %w", constants.ErrScheduleExpired)
 	}
 
 	schedule.Booked += 1
-	if err := s.scheduleRepo.Update(schedule); err != nil {
-		return nil, err
+	if err := s.scheduleRepo.Update(ctx, schedule); err != nil {
+		return nil, fmt.Errorf("appointmentService.BookAppointment: %w", err)
 	}
 
 	req.DoctorID = schedule.DoctorID
 	req.UserID = userID
 	req.Status = "pending"
 
-	if err := s.appointmentRepo.Create(req); err != nil {
-		s.rollbackScheduleBooking(schedule)
-		return nil, err
+	if err := s.appointmentRepo.Create(ctx, req); err != nil {
+		s.rollbackScheduleBooking(ctx, schedule)
+		return nil, fmt.Errorf("appointmentService.BookAppointment: %w", err)
 	}
-	return s.appointmentRepo.FindByID(req.ID)
+	return s.appointmentRepo.FindByID(ctx, req.ID)
 }
 
-func (s *appointmentService) checkScheduleExpired(schedule *models.DoctorSchedule) bool {
+func (s *appointmentService) checkScheduleExpired(ctx context.Context, schedule *models.DoctorSchedule) bool {
 	now := time.Now()
 	scheduleEndStr := fmt.Sprintf("%s %s", schedule.Date.Format("2006-01-02"), schedule.EndTime)
 	var scheduleEnd time.Time
@@ -78,62 +81,62 @@ func (s *appointmentService) checkScheduleExpired(schedule *models.DoctorSchedul
 	return errParse == nil && now.After(scheduleEnd)
 }
 
-func (s *appointmentService) CancelAppointment(id uint, userID uint, isAdmin bool) error {
-	appointment, err := s.appointmentRepo.FindByID(id)
+func (s *appointmentService) CancelAppointment(ctx context.Context, id uint, userID uint, isAdmin bool) error {
+	appointment, err := s.appointmentRepo.FindByID(ctx, id)
 	if err != nil {
-		return errors.New("appointment not found")
+		return fmt.Errorf("appointmentService.CancelAppointment: %w", constants.ErrAppointmentNotFound)
 	}
 
 	if !isAdmin && appointment.UserID != userID {
-		return errors.New("unauthorized to cancel this appointment")
+		return fmt.Errorf("appointmentService.CancelAppointment: %w", constants.ErrUnauthorizedToCancelAppt)
 	}
 
 	if appointment.Status == "cancelled" || appointment.Status == "completed" {
-		return errors.New("cannot cancel an already cancelled or completed appointment")
+		return fmt.Errorf("appointmentService.CancelAppointment: %w", constants.ErrCannotCancelCompleted)
 	}
 
 	appointment.Status = "cancelled"
-	if err := s.appointmentRepo.Update(appointment); err != nil {
-		return err
+	if err := s.appointmentRepo.Update(ctx, appointment); err != nil {
+		return fmt.Errorf("appointmentService.CancelAppointment: %w", err)
 	}
 
-	schedule, err := s.scheduleRepo.FindByID(appointment.DoctorScheduleID)
+	schedule, err := s.scheduleRepo.FindByID(ctx, appointment.DoctorScheduleID)
 	if err == nil && schedule.Booked > 0 {
 		schedule.Booked -= 1
-		s.scheduleRepo.Update(schedule)
+		s.scheduleRepo.Update(ctx, schedule)
 	}
 	return nil
 }
 
-func (s *appointmentService) ApproveAppointment(id uint) error {
-	appointment, err := s.appointmentRepo.FindByID(id)
+func (s *appointmentService) ApproveAppointment(ctx context.Context, id uint) error {
+	appointment, err := s.appointmentRepo.FindByID(ctx, id)
 	if err != nil {
-		return errors.New("appointment not found")
+		return fmt.Errorf("appointmentService.ApproveAppointment: %w", constants.ErrAppointmentNotFound)
 	}
 
 	if appointment.Status != "pending" {
-		return errors.New("can only approve pending appointments")
+		return fmt.Errorf("appointmentService.ApproveAppointment: %w", constants.ErrCanOnlyApprovePending)
 	}
 
 	appointment.Status = "approved"
-	return s.appointmentRepo.Update(appointment)
+	return s.appointmentRepo.Update(ctx, appointment)
 }
 
-func (s *appointmentService) rollbackScheduleBooking(schedule *models.DoctorSchedule) {
+func (s *appointmentService) rollbackScheduleBooking(ctx context.Context, schedule *models.DoctorSchedule) {
 	schedule.Booked -= 1
-	s.scheduleRepo.Update(schedule)
+	s.scheduleRepo.Update(ctx, schedule)
 }
 
-func (s *appointmentService) CompleteAppointment(id uint) error {
-	appointment, err := s.appointmentRepo.FindByID(id)
+func (s *appointmentService) CompleteAppointment(ctx context.Context, id uint) error {
+	appointment, err := s.appointmentRepo.FindByID(ctx, id)
 	if err != nil {
-		return errors.New("appointment not found")
+		return fmt.Errorf("appointmentService.CompleteAppointment: %w", constants.ErrAppointmentNotFound)
 	}
 
 	if appointment.Status != "approved" {
-		return errors.New("can only complete approved appointments")
+		return fmt.Errorf("appointmentService.CompleteAppointment: %w", constants.ErrCanOnlyCompleteApproved)
 	}
 
 	appointment.Status = "completed"
-	return s.appointmentRepo.Update(appointment)
+	return s.appointmentRepo.Update(ctx, appointment)
 }

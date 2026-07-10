@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mobatech_app/core/theme/app_colors.dart';
 import 'package:mobatech_app/core/providers/mock_ui_providers.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class OfferCard extends StatelessWidget {
   final SpecialOffer offer;
@@ -15,7 +16,7 @@ class OfferCard extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.all(AppSpacing.xl),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -62,7 +63,7 @@ class OfferCard extends StatelessWidget {
 
   Widget _buildSubtitle() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
       decoration: BoxDecoration(
         color: AppColors.textWhite.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'edit_medical_data_modal.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class MedicalSummaryCard extends StatelessWidget {
   final dynamic user;
@@ -30,7 +31,7 @@ class MedicalSummaryCard extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             color: AppColors.primaryLight.withValues(alpha: 0.5),
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(AppSpacing.md20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -45,8 +46,8 @@ class MedicalSummaryCard extends StatelessWidget {
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 4,
+                            horizontal: AppSpacing.sm12,
+                            vertical: AppSpacing.xs,
                           ),
                           decoration: BoxDecoration(
                             color: AppColors.errorRed.withValues(alpha: 0.1),

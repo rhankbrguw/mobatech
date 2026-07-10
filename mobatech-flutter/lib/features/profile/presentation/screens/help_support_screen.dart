@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/help_support_widgets.dart';
 import '../widgets/faq_section.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
@@ -61,7 +62,7 @@ class HelpSupportScreen extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 800),
             child: ListView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppSpacing.lg),
               physics: const BouncingScrollPhysics(),
               children: const [
                 ContactCard(),

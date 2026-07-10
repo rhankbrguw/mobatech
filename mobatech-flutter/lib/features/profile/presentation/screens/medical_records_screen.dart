@@ -10,6 +10,7 @@ import '../widgets/medical_record_card.dart';
 import '../widgets/medical_summary_card.dart';
 
 import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 part 'medical_records_screen_parts.dart';
 
 class MedicalRecordsScreen extends ConsumerWidget {
@@ -40,7 +41,7 @@ class MedicalRecordsScreen extends ConsumerWidget {
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverPadding(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(AppSpacing.lg),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
                       profileAsync.when(

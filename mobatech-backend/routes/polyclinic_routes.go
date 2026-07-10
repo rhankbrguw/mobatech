@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/constants"
 	"backend/controllers"
 	"backend/repositories"
 	"backend/services"
@@ -14,20 +15,20 @@ func SetupPolyclinicRoutes(router *gin.Engine, db *gorm.DB) {
 	service := services.NewPolyclinicService(repo)
 	controller := controllers.NewPolyclinicController(service)
 
-	api := router.Group("/api")
+	api := router.Group(constants.RouteApi)
 
-	api.GET("/polyclinics", controller.GetPolyclinics)
-	api.GET("/polyclinics/:id", controller.GetPolyclinicByID)
+	api.GET(constants.RoutePolyclinics, controller.GetPolyclinics)
+	api.GET(constants.RoutePolyclinicsParamId, controller.GetPolyclinicByID)
 
 	// Admin endpoints
-	admin := api.Group("/admin")
+	admin := api.Group(constants.RouteAdmin)
 	{
-		admin.POST("/polyclinics", controller.CreatePolyclinic)
-		admin.PUT("/polyclinics/:id", controller.UpdatePolyclinic)
-		admin.DELETE("/polyclinics/:id", controller.DeletePolyclinic)
+		admin.POST(constants.RoutePolyclinics, controller.CreatePolyclinic)
+		admin.PUT(constants.RoutePolyclinicsParamId, controller.UpdatePolyclinic)
+		admin.DELETE(constants.RoutePolyclinicsParamId, controller.DeletePolyclinic)
 
-		admin.POST("/polyclinics/:id/schedules", controller.CreateSchedule)
-		admin.PUT("/polyclinics/schedules/:sched_id", controller.UpdateSchedule)
-		admin.DELETE("/polyclinics/schedules/:sched_id", controller.DeleteSchedule)
+		admin.POST(constants.RoutePolyclinicsParamIdSchedules, controller.CreateSchedule)
+		admin.PUT(constants.RoutePolyclinicsSchedulesParamSched_id, controller.UpdateSchedule)
+		admin.DELETE(constants.RoutePolyclinicsSchedulesParamSched_id, controller.DeleteSchedule)
 	}
 }

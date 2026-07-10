@@ -5,6 +5,7 @@ import '../screens/appointment_detail_screen.dart';
 
 import 'appointment_card_parts.dart';
 import 'appointment_card_middle.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AppointmentCard extends StatelessWidget {
   final dynamic appointment;
@@ -19,7 +20,7 @@ class AppointmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         boxShadow: [

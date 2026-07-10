@@ -23,7 +23,7 @@ class MedicineRepository {
     return data.map((e) => MedicineCategory.fromJson(e)).toList();
   }
 
-  Future<List<Medicine>> getMedicines({
+  Future<(List<Medicine>, bool)> getMedicines({
     int? categoryId,
     String? search,
     int page = 1,
@@ -38,11 +38,21 @@ class MedicineRepository {
         'limit': limit,
       },
     );
-    final responseData = response.data;
+    final dynamic responseData = response.data;
     final List<dynamic> data =
         responseData is Map && responseData.containsKey('data')
         ? responseData['data']
         : (responseData as List? ?? []);
-    return data.map((e) => Medicine.fromJson(e)).toList();
+        
+    final meta = responseData is Map && responseData.containsKey('meta')
+        ? responseData['meta'] as Map<String, dynamic>?
+        : response.extra['meta'] as Map<String, dynamic>?;
+
+    final medicines = data.map((e) => Medicine.fromJson(e)).toList();
+    
+    final currentPage = meta?['current_page'] as int? ?? 1;
+    final totalPages = meta?['total_pages'] as int? ?? 1;
+
+    return (medicines, currentPage < totalPages);
   }
 }

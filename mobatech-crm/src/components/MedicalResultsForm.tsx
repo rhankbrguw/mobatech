@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { FileUpload } from "@/components/FileUpload";
 import { Dispatch, SetStateAction } from "react";
 import { APP_STRINGS } from "@/lib/constants";
 
@@ -82,9 +83,7 @@ export function MedicalResultsForm({
             className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground focus:border-primary resize-none" />
         </div>
         <div className="sm:col-span-2 space-y-1">
-          <label className="text-xs text-foreground/60 font-medium">URL Berkas (PDF / Gambar)</label>
-          <input disabled={saving} type="text" value={form.file_url} onChange={(e) => setForm((f) => ({ ...f, file_url: e.target.value }))}
-            placeholder={APP_STRINGS.medicalResults.fileUrlPlaceholder} className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground focus:border-primary" />
+          <FileUpload fileUrl={form.file_url} setFileUrl={(url) => setForm((f) => ({ ...f, file_url: url }))} />
         </div>
       </div>
       <div className="flex justify-end gap-2 pt-2">

@@ -37,12 +37,12 @@ func AuthMiddleware() gin.HandlerFunc {
 func extractToken(c *gin.Context) (string, error) {
 	authHeader := c.GetHeader("Authorization")
 	if authHeader == "" {
-		return "", utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Authorization header is required")
+		return "", utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Authorization header is required", nil)
 	}
 
 	parts := strings.SplitN(authHeader, " ", 2)
 	if !(len(parts) == 2 && parts[0] == "Bearer") {
-		return "", utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Authorization header format must be Bearer {token}")
+		return "", utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Authorization header format must be Bearer {token}", nil)
 	}
 	return parts[1], nil
 }
@@ -50,7 +50,7 @@ func extractToken(c *gin.Context) (string, error) {
 func validateToken(tokenString string) (jwt.MapClaims, error) {
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		return nil, utils.NewAppError(utils.ErrInternal, http.StatusInternalServerError, "JWT_SECRET is not configured on the server")
+		return nil, utils.NewAppError(utils.ErrInternal, http.StatusInternalServerError, "JWT_SECRET is not configured on the server", nil)
 	}
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -61,11 +61,11 @@ func validateToken(tokenString string) (jwt.MapClaims, error) {
 	})
 
 	if err != nil || !token.Valid {
-		return nil, utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Invalid or expired token")
+		return nil, utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Invalid or expired token", nil)
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
 		return claims, nil
 	}
-	return nil, utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Invalid token claims")
+	return nil, utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Invalid token claims", nil)
 }

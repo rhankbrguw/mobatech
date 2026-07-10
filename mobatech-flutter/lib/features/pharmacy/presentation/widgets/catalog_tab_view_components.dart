@@ -7,6 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 
 import '../widgets/shimmer_loading.dart';
 import 'catalog_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SearchAndCategories extends StatelessWidget {
   final TextEditingController searchController;
@@ -28,7 +29,7 @@ class SearchAndCategories extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -55,7 +56,7 @@ class SearchAndCategories extends StatelessWidget {
                   ),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
+                    horizontal: AppSpacing.md,
                     vertical: 14,
                   ),
                 ),
@@ -88,7 +89,7 @@ class SearchAndCategories extends StatelessWidget {
                   children: List.generate(
                     4,
                     (index) => const Padding(
-                      padding: EdgeInsets.only(right: 8.0),
+                      padding: EdgeInsets.only(right: AppSpacing.sm),
                       child: ShimmerLoading(
                         width: 80,
                         height: 35,

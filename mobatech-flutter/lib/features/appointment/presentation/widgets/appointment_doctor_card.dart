@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AppointmentDoctorCard extends StatelessWidget {
   final dynamic appointment;
@@ -9,7 +10,7 @@ class AppointmentDoctorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(20),
@@ -27,9 +28,9 @@ class AppointmentDoctorCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             child:
                 appointment.doctor?.imageUrl != null &&
-                    appointment.doctor!.imageUrl.isNotEmpty
+                    (appointment.doctor?.imageUrl?.isNotEmpty ?? false)
                 ? Image.network(
-                    appointment.doctor!.imageUrl
+                    (appointment.doctor?.imageUrl ?? '')
                         .replaceAll('/svg', '/png')
                         .replaceAll('.svg', '.png'),
                     width: 60,
@@ -66,7 +67,7 @@ class AppointmentDoctorCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
-                    vertical: 4,
+                    vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.primaryLight,

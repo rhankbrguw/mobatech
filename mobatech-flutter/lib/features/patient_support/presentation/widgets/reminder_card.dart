@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/reminder.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ReminderCard extends StatelessWidget {
   final Reminder reminder;
@@ -38,7 +39,7 @@ class ReminderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm12),
       decoration: BoxDecoration(
         color: reminder.isRead
             ? AppColors.backgroundWhite
@@ -64,12 +65,12 @@ class ReminderCard extends StatelessWidget {
           child: InkWell(
             onTap: onTap,
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppSpacing.md),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(AppSpacing.sm12),
                     decoration: BoxDecoration(
                       color: _getIconColor(
                         reminder.type,

@@ -6,6 +6,7 @@ import 'package:mobatech_app/core/utils/error_handler.dart';
 import 'package:mobatech_app/core/widgets/skeleton_loader.dart';
 import '../../../appointment/providers/appointment_provider.dart';
 import 'agenda_card.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AgendaListWidget extends ConsumerWidget {
   const AgendaListWidget({super.key});
@@ -18,7 +19,7 @@ class AgendaListWidget extends ConsumerWidget {
       data: (appointments) {
         if (appointments.isEmpty) {
           return const Padding(
-            padding: EdgeInsets.all(24.0),
+            padding: EdgeInsets.all(AppSpacing.lg),
             child: Center(
               child: Text(
                 CoreStrings.emptyAgenda,
@@ -38,7 +39,7 @@ class AgendaListWidget extends ConsumerWidget {
         );
       },
       loading: () => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
         child: CardSkeletonLoader(count: 1),
       ),
       error: (err, stack) => Center(child: Text(ErrorHandler.getMessage(err))),

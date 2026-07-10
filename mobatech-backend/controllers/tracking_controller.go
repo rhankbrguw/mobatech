@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"context"
+
 	"backend/constants"
 	"backend/services"
 	"backend/utils"
@@ -34,9 +36,9 @@ func (tc *TrackingController) TrackAmbulance(c *gin.Context) {
 		return
 	}
 
-	emergency, err := tc.service.GetByID(uint(id))
+	emergency, err := tc.service.GetByID(c.Request.Context(), uint(id))
 	if err != nil {
-		c.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, "Emergency request not found"))
+		c.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, constants.MsgEmergencyNotFound, nil))
 		return
 	}
 
@@ -47,10 +49,10 @@ func (tc *TrackingController) TrackAmbulance(c *gin.Context) {
 	}
 	defer conn.Close()
 
-	tc.startSimulation(conn, uint(id), emergency.Latitude, emergency.Longitude)
+	tc.startSimulation(c.Request.Context(), conn, uint(id), emergency.Latitude, emergency.Longitude)
 }
 
-func (tc *TrackingController) startSimulation(conn *websocket.Conn, reqID uint, patientLat, patientLng float64) {
+func (tc *TrackingController) startSimulation(ctx context.Context, conn *websocket.Conn, reqID uint, patientLat, patientLng float64) {
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 	angle := rng.Float64() * 2 * math.Pi
 	distance := constants.SimulatedDistance + rng.Float64()*constants.SimulatedDistanceRand
@@ -59,13 +61,13 @@ func (tc *TrackingController) startSimulation(conn *websocket.Conn, reqID uint, 
 	ambLng := patientLng + distance*math.Sin(angle)
 	totalSteps := 15 + rng.Intn(6)
 
-	tc.sendInitialStatus(conn, reqID)
-	tc.runMovementLoop(conn, reqID, totalSteps, patientLat, patientLng, ambLat, ambLng)
-	tc.finalizeArrival(conn, reqID, patientLat, patientLng)
+	tc.sendInitialStatus(ctx, conn, reqID)
+	tc.runMovementLoop(ctx, conn, reqID, totalSteps, patientLat, patientLng, ambLat, ambLng)
+	tc.finalizeArrival(ctx, conn, reqID, patientLat, patientLng)
 }
 
-func (tc *TrackingController) sendInitialStatus(conn *websocket.Conn, reqID uint) {
-	tc.service.UpdateStatus(reqID, constants.StatusDispatched)
+func (tc *TrackingController) sendInitialStatus(ctx context.Context, conn *websocket.Conn, reqID uint) {
+	tc.service.UpdateStatus(ctx, reqID, constants.StatusDispatched)
 	conn.WriteJSON(map[string]interface{}{
 		"type":    "status_update",
 		"status":  constants.StatusDispatched,
@@ -73,7 +75,7 @@ func (tc *TrackingController) sendInitialStatus(conn *websocket.Conn, reqID uint
 	})
 }
 
-func (tc *TrackingController) runMovementLoop(conn *websocket.Conn, reqID uint, totalSteps int, pLat, pLng, aLat, aLng float64) {
+func (tc *TrackingController) runMovementLoop(ctx context.Context, conn *websocket.Conn, reqID uint, totalSteps int, pLat, pLng, aLat, aLng float64) {
 	for step := 1; step <= totalSteps; step++ {
 		time.Sleep(constants.SimulatedTimeSleepSec * time.Second)
 		progress := float64(step) / float64(totalSteps)
@@ -82,7 +84,7 @@ func (tc *TrackingController) runMovementLoop(conn *websocket.Conn, reqID uint, 
 		curLng := aLng + (pLng-aLng)*progress
 		remaining := totalSteps - step
 
-		tc.service.UpdateTracking(reqID, curLat, curLng, remaining, constants.StatusDispatched)
+		tc.service.UpdateTracking(ctx, reqID, curLat, curLng, remaining, constants.StatusDispatched)
 		err := conn.WriteJSON(map[string]interface{}{
 			"type":              "location_update",
 			"ambulance_lat":     curLat,
@@ -98,8 +100,8 @@ func (tc *TrackingController) runMovementLoop(conn *websocket.Conn, reqID uint, 
 	}
 }
 
-func (tc *TrackingController) finalizeArrival(conn *websocket.Conn, reqID uint, pLat, pLng float64) {
-	tc.service.UpdateTracking(reqID, pLat, pLng, 0, "Arrived")
+func (tc *TrackingController) finalizeArrival(ctx context.Context, conn *websocket.Conn, reqID uint, pLat, pLng float64) {
+	tc.service.UpdateTracking(ctx, reqID, pLat, pLng, 0, "Arrived")
 	conn.WriteJSON(map[string]interface{}{
 		"type":    "status_update",
 		"status":  "Arrived",

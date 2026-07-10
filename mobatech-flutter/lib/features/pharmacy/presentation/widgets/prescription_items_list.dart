@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../models/prescription.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class PrescriptionItemsList extends StatelessWidget {
   final Prescription prescription;
@@ -24,7 +25,7 @@ class PrescriptionItemsList extends StatelessWidget {
         const SizedBox(height: 8),
         ...prescription.items.map(
           (item) => Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -39,7 +40,7 @@ class PrescriptionItemsList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item.medicineName,
+                        item.displayName,
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 13,

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../providers/patient_support_provider.dart';
 import '../widgets/reminder_card.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class NotificationScreen extends ConsumerWidget {
   const NotificationScreen({super.key});
@@ -64,7 +65,7 @@ class NotificationScreen extends ConsumerWidget {
             onRefresh: () =>
                 ref.read(remindersProvider.notifier).loadReminders(),
             child: ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.md),
               itemCount: reminders.length,
               itemBuilder: (context, index) {
                 final reminder = reminders[index];

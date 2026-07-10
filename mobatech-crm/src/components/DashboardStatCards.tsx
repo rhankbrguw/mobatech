@@ -25,8 +25,8 @@ export function DashboardStatCards({ stats }: { stats: DashboardStats }) {
         value={stats.patients}
         sub="Terdaftar"
         href="/dashboard/patients"
-        colorClass="bg-blue-500 text-blue-600"
-        iconBgClass="bg-blue-500/10"
+        colorClass="bg-info text-info"
+        iconBgClass="bg-info-muted"
       />
       <StatCard
         icon={<CalendarDays size={20} />}
@@ -34,8 +34,8 @@ export function DashboardStatCards({ stats }: { stats: DashboardStats }) {
         value={stats.totalAppointments}
         sub={`${stats.pendingAppointments} Menunggu`}
         href="/dashboard/appointments"
-        colorClass="bg-purple-500 text-purple-600"
-        iconBgClass="bg-purple-500/10"
+        colorClass="bg-accent text-accent"
+        iconBgClass="bg-accent-muted"
       />
       <StatCard
         icon={<Stethoscope size={20} />}
@@ -43,8 +43,8 @@ export function DashboardStatCards({ stats }: { stats: DashboardStats }) {
         value={stats.doctors}
         sub={`${stats.polyclinics} Poliklinik`}
         href="/dashboard/doctors"
-        colorClass="bg-emerald-500 text-emerald-600"
-        iconBgClass="bg-emerald-500/10"
+        colorClass="bg-success text-success"
+        iconBgClass="bg-success-muted"
       />
       <StatCard
         icon={<Siren size={20} />}
@@ -52,8 +52,8 @@ export function DashboardStatCards({ stats }: { stats: DashboardStats }) {
         value={stats.activeEmergencies}
         sub="Kasus Aktif"
         href="/dashboard/emergencies"
-        colorClass="bg-red-500 text-red-600"
-        iconBgClass="bg-red-500/10"
+        colorClass="bg-error text-error"
+        iconBgClass="bg-error-muted"
       />
     </div>
   );

@@ -7,6 +7,7 @@ import 'package:mobatech_app/core/utils/error_handler.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/profile_provider.dart';
 import 'add_family_member_form_fields.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AddFamilyMemberModalContent extends StatefulWidget {
   final WidgetRef ref;
@@ -90,7 +91,7 @@ class _AddFamilyMemberModalContentState
             onSurface: AppColors.textDark,
           ),
         ),
-        child: child!,
+        child: child ?? const SizedBox(),
       ),
     );
     if (date != null && mounted) {
@@ -111,7 +112,7 @@ class _AddFamilyMemberModalContentState
         color: AppColors.backgroundScreen,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(AppSpacing.lg),
           child: AddFamilyMemberFormFields(
             nameController: _nameController,
             relationController: _relationController,

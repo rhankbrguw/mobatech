@@ -7,6 +7,7 @@ import '../providers/profile_provider.dart';
 import '../widgets/profile_loading_skeleton.dart';
 import '../widgets/profile_user_card.dart';
 import '../widgets/profile_menu_section.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/network/dio_client.dart';
@@ -15,6 +16,7 @@ import '../widgets/medical_summary_card.dart';
 import 'package:mobatech_app/core/constants/strings/auth_strings.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 part 'profile_screen_parts.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -50,7 +52,7 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(24),
+                        padding: const EdgeInsets.all(AppSpacing.lg),
                         child: Column(
                           children: [
                             ProfileUserCard(user: user),

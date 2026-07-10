@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"net/http"
 	"backend/utils"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func AdminMiddleware() gin.HandlerFunc {

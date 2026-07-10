@@ -8,6 +8,7 @@ import '../widgets/doctor_card.dart';
 import '../../providers/appointment_provider.dart';
 import 'doctor_detail_screen.dart';
 import '../widgets/appointment_sliver_header.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class AppointmentScreen extends ConsumerStatefulWidget {
   const AppointmentScreen({super.key});
@@ -66,7 +67,7 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
           slivers: [
             AppointmentSliverHeader(searchController: _searchController),
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm12),
               sliver: doctorsAsync.when(
                 data: (doctors) {
                   if (doctors.isEmpty) {
@@ -87,7 +88,7 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
                       (context, index) {
                         if (index == doctors.length) {
                           return const Padding(
-                            padding: EdgeInsets.all(16.0),
+                            padding: EdgeInsets.all(AppSpacing.md),
                             child: Center(
                               child: CupertinoActivityIndicator(radius: 14),
                             ),

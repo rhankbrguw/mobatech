@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../appointment/providers/polyclinic_provider.dart';
 import 'search_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SearchServiceResults extends ConsumerWidget {
   final String query;
@@ -31,7 +32,7 @@ class SearchServiceResults extends ConsumerWidget {
           return const SearchEmptyState(msg: 'Layanan tidak ditemukan');
         }
         return ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.md),
           itemCount: filtered.length,
           itemBuilder: (context, i) => SearchItem(
             icon: Icons.local_hospital,

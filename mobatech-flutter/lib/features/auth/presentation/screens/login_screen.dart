@@ -3,6 +3,7 @@ import 'package:mobatech_app/core/constants/strings/auth_strings.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../widgets/login_form.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -87,7 +88,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+                    padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.xl, AppSpacing.lg, AppSpacing.lg),
                     child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [

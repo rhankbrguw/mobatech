@@ -2,14 +2,15 @@ package services
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 )
 
-func (s *chatService) buildRAGPrompt(userMessage string) string {
-	ragContext, anonymizedQuery := s.fetchRAGContext(userMessage)
+func (s *chatService) buildRAGPrompt(ctx context.Context, userMessage string) string {
+	ragContext, anonymizedQuery := s.fetchRAGContext(ctx, userMessage)
 	if anonymizedQuery == "" {
 		anonymizedQuery = userMessage
 	}
@@ -19,7 +20,7 @@ func (s *chatService) buildRAGPrompt(userMessage string) string {
 	return anonymizedQuery
 }
 
-func (s *chatService) fetchRAGContext(query string) (string, string) {
+func (s *chatService) fetchRAGContext(ctx context.Context, query string) (string, string) {
 	payload, _ := json.Marshal(map[string]string{"query": query})
 	resp, err := http.Post("http://127.0.0.1:8000/api/rag/context", "application/json", bytes.NewBuffer(payload))
 	if err != nil || resp.StatusCode != 200 {

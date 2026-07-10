@@ -8,6 +8,7 @@ import '../widgets/chat_input_area.dart';
 import '../widgets/chatbot_header.dart';
 import '../widgets/chatbot_history_modal.dart';
 import '../providers/chat_provider.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ChatbotScreen extends ConsumerWidget {
   const ChatbotScreen({super.key});
@@ -38,12 +39,12 @@ class ChatbotScreen extends ConsumerWidget {
                 child: isLoadingHistory
                     ? ListView.builder(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 24,
+                          horizontal: AppSpacing.md,
+                          vertical: AppSpacing.lg,
                         ),
                         itemCount: 4,
                         itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
                           child: ChatBubble(
                             text: '',
                             time: '',
@@ -65,8 +66,8 @@ class ChatbotScreen extends ConsumerWidget {
                       )
                     : ListView.builder(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 24,
+                          horizontal: AppSpacing.md,
+                          vertical: AppSpacing.lg,
                         ),
                         itemCount: messages.length,
                         itemBuilder: (context, index) {
@@ -74,7 +75,7 @@ class ChatbotScreen extends ConsumerWidget {
                           final isUser = msg['role'] == 'user';
 
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
+                            padding: const EdgeInsets.only(bottom: AppSpacing.md),
                             child: ChatBubble(
                               text: msg['content'] ?? '',
                               time: '',

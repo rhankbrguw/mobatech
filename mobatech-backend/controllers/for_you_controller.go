@@ -20,7 +20,7 @@ func NewForYouController(service services.ForYouService) *ForYouController {
 func (ctrl *ForYouController) GetRecommendations(c *gin.Context) {
 	userIDStr, exists := c.Get("user_id")
 	if !exists {
-		c.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "UNAUTHENTICATED"))
+		c.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "UNAUTHENTICATED", nil))
 		return
 	}
 

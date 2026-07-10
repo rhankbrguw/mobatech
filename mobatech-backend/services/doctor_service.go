@@ -1,17 +1,21 @@
 package services
 
 import (
+	"fmt"
+
+	"context"
+
 	"backend/models"
 	"backend/repositories"
 	"backend/utils"
 )
 
 type DoctorService interface {
-	GetAllDoctors(search string, filter string, specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, int64, error)
-	GetDoctorByID(id uint) (*models.Doctor, error)
-	CreateDoctor(doctor *models.Doctor) error
-	UpdateDoctor(id uint, input *models.Doctor) (*models.Doctor, error)
-	DeleteDoctor(id uint) error
+	GetAllDoctors(ctx context.Context, search string, filter string, specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, int64, error)
+	GetDoctorByID(ctx context.Context, id uint) (*models.Doctor, error)
+	CreateDoctor(ctx context.Context, doctor *models.Doctor) error
+	UpdateDoctor(ctx context.Context, id uint, input *models.Doctor) (*models.Doctor, error)
+	DeleteDoctor(ctx context.Context, id uint) error
 }
 
 type doctorService struct {
@@ -22,41 +26,41 @@ func NewDoctorService(doctorRepo repositories.DoctorRepository) DoctorService {
 	return &doctorService{doctorRepo}
 }
 
-func (s *doctorService) GetAllDoctors(search string, filter string, specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, int64, error) {
-	return s.doctorRepo.FindAll(search, filter, specialization, polyclinicID, limit, offset)
+func (s *doctorService) GetAllDoctors(ctx context.Context, search string, filter string, specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, int64, error) {
+	return s.doctorRepo.FindAll(ctx, search, filter, specialization, polyclinicID, limit, offset)
 }
 
-func (s *doctorService) GetDoctorByID(id uint) (*models.Doctor, error) {
-	return s.doctorRepo.FindByID(id)
+func (s *doctorService) GetDoctorByID(ctx context.Context, id uint) (*models.Doctor, error) {
+	return s.doctorRepo.FindByID(ctx, id)
 }
 
-func (s *doctorService) CreateDoctor(doctor *models.Doctor) error {
+func (s *doctorService) CreateDoctor(ctx context.Context, doctor *models.Doctor) error {
 	doctor.IsActive = true
-	err := s.doctorRepo.Create(doctor)
+	err := s.doctorRepo.Create(ctx, doctor)
 	if err == nil {
 		utils.TriggerAsyncRAGSync()
 	}
-	return err
+	return fmt.Errorf("doctorService.CreateDoctor: %w", err)
 }
 
-func (s *doctorService) UpdateDoctor(id uint, input *models.Doctor) (*models.Doctor, error) {
-	doctor, err := s.doctorRepo.FindByID(id)
+func (s *doctorService) UpdateDoctor(ctx context.Context, id uint, input *models.Doctor) (*models.Doctor, error) {
+	doctor, err := s.doctorRepo.FindByID(ctx, id)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("doctorService.UpdateDoctor: %w", err)
 	}
 
-	s.applyDoctorUpdates(doctor, input)
+	s.applyDoctorUpdates(ctx, doctor, input)
 
-	err = s.doctorRepo.Update(doctor)
+	err = s.doctorRepo.Update(ctx, doctor)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("doctorService.UpdateDoctor: %w", err)
 	}
 
 	utils.TriggerAsyncRAGSync()
 	return doctor, nil
 }
 
-func (s *doctorService) applyDoctorUpdates(doctor, input *models.Doctor) {
+func (s *doctorService) applyDoctorUpdates(ctx context.Context, doctor, input *models.Doctor) {
 	if input.Name != "" {
 		doctor.Name = input.Name
 	}
@@ -75,10 +79,10 @@ func (s *doctorService) applyDoctorUpdates(doctor, input *models.Doctor) {
 	doctor.PolyclinicID = input.PolyclinicID
 }
 
-func (s *doctorService) DeleteDoctor(id uint) error {
-	err := s.doctorRepo.Delete(id)
+func (s *doctorService) DeleteDoctor(ctx context.Context, id uint) error {
+	err := s.doctorRepo.Delete(ctx, id)
 	if err == nil {
 		utils.TriggerAsyncRAGSync()
 	}
-	return err
+	return fmt.Errorf("doctorService.DeleteDoctor: %w", err)
 }

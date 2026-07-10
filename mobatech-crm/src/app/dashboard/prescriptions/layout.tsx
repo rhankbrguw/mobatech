@@ -1,4 +1,4 @@
-export const metadata = { title: "Prescriptions | Mobatech CRM", description: "Mobatech CRM Prescriptions Management" };
+export const metadata = { title: "Manajemen Resep | Hermina CRM", description: "Hermina CRM Manajemen Resep" };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;

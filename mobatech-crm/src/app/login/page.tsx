@@ -46,7 +46,7 @@ export default function LoginPage() {
 
       <button
         onClick={toggleTheme}
-        className="absolute top-6 right-6 p-2 rounded-xl border glass-panel hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+        className="absolute top-6 right-6 p-2 rounded-xl border glass-panel hover:bg-overlay-dark dark:hover:bg-overlay-light transition-colors cursor-pointer"
         aria-label="Toggle Theme"
       >
         {dark ? "☀️" : "🌙"}

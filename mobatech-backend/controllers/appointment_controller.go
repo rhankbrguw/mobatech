@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"backend/constants"
 	"backend/models"
 	"backend/services"
 	"backend/utils"
@@ -21,7 +22,7 @@ func NewAppointmentController(appointmentService services.AppointmentService) *A
 func (c *AppointmentController) GetAllAppointments(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
-	
+
 	roleFloat, _ := ctx.Get("role")
 	role := ""
 	if roleFloat != nil {
@@ -34,14 +35,14 @@ func (c *AppointmentController) GetAllAppointments(ctx *gin.Context) {
 		userID = uint(userIDFloat.(float64))
 	}
 
-	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
 	if page < 1 {
 		page = 1
 	}
-	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
 	offset := (page - 1) * limit
 
-	appointments, totalCount, err := c.appointmentService.GetAllAppointments(search, filter, userID, role, limit, offset)
+	appointments, totalCount, err := c.appointmentService.GetAllAppointments(ctx.Request.Context(), search, filter, userID, role, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -52,19 +53,19 @@ func (c *AppointmentController) GetAllAppointments(ctx *gin.Context) {
 func (c *AppointmentController) GetUserAppointments(ctx *gin.Context) {
 	userIDFloat, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
 		return
 	}
 	userID := uint(userIDFloat.(float64))
 
-	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
 	if page < 1 {
 		page = 1
 	}
-	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
 	offset := (page - 1) * limit
 
-	appointments, totalCount, err := c.appointmentService.GetUserAppointments(userID, limit, offset)
+	appointments, totalCount, err := c.appointmentService.GetUserAppointments(ctx.Request.Context(), userID, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -75,20 +76,20 @@ func (c *AppointmentController) GetUserAppointments(ctx *gin.Context) {
 func (c *AppointmentController) BookAppointment(ctx *gin.Context) {
 	userIDFloat, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
 		return
 	}
 	userID := uint(userIDFloat.(float64))
 
 	var req models.Appointment
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
-	appointment, err := c.appointmentService.BookAppointment(userID, &req)
+	appointment, err := c.appointmentService.BookAppointment(ctx.Request.Context(), userID, &req)
 	if err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
@@ -98,15 +99,15 @@ func (c *AppointmentController) BookAppointment(ctx *gin.Context) {
 func (c *AppointmentController) CancelAppointment(ctx *gin.Context) {
 	userIDFloat, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
 		return
 	}
 	userID := uint(userIDFloat.(float64))
 
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 
-	if err := c.appointmentService.CancelAppointment(uint(id), userID, false); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+	if err := c.appointmentService.CancelAppointment(ctx.Request.Context(), uint(id), userID, false); err != nil {
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
@@ -116,8 +117,8 @@ func (c *AppointmentController) CancelAppointment(ctx *gin.Context) {
 func (c *AppointmentController) AdminCancelAppointment(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 
-	if err := c.appointmentService.CancelAppointment(uint(id), 0, true); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+	if err := c.appointmentService.CancelAppointment(ctx.Request.Context(), uint(id), 0, true); err != nil {
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
@@ -127,8 +128,8 @@ func (c *AppointmentController) AdminCancelAppointment(ctx *gin.Context) {
 func (c *AppointmentController) ApproveAppointment(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 
-	if err := c.appointmentService.ApproveAppointment(uint(id)); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+	if err := c.appointmentService.ApproveAppointment(ctx.Request.Context(), uint(id)); err != nil {
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
@@ -138,8 +139,8 @@ func (c *AppointmentController) ApproveAppointment(ctx *gin.Context) {
 func (c *AppointmentController) CompleteAppointment(ctx *gin.Context) {
 	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
 
-	if err := c.appointmentService.CompleteAppointment(uint(id)); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+	if err := c.appointmentService.CompleteAppointment(ctx.Request.Context(), uint(id)); err != nil {
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 

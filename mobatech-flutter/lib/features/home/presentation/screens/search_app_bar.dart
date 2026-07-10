@@ -5,6 +5,7 @@ import 'package:mobatech_app/core/constants/strings/home_strings.dart';
 import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'search_screen.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SearchAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final TextEditingController searchController;
@@ -57,8 +58,8 @@ class SearchAppBar extends ConsumerWidget implements PreferredSizeWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 4.0,
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.xs,
               ),
               child: Container(
                 height: 40,

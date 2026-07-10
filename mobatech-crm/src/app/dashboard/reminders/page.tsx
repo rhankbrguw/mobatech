@@ -4,7 +4,7 @@ import { serverFetch } from "@/lib/serverApi";
 export const revalidate = 60; // Cache for 60 seconds (ISR)
 
 
-export const metadata = { title: "Reminders | Mobatech CRM", description: "Mobatech CRM Reminders Management" };
+export const metadata = { title: "Manajemen Pengingat | Hermina CRM", description: "Hermina CRM Manajemen Pengingat" };
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const page = (await searchParams).page || "1";

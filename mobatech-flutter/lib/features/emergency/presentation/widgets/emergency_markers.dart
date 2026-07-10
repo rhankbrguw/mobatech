@@ -3,6 +3,7 @@ import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 Marker buildPatientMarker(LatLng position) {
   return Marker(
@@ -13,7 +14,7 @@ Marker buildPatientMarker(LatLng position) {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
           decoration: BoxDecoration(
             color: AppColors.errorRed,
             borderRadius: BorderRadius.circular(8),
@@ -45,7 +46,7 @@ Marker buildAmbulanceMarker(LatLng position) {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
           decoration: BoxDecoration(
             color: AppColors.ambulanceBlue,
             borderRadius: BorderRadius.circular(8),

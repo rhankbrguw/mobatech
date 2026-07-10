@@ -24,9 +24,9 @@ export function AiAuditChatHistory({
         ) : (
           <div className="divide-y divide-glass-border">
             {sessions.map((session) => (
-              <div key={session.id} className="bg-black/5 dark:bg-white/5">
+              <div key={session.id} className="bg-overlay-dark dark:bg-overlay-light">
                 <div
-                  className="p-4 flex justify-between items-center cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                  className="p-4 flex justify-between items-center cursor-pointer hover:bg-overlay-dark dark:hover:bg-overlay-light transition-colors"
                   onClick={() => setExpandedSession(expandedSession === session.id ? null : session.id)}
                 >
                   <div>
@@ -57,7 +57,7 @@ export function AiAuditChatHistory({
                               className={`p-3 rounded-2xl max-w-[80%] text-sm ${
                                 msg.role === "user"
                                   ? "bg-primary text-primary-foreground rounded-tr-sm"
-                                  : "bg-black/5 dark:bg-white/10 text-foreground rounded-tl-sm"
+                                  : "bg-overlay-dark dark:bg-overlay-light text-foreground rounded-tl-sm"
                               }`}
                             >
                               {msg.content}

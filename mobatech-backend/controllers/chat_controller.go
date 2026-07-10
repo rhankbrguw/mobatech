@@ -1,15 +1,20 @@
 package controllers
+
 import (
+	"backend/constants"
 	"backend/services"
 	"backend/utils"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
+
 type ChatController struct {
 	service services.ChatService
 }
+
 func NewChatController(service services.ChatService) *ChatController {
 	return &ChatController{service}
 }
@@ -18,12 +23,12 @@ func (c *ChatController) CreateSession(ctx *gin.Context) {
 		Title string `json:"title"`
 	}
 	if err := ctx.BindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 	userIDStr, _ := ctx.Get("user_id")
 	userID := fmt.Sprintf("%v", userIDStr)
-	session, err := c.service.CreateSession(userID, req.Title)
+	session, err := c.service.CreateSession(ctx.Request.Context(), userID, req.Title)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -33,11 +38,11 @@ func (c *ChatController) CreateSession(ctx *gin.Context) {
 func (c *ChatController) GetUserSessions(ctx *gin.Context) {
 	userIDStr, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
 		return
 	}
 	userID := fmt.Sprintf("%v", userIDStr)
-	sessions, err := c.service.GetUserSessions(userID)
+	sessions, err := c.service.GetUserSessions(ctx.Request.Context(), userID)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -50,7 +55,7 @@ func (c *ChatController) GetSessionMessages(ctx *gin.Context) {
 		ctx.Error(utils.NewValidationError("invalid session id"))
 		return
 	}
-	messages, err := c.service.GetSessionMessages(uint(sessionID))
+	messages, err := c.service.GetSessionMessages(ctx.Request.Context(), uint(sessionID))
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -60,11 +65,11 @@ func (c *ChatController) GetSessionMessages(ctx *gin.Context) {
 func (c *ChatController) DeleteSession(ctx *gin.Context) {
 	userID, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
 		return
 	}
 	sessionID, _ := strconv.Atoi(ctx.Param("id"))
-	err := c.service.DeleteSession(uint(userID.(float64)), uint(sessionID))
+	err := c.service.DeleteSession(ctx.Request.Context(), uint(userID.(float64)), uint(sessionID))
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -74,7 +79,7 @@ func (c *ChatController) DeleteSession(ctx *gin.Context) {
 func (c *ChatController) RenameSession(ctx *gin.Context) {
 	userID, exists := ctx.Get("user_id")
 	if !exists {
-		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
 		return
 	}
 	sessionID, err := strconv.Atoi(ctx.Param("id"))
@@ -86,10 +91,10 @@ func (c *ChatController) RenameSession(ctx *gin.Context) {
 		Title string `json:"title"`
 	}
 	if err := ctx.BindJSON(&req); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
-	err = c.service.RenameSession(uint(userID.(float64)), uint(sessionID), req.Title)
+	err = c.service.RenameSession(ctx.Request.Context(), uint(userID.(float64)), uint(sessionID), req.Title)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -98,12 +103,12 @@ func (c *ChatController) RenameSession(ctx *gin.Context) {
 }
 func (c *ChatController) GetAllSessions(ctx *gin.Context) {
 	search := ctx.Query("search")
-	pageStr := ctx.DefaultQuery("page", "1")
-	limitStr := ctx.DefaultQuery("limit", "10")
+	pageStr := ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage)
+	limitStr := ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit)
 	page, _ := strconv.Atoi(pageStr)
 	limit, _ := strconv.Atoi(limitStr)
 	offset := (page - 1) * limit
-	sessions, totalCount, err := c.service.GetAllSessions(search, limit, offset)
+	sessions, totalCount, err := c.service.GetAllSessions(ctx.Request.Context(), search, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

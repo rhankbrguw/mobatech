@@ -1,3 +1,4 @@
+
 part of 'settings_widgets.dart';
 
 class SwitchItem extends StatelessWidget {
@@ -17,7 +18,7 @@ class SwitchItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -74,7 +75,7 @@ class ActionItem extends StatelessWidget {
       child: InkWell(
         onTap: () => _handleTap(context),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.md),
           child: Row(children: _buildRowChildren()),
         ),
       ),
@@ -105,7 +106,7 @@ class ActionItem extends StatelessWidget {
       ),
       if (trailingText != null) ...[
         Text(
-          trailingText!,
+          trailingText ?? '',
           style: const TextStyle(fontSize: 14, color: AppColors.textGrey),
         ),
         const SizedBox(width: 8),

@@ -12,10 +12,10 @@ import (
 func (c *PharmacyController) AdminCreateCategory(ctx *gin.Context) {
 	var cat models.MedicineCategory
 	if err := ctx.ShouldBindJSON(&cat); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
-	if err := c.service.CreateCategory(&cat); err != nil {
+	if err := c.service.CreateCategory(ctx.Request.Context(), &cat); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -28,12 +28,12 @@ func (c *PharmacyController) AdminUpdateCategory(ctx *gin.Context) {
 
 	var cat models.MedicineCategory
 	if err := ctx.ShouldBindJSON(&cat); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 	cat.ID = uint(id)
 
-	if err := c.service.UpdateCategory(&cat); err != nil {
+	if err := c.service.UpdateCategory(ctx.Request.Context(), &cat); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -44,7 +44,7 @@ func (c *PharmacyController) AdminDeleteCategory(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, _ := strconv.Atoi(idStr)
 
-	if err := c.service.DeleteCategory(uint(id)); err != nil {
+	if err := c.service.DeleteCategory(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -54,10 +54,10 @@ func (c *PharmacyController) AdminDeleteCategory(ctx *gin.Context) {
 func (c *PharmacyController) AdminCreateMedicine(ctx *gin.Context) {
 	var med models.Medicine
 	if err := ctx.ShouldBindJSON(&med); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
-	if err := c.service.CreateMedicine(&med); err != nil {
+	if err := c.service.CreateMedicine(ctx.Request.Context(), &med); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -70,12 +70,12 @@ func (c *PharmacyController) AdminUpdateMedicine(ctx *gin.Context) {
 
 	var med models.Medicine
 	if err := ctx.ShouldBindJSON(&med); err != nil {
-		ctx.Error(utils.NewValidationError(err.Error()))
+		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 	med.ID = uint(id)
 
-	if err := c.service.UpdateMedicine(&med); err != nil {
+	if err := c.service.UpdateMedicine(ctx.Request.Context(), &med); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -86,7 +86,7 @@ func (c *PharmacyController) AdminDeleteMedicine(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, _ := strconv.Atoi(idStr)
 
-	if err := c.service.DeleteMedicine(uint(id)); err != nil {
+	if err := c.service.DeleteMedicine(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}

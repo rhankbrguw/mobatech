@@ -57,7 +57,7 @@ export function ScheduleForm({
   };
 
   return (
-    <form onSubmit={onSubmit} className="p-4 rounded-xl border border-glass-border bg-black/5 dark:bg-white/5 space-y-4">
+    <form onSubmit={onSubmit} className="p-4 rounded-xl border border-glass-border bg-overlay-dark dark:bg-overlay-light space-y-4">
       <p className="text-xs font-bold text-foreground/80 uppercase tracking-wider">{APP_STRINGS.schedules.addBtn}</p>
       <div className="grid grid-cols-2 gap-4">
         <div>

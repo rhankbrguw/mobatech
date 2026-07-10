@@ -96,15 +96,31 @@ class AppColors {
   static Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'pending':
-        return warningYellow;
+      case 'menunggu':
+        return warningOrange;
+      case 'approved':
+      case 'disetujui':
       case 'processing':
-        return ambulanceBlue;
+        return googleBlue;
       case 'ready':
+      case 'tersedia':
+      case 'available':
         return Colors.purple;
       case 'completed':
+      case 'selesai':
+      case 'active':
+      case 'aktif':
         return successGreen;
       case 'cancelled':
+      case 'dibatalkan':
+      case 'unavailable':
         return errorRed;
+      case 'dispatched':
+        return ambulanceBlueDark;
+      case 'arrived':
+        return arrivedGreen1;
+      case 'redeemed':
+        return textGrey;
       default:
         return textGrey;
     }

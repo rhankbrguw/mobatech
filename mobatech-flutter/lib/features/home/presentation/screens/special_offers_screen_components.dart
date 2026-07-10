@@ -1,3 +1,4 @@
+
 part of 'special_offers_screen.dart';
 
 class _PromoCard extends StatelessWidget {
@@ -57,7 +58,7 @@ class _PromoCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(AppSpacing.lg),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -90,7 +91,7 @@ class _PromoCard extends StatelessWidget {
 
   Widget _buildPromoLabel() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: AppSpacing.xs),
       decoration: BoxDecoration(
         color: AppColors.black10,
         borderRadius: BorderRadius.circular(8),

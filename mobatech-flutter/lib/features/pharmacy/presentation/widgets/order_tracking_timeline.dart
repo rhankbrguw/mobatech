@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../core/utils/formatters.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 part 'order_tracking_item.dart';
 
@@ -31,7 +32,7 @@ class OrderTrackingTimeline extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isCancelled) {
       return Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
           color: AppColors.backgroundWhite,
           borderRadius: BorderRadius.circular(16),
@@ -59,7 +60,7 @@ class OrderTrackingTimeline extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: AppColors.backgroundWhite,
         borderRadius: BorderRadius.circular(16),

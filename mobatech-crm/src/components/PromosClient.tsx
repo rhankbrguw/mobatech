@@ -15,6 +15,8 @@ import { Promo } from "@/types/api";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 import { PromoDetailView } from "./PromoDetailView";
 
+import { PromosTable } from "./PromosTable";
+
 export function PromosClient() {
   const [promos, setPromos] = useState<Promo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +45,7 @@ export function PromosClient() {
         setTotalPages(res.meta.total_pages);
       }
     } catch {
-      setToast({ isOpen: true, message: "Gagal memuat promo", type: "error" });
+      setToast({ isOpen: true, message: APP_STRINGS.common.loadError, type: "error" });
     } finally {
       setLoading(false);
     }
@@ -56,10 +58,10 @@ export function PromosClient() {
     if (!deleteConfirm) return;
     try {
       await api.delete(`/api/admin/promos/${deleteConfirm.id}`);
-      setToast({ isOpen: true, message: "Promo berhasil dihapus", type: "success" });
+      setToast({ isOpen: true, message: APP_STRINGS.common.deleteSuccess, type: "success" });
       loadPromos();
     } catch (err) {
-      setToast({ isOpen: true, message: err instanceof ApiError ? err.message : "Gagal menghapus", type: "error" });
+      setToast({ isOpen: true, message: err instanceof ApiError ? err.message : APP_STRINGS.common.deleteError, type: "error" });
     } finally {
       setDeleteConfirm(null);
     }
@@ -79,63 +81,13 @@ export function PromosClient() {
 
       <Card noPadding>
         <div className="w-full overflow-x-auto">
-          <table className="w-full text-center border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-glass-border bg-black/5 dark:bg-white/5 font-semibold">
-                <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Promo / Subtitle</th>
-                <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Warna Tema</th>
-                <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Status</th>
-                <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? <tr><td colSpan={4} className="p-8 text-center text-foreground/50">Memuat...</td></tr> : promos.map((p) => (
-                <tr key={p.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                    <div className="text-left"><div className="font-semibold">{p.title}</div><div className="text-xs text-foreground/60">{p.subtitle}</div></div>
-                  </td>
-                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 rounded-full border border-glass-border shadow-sm" style={{backgroundColor: p.themeColor}}></div>
-                      <span className="font-mono text-xs text-foreground/75">{p.themeColor}</span>
-                    </div>
-                  </td>
-                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${p.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
-                      {p.is_active ? "Aktif" : "Tidak Aktif"}
-                    </span>
-                  </td>
-                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                    <div className="flex justify-center">
-                      <ActionMenu
-                        items={[
-                          {
-                            label: "Lihat Detail",
-                            icon: <Eye size={14} />,
-                            onClick: () => { setViewingPromo(p); setIsDrawerOpen(true); }
-                          },
-                          {
-                            label: "Ubah",
-                            icon: <Edit size={14} />,
-                            onClick: () => { setEditingPromo(p); setShowModal(true); }
-                          },
-                          {
-                            label: "Hapus",
-                            icon: <Trash2 size={14} />,
-                            onClick: () => setDeleteConfirm({ id: p.id, title: `Hapus promo "${p.title}"?` }),
-                            variant: "danger" as const
-                          }
-                        ]}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {!loading && promos.length === 0 && (
-                <tr><td colSpan={4} className="p-8 text-center text-foreground/50">Tidak ada promo ditemukan.</td></tr>
-              )}
-            </tbody>
-          </table>
+          <PromosTable 
+            promos={promos} 
+            loading={loading} 
+            onView={(p) => { setViewingPromo(p); setIsDrawerOpen(true); }} 
+            onEdit={(p) => { setEditingPromo(p); setShowModal(true); }} 
+            onDelete={(id, title) => setDeleteConfirm({ id, title })} 
+          />
         </div>
       </Card>
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />

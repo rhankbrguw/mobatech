@@ -1,3 +1,4 @@
+
 part of 'onboarding_screen.dart';
 
 class _OnboardingImageSection extends StatelessWidget {
@@ -66,7 +67,7 @@ class _OnboardingTextSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
         child: FadeTransition(
           opacity: fadeController,
           child: Column(

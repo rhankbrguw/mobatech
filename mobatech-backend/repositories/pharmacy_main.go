@@ -1,44 +1,49 @@
 package repositories
 
 import (
+	"fmt"
+
+	"context"
+
 	"backend/models"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type PharmacyRepository interface {
-	GetAllCategories() ([]models.MedicineCategory, error)
-	GetCategoryByID(id uint) (*models.MedicineCategory, error)
-	CreateCategory(cat *models.MedicineCategory) error
-	UpdateCategory(cat *models.MedicineCategory) error
-	DeleteCategory(id uint) error
+	GetAllCategories(ctx context.Context) ([]models.MedicineCategory, error)
+	GetCategoryByID(ctx context.Context, id uint) (*models.MedicineCategory, error)
+	CreateCategory(ctx context.Context, cat *models.MedicineCategory) error
+	UpdateCategory(ctx context.Context, cat *models.MedicineCategory) error
+	DeleteCategory(ctx context.Context, id uint) error
 
-	GetAllMedicines(categoryID uint, search string, limit int, offset int) ([]models.Medicine, int64, error)
-	GetMedicineByID(id uint) (*models.Medicine, error)
-	CreateMedicine(med *models.Medicine) error
-	UpdateMedicine(med *models.Medicine) error
-	DeleteMedicine(id uint) error
-	UpdateMedicineStock(id uint, quantityChange int) error
+	GetAllMedicines(ctx context.Context, categoryID uint, search string, limit int, offset int) ([]models.Medicine, int64, error)
+	GetMedicineByID(ctx context.Context, id uint) (*models.Medicine, error)
+	CreateMedicine(ctx context.Context, med *models.Medicine) error
+	UpdateMedicine(ctx context.Context, med *models.Medicine) error
+	DeleteMedicine(ctx context.Context, id uint) error
+	UpdateMedicineStock(ctx context.Context, id uint, quantityChange int) error
 
-	GetPrescriptionsByUserID(userID uint) ([]models.Prescription, error)
-	GetPrescriptionByID(id uint) (*models.Prescription, error)
-	GetAllPrescriptions() ([]models.Prescription, error)
-	CreatePrescription(p *models.Prescription) error
-	DeletePrescription(id uint) error
-	UpdatePrescriptionStatus(id uint, status string) error
+	GetPrescriptionsByUserID(ctx context.Context, userID uint, limit int, offset int) ([]models.Prescription, int64, error)
+	GetPrescriptionByID(ctx context.Context, id uint) (*models.Prescription, error)
+	GetAllPrescriptions(ctx context.Context, limit int, offset int) ([]models.Prescription, int64, error)
+	CreatePrescription(ctx context.Context, p *models.Prescription) error
+	DeletePrescription(ctx context.Context, id uint) error
+	UpdatePrescriptionStatus(ctx context.Context, id uint, status string) error
 
-	GetOrdersByUserID(userID uint) ([]models.PharmacyOrder, error)
-	GetOrderByID(id uint) (*models.PharmacyOrder, error)
-	GetAllOrders(search string, filter string, limit int, offset int) ([]models.PharmacyOrder, int64, error)
-	CreateOrder(order *models.PharmacyOrder) error
-	UpdateOrderStatus(id uint, status string) error
-	UpdateOrderPayment(id uint, paymentStatus string) error
+	GetOrdersByUserID(ctx context.Context, userID uint) ([]models.PharmacyOrder, error)
+	GetOrderByID(ctx context.Context, id uint) (*models.PharmacyOrder, error)
+	GetAllOrders(ctx context.Context, search string, filter string, limit int, offset int) ([]models.PharmacyOrder, int64, error)
+	CreateOrder(ctx context.Context, order *models.PharmacyOrder) error
+	UpdateOrderStatus(ctx context.Context, id uint, status string) error
+	UpdateOrderPayment(ctx context.Context, id uint, paymentStatus string) error
 
-	GetCartByUserID(userID uint) (*models.Cart, error)
-	AddToCart(userID uint, medicineID uint, quantity int) error
-	UpdateCartItemQuantity(userID uint, cartItemID uint, quantity int) error
-	RemoveFromCart(userID uint, cartItemID uint) error
-	ClearCart(userID uint) error
+	GetCartByUserID(ctx context.Context, userID uint) (*models.Cart, error)
+	AddToCart(ctx context.Context, userID uint, medicineID uint, quantity int) error
+	UpdateCartItemQuantity(ctx context.Context, userID uint, cartItemID uint, quantity int) error
+	RemoveFromCart(ctx context.Context, userID uint, cartItemID uint) error
+	ClearCart(ctx context.Context, userID uint) error
 }
 type pharmacyRepository struct {
 	db *gorm.DB
@@ -48,31 +53,35 @@ func NewPharmacyRepository(db *gorm.DB) PharmacyRepository {
 	return &pharmacyRepository{db}
 }
 
-func (r *pharmacyRepository) GetAllCategories() ([]models.MedicineCategory, error) {
+func (r *pharmacyRepository) GetAllCategories(ctx context.Context) ([]models.MedicineCategory, error) {
 	var cats []models.MedicineCategory
-	err := r.db.Find(&cats).Error
-	return cats, err
+	if err := r.db.Find(&cats).Error; err != nil {
+		return nil, fmt.Errorf("pharmacyRepository.GetAllCategories: %w", err)
+	}
+	return cats, nil
 }
 
-func (r *pharmacyRepository) GetCategoryByID(id uint) (*models.MedicineCategory, error) {
+func (r *pharmacyRepository) GetCategoryByID(ctx context.Context, id uint) (*models.MedicineCategory, error) {
 	var cat models.MedicineCategory
-	err := r.db.First(&cat, id).Error
-	return &cat, err
+	if err := r.db.First(&cat, id).Error; err != nil {
+		return nil, fmt.Errorf("pharmacyRepository.GetCategoryByID: %w", err)
+	}
+	return &cat, nil
 }
 
-func (r *pharmacyRepository) CreateCategory(cat *models.MedicineCategory) error {
+func (r *pharmacyRepository) CreateCategory(ctx context.Context, cat *models.MedicineCategory) error {
 	return r.db.Create(cat).Error
 }
 
-func (r *pharmacyRepository) UpdateCategory(cat *models.MedicineCategory) error {
+func (r *pharmacyRepository) UpdateCategory(ctx context.Context, cat *models.MedicineCategory) error {
 	return r.db.Omit("created_at").Save(cat).Error
 }
 
-func (r *pharmacyRepository) DeleteCategory(id uint) error {
+func (r *pharmacyRepository) DeleteCategory(ctx context.Context, id uint) error {
 	return r.db.Delete(&models.MedicineCategory{}, id).Error
 }
 
-func (r *pharmacyRepository) GetAllMedicines(categoryID uint, search string, limit int, offset int) ([]models.Medicine, int64, error) {
+func (r *pharmacyRepository) GetAllMedicines(ctx context.Context, categoryID uint, search string, limit int, offset int) ([]models.Medicine, int64, error) {
 	var meds []models.Medicine
 	var totalCount int64
 	query := r.db.Model(&models.Medicine{})
@@ -87,36 +96,48 @@ func (r *pharmacyRepository) GetAllMedicines(categoryID uint, search string, lim
 	}
 
 	if err := query.Count(&totalCount).Error; err != nil {
-		return nil, 0, err
+		return nil, 0, fmt.Errorf("pharmacyRepository.GetAllMedicines: %w", err)
 	}
 
 	if limit > 0 {
 		query = query.Limit(limit).Offset(offset)
 	}
 
-	err := query.Preload("Category").Find(&meds).Error
-	return meds, totalCount, err
+	if err := query.Preload("Category").Find(&meds).Error; err != nil {
+		return nil, 0, fmt.Errorf("pharmacyRepository.GetAllMedicines: %w", err)
+	}
+	return meds, totalCount, nil
 }
 
-func (r *pharmacyRepository) GetMedicineByID(id uint) (*models.Medicine, error) {
+func (r *pharmacyRepository) GetMedicineByID(ctx context.Context, id uint) (*models.Medicine, error) {
 	var med models.Medicine
-	err := r.db.Preload("Category").First(&med, id).Error
-	return &med, err
+	if err := r.db.Preload("Category").First(&med, id).Error; err != nil {
+		return nil, fmt.Errorf("pharmacyRepository.GetMedicineByID: %w", err)
+	}
+	return &med, nil
 }
 
-func (r *pharmacyRepository) CreateMedicine(med *models.Medicine) error {
+func (r *pharmacyRepository) CreateMedicine(ctx context.Context, med *models.Medicine) error {
 	return r.db.Create(med).Error
 }
 
-func (r *pharmacyRepository) UpdateMedicine(med *models.Medicine) error {
+func (r *pharmacyRepository) UpdateMedicine(ctx context.Context, med *models.Medicine) error {
 	return r.db.Omit("created_at").Save(med).Error
 }
 
-func (r *pharmacyRepository) DeleteMedicine(id uint) error {
+func (r *pharmacyRepository) DeleteMedicine(ctx context.Context, id uint) error {
 	return r.db.Delete(&models.Medicine{}, id).Error
 }
 
-func (r *pharmacyRepository) UpdateMedicineStock(id uint, quantityChange int) error {
-	return r.db.Model(&models.Medicine{}).Where("id = ?", id).
-		UpdateColumn("stock", gorm.Expr("stock + ?", quantityChange)).Error
+func (r *pharmacyRepository) UpdateMedicineStock(ctx context.Context, id uint, quantityChange int) error {
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		var med models.Medicine
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&med, id).Error; err != nil {
+			return fmt.Errorf("pharmacyRepository.UpdateMedicineStock: %w", err)
+		}
+		if med.Stock+quantityChange < 0 {
+			return fmt.Errorf("pharmacyRepository.UpdateMedicineStock: insufficient stock")
+		}
+		return tx.Model(&med).UpdateColumn("stock", med.Stock+quantityChange).Error
+	})
 }

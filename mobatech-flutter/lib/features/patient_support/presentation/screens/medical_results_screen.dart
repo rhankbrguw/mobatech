@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../providers/patient_support_provider.dart';
 import '../widgets/result_card.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class MedicalResultsScreen extends ConsumerWidget {
   const MedicalResultsScreen({super.key});
@@ -64,7 +65,7 @@ class MedicalResultsScreen extends ConsumerWidget {
           return RefreshIndicator(
             onRefresh: () => ref.refresh(medicalResultsProvider.future),
             child: ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.md),
               itemCount: results.length,
               itemBuilder: (context, index) {
                 final result = results[index];

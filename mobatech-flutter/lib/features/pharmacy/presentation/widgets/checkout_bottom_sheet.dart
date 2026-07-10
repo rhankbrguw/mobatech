@@ -1,3 +1,4 @@
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
 import 'dart:ui';
 import 'package:mobatech_app/core/utils/formatters.dart';
 import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/pharmacy_provider.dart';
 import '../../models/cart.dart';
 import '../../models/pharmacy_order.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class CheckoutBottomSheet extends ConsumerWidget {
   final double grandTotal;
@@ -30,7 +32,7 @@ class CheckoutBottomSheet extends ConsumerWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 16.0, sigmaY: 16.0),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md20),
           decoration: BoxDecoration(
             color: AppColors.backgroundWhite.withValues(alpha: 0.85),
             border: Border(
@@ -105,14 +107,14 @@ class CheckoutBottomSheet extends ConsumerWidget {
                   }
                 } catch (e) {
                   if (context.mounted) {
-                    CustomSnackbar.showError(context, 'Gagal membuat pesanan');
+                    CustomSnackbar.showError(context, ErrorStrings.extGagalmembuatpesanan);
                   }
                 }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
+                  horizontal: AppSpacing.xl,
                   vertical: 14,
                 ),
                 shape: RoundedRectangleBorder(

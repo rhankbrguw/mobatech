@@ -5,6 +5,7 @@ import '../../models/medicine.dart';
 
 export 'medicine_card_components.dart';
 import 'medicine_card_components.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 part 'category_chip.dart';
 part 'medicine_card.dart';

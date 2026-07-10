@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SuggestionChip extends StatelessWidget {
   final IconData icon;
@@ -26,7 +27,7 @@ class SuggestionChip extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 10),
             decoration: BoxDecoration(
               color: AppColors.backgroundWhite.withValues(alpha: 0.85),
               borderRadius: BorderRadius.circular(20),

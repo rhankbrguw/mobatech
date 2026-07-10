@@ -46,7 +46,7 @@ export function PhoneInput({
 
   return (
     <div className={`flex items-center border glass-input rounded-xl overflow-hidden focus-within:border-primary transition-all h-10 ${className ?? ""}`}>
-      <span className="flex items-center gap-1.5 px-3 text-sm font-medium text-foreground/60 border-r border-glass-border h-full whitespace-nowrap bg-black/5 dark:bg-white/5 select-none">
+      <span className="flex items-center gap-1.5 px-3 text-sm font-medium text-foreground/60 border-r border-glass-border h-full whitespace-nowrap bg-overlay-dark dark:bg-overlay-light select-none">
         <Phone size={14} />
         {COUNTRY_CODE}
       </span>

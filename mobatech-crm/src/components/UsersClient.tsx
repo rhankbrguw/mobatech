@@ -52,7 +52,7 @@ export function UsersClient() {
         setTotalPages(res.meta.total_pages);
       }
     } catch {
-      setToast({ isOpen: true, message: "Gagal memuat data pengguna", type: "error" });
+      setToast({ isOpen: true, message: APP_STRINGS.common.userLoadError, type: "error" });
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,7 @@ export function UsersClient() {
     if (!deleteConfirm) return;
     try {
       await api.delete(`/api/admin/users/${deleteConfirm.id}`);
-      setToast({ isOpen: true, message: "Pengguna berhasil dihapus", type: "success" });
+      setToast({ isOpen: true, message: APP_STRINGS.common.userDeleteSuccess, type: "success" });
       loadUsers();
     } catch (err) {
       setToast({ isOpen: true, message: err instanceof ApiError ? err.message : "Gagal menghapus", type: "error" });

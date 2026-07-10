@@ -6,6 +6,7 @@ import '../../../../core/utils/error_handler.dart';
 import '../providers/profile_provider.dart';
 import '../widgets/family_member_card.dart';
 import '../widgets/add_family_member_modal.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class FamilyMembersScreen extends ConsumerWidget {
   const FamilyMembersScreen({super.key});
@@ -77,8 +78,8 @@ class FamilyMembersScreen extends ConsumerWidget {
 
                 return ListView(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 20,
+                    horizontal: AppSpacing.lg,
+                    vertical: AppSpacing.md20,
                   ),
                   physics: const BouncingScrollPhysics(),
                   children: [
@@ -95,7 +96,7 @@ class FamilyMembersScreen extends ConsumerWidget {
                     ...familyList.map((member) {
                       final m = member as Map<String, dynamic>;
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.only(bottom: AppSpacing.sm12),
                         child: FamilyMemberCard(
                           name: m['full_name'] ?? 'Tanpa Nama',
                           relation: m['relationship'] ?? 'Keluarga',

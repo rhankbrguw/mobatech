@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class SearchEmptyState extends StatelessWidget {
   final String msg;
@@ -34,7 +35,7 @@ class SearchSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Text(
         title,
         style: const TextStyle(
@@ -66,7 +67,7 @@ class SearchItem extends StatelessWidget {
     return Card(
       elevation: 0,
       color: AppColors.transparent,
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(color: AppColors.textGrey.withValues(alpha: 0.2)),
@@ -79,7 +80,7 @@ class SearchItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
+              horizontal: AppSpacing.sm12,
               vertical: 2,
             ),
             minLeadingWidth: 0,

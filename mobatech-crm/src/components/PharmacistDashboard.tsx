@@ -41,6 +41,15 @@ export function PharmacistDashboard() {
     load();
   }, []);
 
+  const getFirstName = (name?: string) => {
+    if (!name) return "Utama";
+    const parts = name.split(" ");
+    if (parts.length > 1 && (parts[0].toLowerCase() === "apt." || parts[0].toLowerCase() === "apt")) {
+      return `${parts[0]} ${parts[1]}`;
+    }
+    return parts[0];
+  };
+
   return (
     <div className="space-y-8 animate-slide-in">
       {/* Header */}
@@ -48,7 +57,7 @@ export function PharmacistDashboard() {
         <div>
           <p className="text-sm text-foreground/50">{greeting} 👋</p>
           <h1 className="text-2xl font-extrabold tracking-tight text-foreground mt-0.5">
-            Apoteker {user?.full_name?.split(" ")[0] || "Utama"}
+            {getFirstName(user?.full_name)}
           </h1>
           <p className="text-xs text-foreground/50 mt-1">
             {Formatters.date(new Date(), "weekday")}
@@ -59,38 +68,38 @@ export function PharmacistDashboard() {
       {/* Analytics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Antrean Resep (Biru - Actionable) */}
-        <div className="group relative glass-panel p-5 rounded-2xl border border-glass-border shadow-sm bg-blue-500/5 overflow-hidden">
-          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-blue-500 opacity-5 group-hover:opacity-10 transition-opacity duration-300" />
+        <div className="group relative glass-panel p-5 rounded-2xl border border-glass-border shadow-sm bg-info-muted overflow-hidden">
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-info opacity-5 group-hover:opacity-10 transition-opacity duration-300" />
           <div className="flex justify-between items-start mb-2 relative z-10">
             <div>
               <p className="text-xs font-semibold text-foreground/50 uppercase tracking-wider">Antrean E-Resep</p>
-              <h2 className="text-3xl font-extrabold text-blue-600 mt-1">{stats.loading ? "..." : stats.pendingPrescriptions}</h2>
+              <h2 className="text-3xl font-extrabold text-info mt-1">{stats.loading ? "..." : stats.pendingPrescriptions}</h2>
             </div>
-            <div className="p-2 bg-blue-500/10 text-blue-600 rounded-xl"><Pill size={20} /></div>
+            <div className="p-2 bg-info-muted text-info rounded-xl"><Pill size={20} /></div>
           </div>
         </div>
 
         {/* Master Obat (Netral/Purple) */}
         <div className="group relative glass-panel p-5 rounded-2xl border border-glass-border shadow-sm overflow-hidden">
-          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-purple-500 opacity-5 group-hover:opacity-10 transition-opacity duration-300" />
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-accent opacity-5 group-hover:opacity-10 transition-opacity duration-300" />
           <div className="flex justify-between items-start mb-2 relative z-10">
             <div>
               <p className="text-xs font-semibold text-foreground/50 uppercase tracking-wider">Katalog Obat</p>
               <h2 className="text-3xl font-extrabold text-foreground mt-1">{stats.loading ? "..." : stats.totalMeds}</h2>
             </div>
-            <div className="p-2 bg-purple-500/10 text-purple-600 rounded-xl"><CheckCircle size={20} /></div>
+            <div className="p-2 bg-accent-muted text-accent rounded-xl"><CheckCircle size={20} /></div>
           </div>
         </div>
 
         {/* Stok Kritis (Merah - Peringatan) */}
-        <div className="group relative glass-panel p-5 rounded-2xl border border-glass-border shadow-sm bg-red-500/5 overflow-hidden">
-          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-red-500 opacity-5 group-hover:opacity-10 transition-opacity duration-300" />
+        <div className="group relative glass-panel p-5 rounded-2xl border border-glass-border shadow-sm bg-error-muted overflow-hidden">
+          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-error opacity-5 group-hover:opacity-10 transition-opacity duration-300" />
           <div className="flex justify-between items-start mb-2 relative z-10">
             <div>
               <p className="text-xs font-semibold text-foreground/50 uppercase tracking-wider">Stok Kritis</p>
-              <h2 className="text-3xl font-extrabold text-red-600 mt-1">{stats.loading ? "..." : stats.lowStock}</h2>
+              <h2 className="text-3xl font-extrabold text-error mt-1">{stats.loading ? "..." : stats.lowStock}</h2>
             </div>
-            <div className="p-2 bg-red-500/10 text-red-600 rounded-xl"><AlertTriangle size={20} /></div>
+            <div className="p-2 bg-error-muted text-error rounded-xl"><AlertTriangle size={20} /></div>
           </div>
         </div>
       </div>

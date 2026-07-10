@@ -4,6 +4,7 @@ import '../../../../core/utils/formatters.dart';
 import '../../models/medicine.dart';
 import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class MedicineCardDetails extends StatelessWidget {
   final Medicine medicine;
@@ -18,7 +19,7 @@ class MedicineCardDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(AppSpacing.sm12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,7 +88,7 @@ class MedicineCardDetails extends StatelessWidget {
 
   Widget _buildPrescriptionLabel() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
       decoration: BoxDecoration(
         color: AppColors.iconOrange.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
@@ -108,7 +109,7 @@ class MedicineCardDetails extends StatelessWidget {
     return GestureDetector(
       onTap: isOutOfStock ? null : onAddToCart,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm12, vertical: 6),
         decoration: BoxDecoration(
           color: isOutOfStock
               ? AppColors.backgroundWave

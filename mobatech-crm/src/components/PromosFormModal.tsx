@@ -42,7 +42,7 @@ export function PromosFormModal({
       } else {
         await api.post("/api/admin/promos", formData);
       }
-      setToast({ isOpen: true, message: "Berhasil menyimpan promo", type: "success" });
+      setToast({ isOpen: true, message: APP_STRINGS.common.promoSaveSuccess, type: "success" });
       onSuccess();
       onClose();
     } catch (err) {
@@ -75,7 +75,7 @@ export function PromosFormModal({
           <div>
             <label className="block text-xs font-semibold mb-2">{APP_STRINGS.promos.statusActive}</label>
             <label className="flex items-center mt-3 cursor-pointer">
-              <input disabled={isSubmitting} type="checkbox" checked={formData.is_active} onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })} className="w-5 h-5 rounded border-glass-border text-primary focus:ring-primary/50 bg-black/5 dark:bg-white/5" />
+              <input disabled={isSubmitting} type="checkbox" checked={formData.is_active} onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })} className="w-5 h-5 rounded border-glass-border text-primary focus:ring-primary/50 bg-overlay-dark dark:bg-overlay-light" />
               <span className="ml-2 text-sm text-foreground/75">{APP_STRINGS.promos.active}</span>
             </label>
           </div>

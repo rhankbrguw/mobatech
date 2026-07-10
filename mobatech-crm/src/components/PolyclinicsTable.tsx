@@ -6,6 +6,9 @@ import { SkeletonTable } from "@/components/ui/SkeletonTable";
 import { Polyclinic } from "@/types/api";
 import { APP_STRINGS } from "@/lib/constants";
 
+const TH_CLASS = "align-middle whitespace-nowrap py-3 px-4 text-xs font-bold uppercase tracking-wider text-foreground/50";
+const TD_CLASS = "align-middle whitespace-nowrap py-4 px-4 border-b border-glass-border/50";
+
 export function PolyclinicsTable({
   items,
   loading,
@@ -25,13 +28,13 @@ export function PolyclinicsTable({
         {loading ? (
           <SkeletonTable rows={5} columns={4} />
         ) : (
-          <table className="w-full text-center border-collapse text-sm">
+          <table className="w-full border-collapse text-sm">
             <thead>
-              <tr className="border-b border-glass-border bg-black/5 dark:bg-white/5 font-semibold">
-                <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">{APP_STRINGS.polyclinics.tableHeaderName}</th>
-                <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">{APP_STRINGS.polyclinics.tableHeaderDesc}</th>
-                <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">{APP_STRINGS.polyclinics.tableHeaderStatus}</th>
-                <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">{APP_STRINGS.polyclinics.tableHeaderActions}</th>
+              <tr className="border-b border-glass-border bg-overlay-dark] dark:bg-overlay-light]">
+                <th className={`${TH_CLASS} text-center`}>{APP_STRINGS.polyclinics.tableHeaderName}</th>
+                <th className={`${TH_CLASS} text-center`}>{APP_STRINGS.polyclinics.tableHeaderDesc}</th>
+                <th className={`${TH_CLASS} text-center`}>{APP_STRINGS.polyclinics.tableHeaderStatus}</th>
+                <th className={`${TH_CLASS} text-center`}>{APP_STRINGS.polyclinics.tableHeaderActions}</th>
               </tr>
             </thead>
             <tbody>
@@ -45,16 +48,16 @@ export function PolyclinicsTable({
                   </td>
                 </tr>
               ) : items.map((item) => (
-                <tr key={item.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm font-semibold">{item.name}</td>
-                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/75 truncate max-w-xs">{item.description}</td>
+                <tr key={item.id} className="hover:bg-overlay-dark] dark:hover:bg-overlay-light] transition-colors group">
+                  <td className={`${TD_CLASS} text-center font-medium text-foreground`}>{item.name}</td>
+                  <td className={`${TD_CLASS} text-center font-medium text-foreground truncate max-w-xs`}>{item.description}</td>
 
-                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
+                  <td className={`${TD_CLASS} text-center font-medium text-foreground`}>
                     <Badge variant={item.is_active ? "success" : "error"}>
                       {item.is_active ? APP_STRINGS.polyclinics.statusActive : APP_STRINGS.polyclinics.statusInactive}
                     </Badge>
                   </td>
-                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
+                  <td className={`${TD_CLASS} text-center font-medium text-foreground`}>
                     <div className="flex justify-center">
                       <ActionMenu
                         items={[
@@ -87,3 +90,4 @@ export function PolyclinicsTable({
     </Card>
   );
 }
+

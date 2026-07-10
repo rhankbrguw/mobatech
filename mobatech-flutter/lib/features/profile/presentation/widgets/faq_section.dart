@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class FaqSection extends StatelessWidget {
   const FaqSection({super.key});
@@ -65,7 +66,7 @@ class FaqSection extends StatelessWidget {
                         ),
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                            padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.md),
                             child: Text(
                               faq['a']!,
                               style: const TextStyle(

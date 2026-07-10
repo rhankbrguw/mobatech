@@ -9,6 +9,7 @@ import 'attachment_preview.dart';
 import 'suggestion_chips_row.dart';
 import 'chat_input_row.dart';
 import 'chat_attachment_handler.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class ChatInputArea extends ConsumerStatefulWidget {
   const ChatInputArea({super.key});
@@ -106,7 +107,7 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.md),
       color: AppColors.backgroundScreen,
       child: Column(
         children: [

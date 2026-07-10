@@ -7,11 +7,11 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const badgeStyles: Record<BadgeVariant, string> = {
-  success: "bg-emerald-500/10 border-emerald-500/20 text-emerald-800 dark:text-emerald-200",
-  warning: "bg-amber-500/10 border-amber-500/20 text-amber-800 dark:text-amber-200",
-  error: "bg-rose-500/10 border-rose-500/20 text-rose-800 dark:text-rose-200",
-  info: "bg-blue-500/10 border-blue-500/20 text-blue-800 dark:text-blue-200",
-  neutral: "bg-gray-500/10 border-gray-500/20 text-gray-800 dark:text-gray-200",
+  success: "bg-success-muted border-success-muted text-success dark:text-success",
+  warning: "bg-warning-muted border-warning-muted text-warning dark:text-warning",
+  error: "bg-error-muted border-error-muted text-error dark:text-error",
+  info: "bg-info-muted border-info-muted text-info dark:text-info",
+  neutral: "bg-neutral-muted border-neutral-muted text-neutral dark:text-neutral",
 };
 
 export const Badge: React.FC<BadgeProps> = ({ children, variant = "neutral", className = "", ...props }) => {

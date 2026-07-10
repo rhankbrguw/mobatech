@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/network/dio_client.dart';
@@ -55,8 +55,8 @@ class _SplashScreenState extends State<SplashScreen>
     await Future.delayed(AppDurations.splashDelay);
     if (!mounted) return;
 
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('jwt_token');
+    const secureStorage = FlutterSecureStorage();
+    final token = await secureStorage.read(key: 'jwt_token');
 
     if (!mounted) return;
 

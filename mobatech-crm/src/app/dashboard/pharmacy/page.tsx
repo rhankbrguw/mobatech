@@ -5,7 +5,7 @@ import { PharmacyOrder, Medicine, MedicineCategory } from "@/types/api";
 export const revalidate = 60; // Cache for 60 seconds (ISR)
 
 
-export const metadata = { title: "Pharmacy | Mobatech CRM", description: "Mobatech CRM Pharmacy Management" };
+export const metadata = { title: "Manajemen Farmasi | Hermina CRM", description: "Hermina CRM Manajemen Farmasi" };
 
 export default async function PharmacyPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const tab = typeof (await searchParams).tab === "string" ? (await searchParams).tab : "orders";
