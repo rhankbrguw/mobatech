@@ -22,7 +22,7 @@ export function DoctorProfileView({
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
         <div className="relative p-5 sm:p-6 flex flex-col sm:flex-row items-center sm:items-start gap-5">
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl shadow-sm overflow-hidden border border-glass-border flex-shrink-0 bg-background/50 z-10">
-            <img src={doctor.image_url} alt={doctor.name} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+            <img src={doctor.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(doctor.name)}&background=1e5e44&color=fff`} alt={doctor.name} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
           </div>
           <div className="flex-1 text-center sm:text-left z-10">
             <h1 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight mb-1">{doctor.name}</h1>

@@ -51,7 +51,7 @@ export function BranchesTable({
                 <tr key={item.id} className="hover:bg-overlay-dark] dark:hover:bg-overlay-light] transition-colors group">
                   <td className={`${TD_CLASS} text-center font-medium text-foreground`}>
                     <div className="flex items-center justify-center gap-3">
-                      <img src={item.image_url} alt={item.name} className="w-8 h-8 rounded-full object-cover bg-glass-panel" />
+                      <img src={item.image_url || "/globe.svg"} alt={item.name} className="w-8 h-8 rounded-full object-cover bg-glass-panel" />
                       {item.name}
                     </div>
                   </td>

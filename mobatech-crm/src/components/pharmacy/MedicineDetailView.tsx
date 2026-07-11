@@ -18,7 +18,7 @@ export function MedicineDetailView({ isOpen, onClose, medicine }: MedicineDetail
         <div className="space-y-4">
           <div className="flex items-center gap-4 border-b border-glass-border pb-4">
             {medicine.image_url ? (
-              <img src={medicine.image_url} alt={medicine.name} className="w-20 h-20 object-cover rounded-xl border border-glass-border shadow-sm" />
+              <img src={medicine.image_url || "/globe.svg"} alt={medicine.name} className="w-20 h-20 object-cover rounded-xl border border-glass-border shadow-sm" />
             ) : (
               <div className="w-20 h-20 rounded-xl bg-overlay-dark dark:bg-overlay-light flex items-center justify-center border border-glass-border">
                 <Package size={32} className="text-foreground/40" />

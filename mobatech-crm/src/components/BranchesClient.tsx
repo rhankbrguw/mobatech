@@ -126,7 +126,7 @@ export function BranchesClient({ initialData, searchParams }: { initialData?: un
         {drawerItem && (
           <div className="space-y-3">
             <div className="flex justify-center mb-4">
-              <img src={drawerItem.image_url} alt={drawerItem.name} className="w-24 h-24 rounded-full object-cover shadow-lg border-2 border-white/20" />
+              <img src={drawerItem.image_url || "/globe.svg"} alt={drawerItem.name} className="w-24 h-24 rounded-full object-cover shadow-lg border-2 border-white/20" />
             </div>
             <div><strong>Nama Cabang:</strong> {drawerItem.name}</div>
             <div><strong>Alamat:</strong> {drawerItem.address}</div>

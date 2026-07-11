@@ -25,7 +25,7 @@ export function MedicineTableRow({ medicine, role, onView, onEdit, onDelete }: M
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-overlay-dark dark:bg-overlay-light border border-glass-border/50 flex items-center justify-center overflow-hidden shrink-0">
             {medicine.image_url ? (
-              <img src={medicine.image_url} alt={medicine.name} className="w-full h-full object-cover" />
+              <img src={medicine.image_url || "/globe.svg"} alt={medicine.name} className="w-full h-full object-cover" />
             ) : (
               <Package size={20} className="text-foreground/40" />
             )}

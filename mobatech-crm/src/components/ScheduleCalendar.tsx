@@ -101,7 +101,7 @@ export function ScheduleCalendar({ groupedSchedules }: Props) {
                       <div className="flex items-center gap-3">
                         <div className="w-11 h-11 rounded-full bg-background flex items-center justify-center overflow-hidden border border-glass-border shadow-sm group-hover:scale-105 transition-transform duration-300">
                           {s.doctor?.image_url ? (
-                            <img src={s.doctor.image_url} alt={s.doctor.name} className="w-full h-full object-cover" />
+                            <img src={s.doctor.image_url || "/globe.svg"} alt={s.doctor.name} className="w-full h-full object-cover" />
                           ) : (
                             <span className="text-primary font-bold text-sm">{s.doctor?.name?.charAt(0) || "D"}</span>
                           )}
