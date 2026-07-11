@@ -5,7 +5,8 @@ backend.pid
 backend.exe
 temp_server
 *.db
-uploads/
-tmp/
+uploads/*
+tmp/*
 main
 !uploads/.gitkeep
+!tmp/.gitkeep

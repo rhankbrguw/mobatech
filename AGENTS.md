@@ -1,7 +1,7 @@
 # AGENTS.md
 
 > Read this file before every task. The global `engineering-standards` skill applies
-> to all code. This file provides project-specific context that overrides or extends it.
+> to all code. This file provides project-specific context that overrides or extends it(you can edited it later).
 
 ---
 
@@ -17,6 +17,7 @@ db      : [mysql, vector-db]
 ## Active Stack Rules
 
 <!-- Active Stacks for CRM Portal: -->
+
 - **typescript**
 - **react**
 - **nextjs**
@@ -48,7 +49,6 @@ db      : [mysql, vector-db]
   - Limit helper/utility functions to 30 lines. Use custom hooks to extract data-fetching or input-filtering logic.
   - Display user operations status (success, error, warning) using `CustomSnackbar`.
 
-
 ## Folder Structure
 
 ```
@@ -67,7 +67,7 @@ mobatech-flutter/
 ├── ios/                      # iOS native project files
 ├── lib/                      # Application source code
 │   ├── features/             # Feature-based modular architecture
-│   │   └── [feature]/        
+│   │   └── [feature]/
 │   │       ├── data/         # Repositories, models, APIs
 │   │       ├── domain/       # Business logic, entities
 │   │       └── presentation/ # Widgets, Riverpod providers, screens
