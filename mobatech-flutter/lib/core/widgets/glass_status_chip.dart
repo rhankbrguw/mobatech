@@ -24,6 +24,9 @@ class GlassStatusChip extends StatelessWidget {
       case 'pending':
         label = 'Menunggu';
         break;
+      case 'requested':
+        label = 'Meminta Ditebus';
+        break;
       case 'approved':
         label = 'Disetujui';
         break;
@@ -43,7 +46,8 @@ class GlassStatusChip extends StatelessWidget {
         label = 'Aktif';
         break;
       case 'redeemed':
-        label = 'Ditebus';
+      case 'ditebus':
+        label = 'Selesai';
         break;
       case 'available':
         label = 'Tersedia';

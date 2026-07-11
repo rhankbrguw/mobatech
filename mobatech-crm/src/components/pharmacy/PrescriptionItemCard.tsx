@@ -26,8 +26,8 @@ export function PrescriptionItemCard({
             className="w-full glass-input rounded-lg px-2.5 py-1.5 text-sm font-medium cursor-pointer"
           >
             <option value={0}>✏️ Obat Manual / Kustom</option>
-            {medicines.map(m => (
-              <option key={m.id} value={m.id}>{m.name}</option>
+            {medicines.map((m, idx) => (
+              <option key={`${m.id}-${idx}`} value={m.id}>{m.name}</option>
             ))}
           </select>
           {(!item.medicine_id || item.medicine_id === 0) && (

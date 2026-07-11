@@ -1,43 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import '../../models/prescription.dart';
-import 'package:mobatech_app/core/theme/app_spacing.dart';
-import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
+import '../../providers/prescription_provider.dart';
 
-
-
-class PrescriptionRedeemButton extends StatelessWidget {
+class PrescriptionRedeemButton extends ConsumerStatefulWidget {
   final Prescription prescription;
   const PrescriptionRedeemButton({super.key, required this.prescription});
 
   @override
+  ConsumerState<PrescriptionRedeemButton> createState() => _PrescriptionRedeemButtonState();
+}
+
+class _PrescriptionRedeemButtonState extends ConsumerState<PrescriptionRedeemButton> {
+  bool _isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
-    if (prescription.status != 'Pending') return const SizedBox.shrink();
+    if (widget.prescription.status.toLowerCase() != 'active') return const SizedBox.shrink();
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.md),
+      padding: const EdgeInsets.only(top: 16),
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () {
-            CustomSnackbar.showSuccess(
-              context,
-              PharmacyStrings.addedToCartMessage,
-            );
-          },
+          onPressed: _isLoading
+              ? null
+              : () async {
+                  setState(() => _isLoading = true);
+                  final success = await ref
+                      .read(prescriptionsProvider.notifier)
+                      .redeemPrescription(widget.prescription.id);
+                  if (!context.mounted) return;
+                  setState(() => _isLoading = false);
+                  if (success) {
+                    CustomSnackbar.showSuccess(
+                      context,
+                      'Permintaan penebusan obat terkirim ke Apoteker',
+                    );
+                  } else {
+                    CustomSnackbar.showError(
+                      context,
+                      'Gagal menebus obat. Silakan coba lagi.',
+                    );
+                  }
+                },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
             foregroundColor: AppColors.textWhite,
+            padding: const EdgeInsets.symmetric(vertical: 12),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
             ),
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm12),
           ),
-          child: const Text(
-            'Tebus Obat',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          child: _isLoading
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: AppColors.textWhite,
+                  ),
+                )
+              : const Text(
+                  'Tebus Obat',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
         ),
       ),
     );

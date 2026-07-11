@@ -1,6 +1,7 @@
 export interface GormModel {
   id: number; created_at: string;
   updated_at: string; deleted_at?: string | null;
+  ID?: number; CreatedAt?: string; UpdatedAt?: string; DeletedAt?: string | null;
 }
 export interface User extends GormModel {
   full_name: string; email: string;
@@ -121,7 +122,19 @@ export interface Prescription extends GormModel {
   appointment_id: number;
   doctor_name: string;
   diagnosis: string;
-  status: "pending" | "completed";
+  status: string;
   items: PrescriptionItem[];
 }
 
+export interface MedicalResult extends GormModel {
+  user_id: number;
+  appointment_id?: number;
+  doctor_name: string;
+  test_type: string;
+  test_name: string;
+  result: string;
+  notes: string;
+  file_url: string;
+  result_date: string;
+  has_prescription?: boolean;
+}

@@ -1,7 +1,7 @@
 import { DoctorsClient } from "@/components/DoctorsClient";
 import { serverFetch } from "@/lib/serverApi";
 
-export const revalidate = 60; // Cache for 60 seconds (ISR)
+export const revalidate = 60;
 
 
 export const metadata = { title: "Manajemen Dokter | Hermina CRM", description: "Hermina CRM Manajemen Dokter" };
@@ -10,7 +10,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
   const page = (await searchParams).page || "1";
   const search = (await searchParams).search || "";
   
-  // Example fetch, customize per page
   let initialData: unknown = [];
   try {
     initialData = await serverFetch(`/api/doctors?page=${page}&search=${search}`);

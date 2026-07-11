@@ -56,6 +56,36 @@ class PrescriptionsNotifier extends AutoDisposeAsyncNotifier<List<Prescription>>
       _isFetchingNextPage = false;
     }
   }
+
+  Future<bool> redeemPrescription(int id) async {
+    try {
+      final repo = ref.read(prescriptionRepositoryProvider);
+      await repo.redeemPrescription(id);
+      
+      final current = state.value ?? [];
+      final updated = current.map((p) {
+        if (p.id == id) {
+          return Prescription(
+            id: p.id,
+            appointmentId: p.appointmentId,
+            doctorName: p.doctorName,
+            diagnosis: p.diagnosis,
+            items: p.items,
+            userId: p.userId,
+            imageUrl: p.imageUrl,
+            notes: p.notes,
+            status: 'Requested',
+            createdAt: p.createdAt,
+          );
+        }
+        return p;
+      }).toList();
+      state = AsyncData(updated);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 final prescriptionsProvider = AsyncNotifierProvider.autoDispose<

@@ -120,6 +120,7 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
           onCancel={setCancelConfirmId}
           onComplete={handleComplete}
           onViewDetails={openDrawer}
+          userRole={role}
         />
       </Card>
 

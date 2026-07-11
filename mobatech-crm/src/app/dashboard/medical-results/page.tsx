@@ -1,7 +1,7 @@
 import { MedicalResultsClient } from "@/components/MedicalResultsClient";
 import { serverFetch } from "@/lib/serverApi";
 
-export const revalidate = 60; // Cache for 60 seconds (ISR)
+export const revalidate = 60;
 
 
 export const metadata = { title: "Hasil Medis | Hermina CRM", description: "Hermina CRM Hasil Medis" };
@@ -10,13 +10,18 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
   const page = (await searchParams).page || "1";
   const search = (await searchParams).search || "";
   
-  // Example fetch, customize per page
   let initialData: unknown = [];
+  let medicines: unknown = [];
   try {
-    initialData = await serverFetch(`/api/admin/medical-results?page=${page}&search=${search}`);
+    const [resData, resMed] = await Promise.allSettled([
+      serverFetch(`/api/admin/medical-results?page=${page}&search=${search}`),
+      serverFetch(`/api/pharmacy/medicines?limit=100`)
+    ]);
+    if (resData.status === "fulfilled") initialData = resData.value;
+    if (resMed.status === "fulfilled") medicines = resMed.value;
   } catch (e) {
     console.error(e);
   }
 
-  return <><h1 className="sr-only">{metadata.title as string}</h1><MedicalResultsClient initialData={initialData} searchParams={await searchParams} /></>;
+  return <><h1 className="sr-only">{metadata.title as string}</h1><MedicalResultsClient initialData={initialData} initialMedicines={medicines} searchParams={await searchParams} /></>;
 }

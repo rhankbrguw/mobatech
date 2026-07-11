@@ -22,6 +22,25 @@ export async function serverFetch<T>(path: string, options: RequestInit = {}): P
     throw new Error(errorData.message || "An error occurred while fetching data");
   }
 
+  const normalizeKeys = (obj: unknown): unknown => {
+    if (Array.isArray(obj)) return obj.map(normalizeKeys);
+    else if (obj !== null && typeof obj === "object") {
+      const newObj: Record<string, unknown> = {};
+      for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+          let newKey = key;
+          if (key === "ID") newKey = "id";
+          else if (key === "CreatedAt") newKey = "created_at";
+          else if (key === "UpdatedAt") newKey = "updated_at";
+          else if (key === "DeletedAt") newKey = "deleted_at";
+          newObj[newKey] = normalizeKeys((obj as Record<string, unknown>)[key]);
+        }
+      }
+      return newObj;
+    }
+    return obj;
+  };
+
   const json = await res.json();
-  return json.data;
+  return normalizeKeys(json.data) as T;
 }

@@ -4,12 +4,10 @@ import { Card } from "@/components/ui/Card";
 import { Formatters } from "@/lib/formatters";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 import { SkeletonTable } from "@/components/ui/SkeletonTable";
+import { User, MedicalResult } from "@/types/api";
 
 const TH_CLASS = "align-middle whitespace-nowrap py-3 px-4 text-xs font-bold uppercase tracking-wider text-foreground/50";
 const TD_CLASS = "align-middle whitespace-nowrap py-4 px-4 border-b border-glass-border/50";
-
-interface User { id: number; full_name: string; email: string; }
-interface MedicalResult { id: number; created_at: string; user_id: number; appointment_id: number; doctor_name: string; test_type: string; test_name: string; result: string; notes: string; file_url: string; result_date: string; }
 
 export function MedicalResultsTable({ 
   loading, 
@@ -18,6 +16,7 @@ export function MedicalResultsTable({
   onEdit, 
   onDelete,
   onViewDetails,
+  onCreatePrescription,
   userRole 
 }: { 
   loading: boolean;
@@ -26,6 +25,7 @@ export function MedicalResultsTable({
   onEdit: (r: MedicalResult) => void;
   onDelete: (id: number) => void;
   onViewDetails?: (r: MedicalResult) => void;
+  onCreatePrescription?: (r: MedicalResult) => void;
   userRole?: string;
 }) {
   const router = useRouter();
@@ -80,12 +80,19 @@ export function MedicalResultsTable({
                             icon: <Eye size={14} />,
                             onClick: () => onViewDetails(r),
                           }] : []),
-                          {
+                          ...(!r.has_prescription && onCreatePrescription ? [{
                             label: "E-Resep",
                             icon: <Pill size={14} />,
-                            onClick: () => router.push(`/dashboard/pharmacy?action=create_prescription&appointment_id=${r.appointment_id || ''}&user_id=${r.user_id}&doctor_name=${encodeURIComponent(r.doctor_name || '')}&diagnosis=${encodeURIComponent(r.result || '')}`),
+                            onClick: () => onCreatePrescription(r),
+                            disabled: userRole === "admin",
                             variant: "info" as const,
-                          },
+                          }] : []),
+                          ...(r.has_prescription ? [{
+                            label: "E-Resep Selesai",
+                            icon: <Pill size={14} />,
+                            onClick: () => {},
+                            disabled: true,
+                          }] : []),
                           {
                             label: "Edit",
                             icon: <Edit size={14} />,

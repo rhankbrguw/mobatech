@@ -84,7 +84,7 @@ class Prescription {
       userId: json['user_id'] as int? ?? 0,
       imageUrl: rawImageUrl,
       notes: json['notes'] as String? ?? '',
-      status: json['status'] as String? ?? 'Pending',
+      status: json['status'] as String? ?? 'Active',
       createdAt: json['CreatedAt'] != null
           ? DateTime.parse(json['CreatedAt'])
           : DateTime.now(),

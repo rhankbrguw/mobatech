@@ -39,4 +39,8 @@ class PrescriptionRepository {
   Future<void> deletePrescription(int id) async {
     await _dio.delete('/pharmacy/prescriptions/$id');
   }
+
+  Future<void> redeemPrescription(int id) async {
+    await _dio.post('/pharmacy/prescriptions/$id/redeem');
+  }
 }

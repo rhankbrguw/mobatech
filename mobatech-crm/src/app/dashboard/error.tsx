@@ -13,7 +13,6 @@ export default function DashboardError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service in production
     console.error("Dashboard Error Boundary Caught:", error);
   }, [error]);
   const handleForceLogout = async () => {

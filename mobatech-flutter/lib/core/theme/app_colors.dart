@@ -97,6 +97,7 @@ class AppColors {
     switch (status.toLowerCase()) {
       case 'pending':
       case 'menunggu':
+      case 'requested':
         return warningOrange;
       case 'approved':
       case 'disetujui':
@@ -110,6 +111,8 @@ class AppColors {
       case 'selesai':
       case 'active':
       case 'aktif':
+      case 'redeemed':
+      case 'ditebus':
         return successGreen;
       case 'cancelled':
       case 'dibatalkan':
@@ -119,8 +122,6 @@ class AppColors {
         return ambulanceBlueDark;
       case 'arrived':
         return arrivedGreen1;
-      case 'redeemed':
-        return textGrey;
       default:
         return textGrey;
     }

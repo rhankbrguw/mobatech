@@ -1,140 +1,135 @@
-import { useState, useEffect, useMemo } from "react";
+"use client";
+import React, { useState } from "react";
+import { Prescription } from "@/types/api";
 import { api } from "@/lib/api";
-import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { Check, Inbox } from "lucide-react";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
+import { APP_STRINGS } from "@/lib/constants";
+import { Formatters } from "@/lib/formatters";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
-import { Pagination } from "@/components/ui/Pagination";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { StatusPill } from "@/components/StatusPill";
-import { SideDrawer } from "@/components/ui/SideDrawer";
-import { Pill, CheckCircle, Eye, ChevronRight } from "lucide-react";
-import { Prescription } from "@/types/api";
-import { Formatters } from "@/lib/formatters";
-import { PharmacyPrescriptionRow } from "./PharmacyPrescriptionRow";
-import { PrescriptionDetailDrawer } from "./PrescriptionDetailDrawer";
-import { APP_STRINGS } from "@/lib/constants";
+import { Card } from "@/components/ui/Card";
+import { ActionMenu } from "@/components/ui/ActionMenu";
 
-const TH_CLASS = "align-middle whitespace-nowrap py-3 px-4 text-xs font-bold uppercase tracking-wider text-foreground/50";
+const TH_CLASS = "align-middle whitespace-nowrap py-3 px-4 text-xs font-bold uppercase tracking-wider text-foreground/50 text-center";
+const TD_CLASS = "align-middle whitespace-nowrap py-4 px-4 border-b border-glass-border/50 text-center font-medium text-foreground";
 
-export function PharmacyPrescriptions() {
-  const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescriptions: Prescription[] }) {
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>(initialPrescriptions);
+  const [loadingId, setLoadingId] = useState<number | null>(null);
   const [toast, setToast] = useState<{isOpen: boolean, message: string, type: "success"|"error"}>({ isOpen: false, message: "", type: "success" });
-  const [viewingPrescription, setViewingPrescription] = useState<Prescription | null>(null);
+  const [filterValue, setFilterValue] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const load = async () => {
+  const handleUpdateStatus = async (id: number, status: string) => {
+    setLoadingId(id);
     try {
-      const queryParams = new URLSearchParams();
-      if (searchQuery) queryParams.append("search", searchQuery);
-      if (statusFilter) queryParams.append("status", statusFilter);
-      queryParams.append("page", String(currentPage));
-      queryParams.append("limit", "10");
-      const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
-      const res = await api.get<Prescription[]>(`/api/admin/pharmacy/prescriptions${qs}`);
-      setPrescriptions(res.data || []);
-      if (res.meta?.total_pages) setTotalPages(res.meta.total_pages);
-    } catch (e) {
-      console.error(e);
-      setToast({ isOpen: true, message: APP_STRINGS.pharmacy.loadError, type: "error" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { setCurrentPage(1); }, [searchQuery, statusFilter]);
-  useEffect(() => { load(); }, [searchQuery, statusFilter, currentPage]);
-
-  const handleProcess = async (id: number) => {
-    try {
-      await api.put(`/api/admin/pharmacy/prescriptions/${id}/status`, { status: "completed" });
+      await api.put(`/api/admin/pharmacy/prescriptions/${id}/status`, { status });
+      setPrescriptions(prev => prev.map(p => p.id === id ? { ...p, status } : p));
       setToast({ isOpen: true, message: APP_STRINGS.pharmacy.processSuccess, type: "success" });
-      setViewingPrescription(null);
-      load();
     } catch {
       setToast({ isOpen: true, message: APP_STRINGS.pharmacy.processError, type: "error" });
+    } finally {
+      setLoadingId(null);
     }
   };
 
-  const filtered = useMemo(() => {
-    return prescriptions.filter(p => {
-      const matchSearch = p.doctor_name?.toLowerCase().includes(searchQuery.toLowerCase()) || String(p.id).includes(searchQuery);
-      const matchStatus = statusFilter ? p.status === statusFilter : true;
-      return matchSearch && matchStatus;
-    });
-  }, [prescriptions, searchQuery, statusFilter]);
+  const getStatusBadge = (status: string) => {
+    const badges: Record<string, React.ReactNode> = {
+      Requested: <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20">Meminta Ditebus</span>,
+      Pending: <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-500/20 text-orange-600 dark:text-orange-400 border border-orange-500/20">Menunggu Pasien</span>,
+      Redeemed: <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/20 text-primary border border-primary/20">Selesai</span>
+    };
+    return badges[status] || <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-foreground/10 text-foreground/70 border border-foreground/10">{status}</span>;
+  };
 
-  if (loading) return <div className="p-8 text-center text-foreground/50 animate-pulse text-sm">Memuat E-Resep...</div>;
+  const filteredPrescriptions = prescriptions.filter(p => {
+    if (filterValue !== "all" && p.status !== filterValue) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      return (
+        p.id.toString().includes(q) ||
+        p.user_id.toString().includes(q) ||
+        (p.doctor_name && p.doctor_name.toLowerCase().includes(q))
+      );
+    }
+    return true;
+  });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-slide-in">
       <PageHeader
-        title="Antrean E-Resep"
-        description="Kelola dan proses resep obat masuk dari dokter ke instalasi farmasi."
+        title="Daftar E-Resep"
+        description="Pantau dan proses permintaan tebus obat dari pasien secara real-time."
       />
-
-      <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
+      
+      <div className="flex justify-end mb-4 gap-2">
         <FilterDropdown
-          value={statusFilter}
-          onChange={setStatusFilter}
+          value={filterValue}
+          onChange={setFilterValue}
           options={[
-            { label: "Semua Status", value: "" },
-            { label: "Pending", value: "pending" },
-            { label: "Selesai", value: "completed" }
+            { label: 'Semua Status', value: 'all' },
+            { label: 'Meminta Ditebus', value: 'Requested' },
+            { label: 'Menunggu Pasien', value: 'Pending' },
+            { label: 'Selesai', value: 'Redeemed' }
           ]}
-          placeholder="Filter Status"
-          className="w-full sm:w-48 h-10"
+          placeholder="Pilih Status"
         />
         <SearchFilterBar 
           value={searchQuery} 
           onChange={setSearchQuery} 
-          className="w-full sm:max-w-xs h-10"
-          placeholder="Pencarian Dokter atau ID"
+          placeholder="Cari ID/Dokter..." 
         />
       </div>
 
       <Card noPadding>
         <div className="w-full overflow-x-auto">
-        <table className="w-full border-collapse text-sm">
-          <thead>
-            <tr className="border-b border-glass-border bg-overlay-dark] dark:bg-overlay-light]">
-              <th className={`${TH_CLASS} text-center`}>Tanggal</th>
-              <th className={`${TH_CLASS} text-center`}>ID Pasien</th>
-              <th className={`${TH_CLASS} text-center`}>Dokter</th>
-              <th className={`${TH_CLASS} text-center`}>Diagnosa</th>
-              <th className={`${TH_CLASS} text-center`}>Status</th>
-              <th className={`${TH_CLASS} text-center`}>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map(p => (
-              <PharmacyPrescriptionRow 
-                key={p.id} 
-                prescription={p} 
-                onView={setViewingPrescription} 
-                onProcess={handleProcess} 
-              />
-            ))}
-            {filtered.length === 0 && (
-              <tr><td colSpan={6} className="py-12 text-center text-foreground/50">Tidak ada E-Resep saat ini</td></tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-glass-border bg-overlay-dark] dark:bg-overlay-light]">
+                <th className={TH_CLASS}>ID Resep</th>
+                <th className={TH_CLASS}>Pasien (ID)</th>
+                <th className={TH_CLASS}>Dokter</th>
+                <th className={TH_CLASS}>Tanggal</th>
+                <th className={TH_CLASS}>Status</th>
+                <th className={TH_CLASS}>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredPrescriptions.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="text-center py-16">
+                    <div className="flex flex-col items-center justify-center text-foreground/50">
+                      <Inbox className="w-12 h-12 mb-3 text-foreground/20" />
+                      <p className="text-sm">Belum ada e-resep yang sesuai pencarian.</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : filteredPrescriptions.map((p) => (
+                <tr key={p.id} className="hover:bg-overlay-dark] dark:hover:bg-overlay-light] transition-colors group">
+                  <td className={TD_CLASS}>#{p.id}</td>
+                  <td className={TD_CLASS}>{p.user_id}</td>
+                  <td className={`${TD_CLASS} text-foreground/80`}>{p.doctor_name || "-"}</td>
+                  <td className={TD_CLASS}>{Formatters.date(p.CreatedAt || "", "short")}</td>
+                  <td className={TD_CLASS}>{getStatusBadge(p.status)}</td>
+                  <td className={TD_CLASS}>
+                    <div className="flex justify-center">
+                      <ActionMenu
+                        items={[
+                          ...(p.status === "Requested" ? [{ label: loadingId === p.id ? "Memproses..." : "Proses Tebus", icon: <Check size={14} />, onClick: () => handleUpdateStatus(p.id, "Redeemed"), disabled: loadingId === p.id, variant: "success" as const }] : []),
+                          ...(p.status === "Pending" ? [{ label: "Menunggu Pasien", icon: <Check size={14} />, onClick: () => {}, disabled: true }] : []),
+                          ...(p.status === "Redeemed" ? [{ label: "Selesai", icon: <Check size={14} />, onClick: () => {}, disabled: true }] : [])
+                        ]}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </Card>
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-
-      <PrescriptionDetailDrawer
-        prescription={viewingPrescription}
-        onClose={() => setViewingPrescription(null)}
-        onProcess={handleProcess}
-      />
-
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast(t => ({...t, isOpen: false}))} />
     </div>
   );
