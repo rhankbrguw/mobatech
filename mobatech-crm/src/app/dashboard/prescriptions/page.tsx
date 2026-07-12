@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Manajemen Resep Obat Hermina CRM"
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function Page({
   searchParams,

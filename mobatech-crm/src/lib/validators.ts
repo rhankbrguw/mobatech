@@ -42,4 +42,11 @@ export const FormValidators = {
     if (!value.trim()) return `${label}${APP_STRINGS.validation.requiredSuffix}`;
     return null;
   },
+
+  quota: (value: number | undefined | null | string): string | null => {
+    if (value === undefined || value === null || value === "") return APP_STRINGS.validation.quotaEmpty;
+    const numValue = Number(value);
+    if (isNaN(numValue) || numValue < 10) return APP_STRINGS.validation.quotaMin;
+    return null;
+  },
 } as const;

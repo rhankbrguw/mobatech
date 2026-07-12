@@ -29,6 +29,7 @@ type PharmacyRepository interface {
 	GetPrescriptionByID(ctx context.Context, id uint) (*models.Prescription, error)
 	GetAllPrescriptions(ctx context.Context, limit int, offset int) ([]models.Prescription, int64, error)
 	CreatePrescription(ctx context.Context, p *models.Prescription) error
+	CheckPrescriptionExistsByAppointment(ctx context.Context, appointmentID uint) (bool, error)
 	DeletePrescription(ctx context.Context, id uint) error
 	UpdatePrescriptionStatus(ctx context.Context, id uint, status string) error
 

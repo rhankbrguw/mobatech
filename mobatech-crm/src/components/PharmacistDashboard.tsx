@@ -29,8 +29,8 @@ export function PharmacistDashboard() {
         }
         if (pRes.status === "fulfilled") {
           const pres = pRes.value.data || [];
-          pendingPrescriptions = pres.filter(p => p.status === "pending").length;
-          completedPrescriptions = pres.filter(p => p.status === "completed").length;
+          pendingPrescriptions = pres.filter(p => p.status === "Pending" || p.status === "pending").length;
+          completedPrescriptions = pres.filter(p => p.status === "Redeemed" || p.status === "completed").length;
           totalPrescriptions = pendingPrescriptions + completedPrescriptions;
         }
         setStats({ totalMeds, lowStock, pendingPrescriptions, completedPrescriptions, totalPrescriptions, loading: false });

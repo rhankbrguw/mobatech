@@ -9,6 +9,7 @@ import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ScheduleForm } from "./ScheduleForm";
 import { Formatters } from "@/lib/formatters";
+import { FormValidators } from "@/lib/validators";
 interface ScheduleModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -47,6 +48,13 @@ export function ScheduleModal({ isOpen, onClose, doctor, onChange }: ScheduleMod
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!doctor) return;
+
+    const quotaError = FormValidators.quota(quota);
+    if (quotaError) {
+      setToast({ isOpen: true, message: quotaError, type: "error" });
+      return;
+    }
+
     try {
       const payload = {
         doctor_id: doctor.id,

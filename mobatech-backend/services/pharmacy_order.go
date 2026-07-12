@@ -23,7 +23,13 @@ func (s *pharmacyService) GetAllPrescriptions(ctx context.Context, limit int, of
 }
 
 func (s *pharmacyService) CreatePrescription(ctx context.Context, p *models.Prescription) error {
-	p.Status = "pending"
+	if p.AppointmentID != nil && *p.AppointmentID != 0 {
+		exists, err := s.repo.CheckPrescriptionExistsByAppointment(ctx, *p.AppointmentID)
+		if err == nil && exists {
+			return fmt.Errorf("e-resep sudah diterbitkan untuk janji temu ini")
+		}
+	}
+	p.Status = "Pending"
 	return s.repo.CreatePrescription(ctx, p)
 }
 

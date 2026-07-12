@@ -55,7 +55,7 @@ func (r *medicalResultRepository) FindAll(ctx context.Context, search string, fi
 		return nil, 0, fmt.Errorf("medicalResultRepository.FindAll: %w", err)
 	}
 
-	if err := query.Preload("Appointment").Limit(limit).Offset(offset).Find(&results).Error; err != nil {
+	if err := query.Select("medical_results.*, EXISTS (SELECT 1 FROM prescriptions WHERE prescriptions.appointment_id = medical_results.appointment_id) AS has_prescription").Preload("Appointment").Limit(limit).Offset(offset).Find(&results).Error; err != nil {
 		return nil, 0, fmt.Errorf("medicalResultRepository.FindAll: %w", err)
 	}
 	return results, count, nil
@@ -63,7 +63,7 @@ func (r *medicalResultRepository) FindAll(ctx context.Context, search string, fi
 
 func (r *medicalResultRepository) FindByUserID(ctx context.Context, userID uint) ([]models.MedicalResult, error) {
 	var results []models.MedicalResult
-	if err := r.db.Where("user_id = ?", userID).Order("created_at desc").Find(&results).Error; err != nil {
+	if err := r.db.Select("medical_results.*, EXISTS (SELECT 1 FROM prescriptions WHERE prescriptions.appointment_id = medical_results.appointment_id) AS has_prescription").Where("user_id = ?", userID).Order("created_at desc").Find(&results).Error; err != nil {
 		return nil, fmt.Errorf("medicalResultRepository.FindByUserID: %w", err)
 	}
 	return results, nil

@@ -48,6 +48,11 @@ func (r *pharmacyRepository) GetAllPrescriptions(ctx context.Context, limit int,
 func (r *pharmacyRepository) CreatePrescription(ctx context.Context, p *models.Prescription) error {
 	return r.db.Create(p).Error
 }
+func (r *pharmacyRepository) CheckPrescriptionExistsByAppointment(ctx context.Context, appointmentID uint) (bool, error) {
+	var count int64
+	err := r.db.Model(&models.Prescription{}).Where("appointment_id = ?", appointmentID).Count(&count).Error
+	return count > 0, err
+}
 func (r *pharmacyRepository) DeletePrescription(ctx context.Context, id uint) error {
 	return r.db.Delete(&models.Prescription{}, id).Error
 }

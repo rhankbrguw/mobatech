@@ -46,6 +46,11 @@ func (c *ScheduleController) CreateSchedule(ctx *gin.Context) {
 		return
 	}
 
+	if input.Quota < 10 {
+		ctx.Error(utils.NewValidationError("Minimum quota/pasien adalah 10"))
+		return
+	}
+
 	if err := c.scheduleService.CreateSchedule(ctx.Request.Context(), &input); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -59,6 +64,11 @@ func (c *ScheduleController) UpdateSchedule(ctx *gin.Context) {
 	var input models.DoctorSchedule
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
+		return
+	}
+
+	if input.Quota > 0 && input.Quota < 10 {
+		ctx.Error(utils.NewValidationError("Minimum quota/pasien adalah 10"))
 		return
 	}
 

@@ -15,7 +15,8 @@ type MedicalResult struct {
 	TestType      string       `json:"test_type"`
 	TestName      string       `json:"test_name"`
 	Result        string       `json:"result" gorm:"type:text"`
-	Notes         string       `json:"notes" gorm:"type:text"`
-	FileURL       string       `json:"file_url"`
-	ResultDate    time.Time    `json:"result_date"`
+	Notes           string       `json:"notes" gorm:"type:text"`
+	FileURL         string       `json:"file_url"`
+	ResultDate      time.Time    `json:"result_date"`
+	HasPrescription *bool        `json:"has_prescription" gorm:"->;default:false"`
 }

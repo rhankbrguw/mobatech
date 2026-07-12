@@ -78,7 +78,15 @@ export function MedicalResultsClient({ initialData, initialMedicines, searchPara
         showToast(APP_STRINGS.common.medicalResultsUpdated, "success");
       } else {
         await api.post("/api/admin/medical-results", payload);
-        showToast(APP_STRINGS.common.medicalResultsAdded, "success"); }
+        if (payload.appointment_id) {
+          try {
+            await api.post(`/api/admin/appointments/${payload.appointment_id}/complete`, {});
+          } catch (e) {
+            console.error("Auto-complete antrean gagal:", e);
+          }
+        }
+        showToast(APP_STRINGS.common.medicalResultsAdded, "success"); 
+      }
       setShowForm(false);
       setForm(defaultForm);
       setEditId(null);

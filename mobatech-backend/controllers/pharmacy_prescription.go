@@ -21,8 +21,9 @@ func (c *PharmacyController) GetMyPrescriptions(ctx *gin.Context) {
 
 	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
 	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	offset := (page - 1) * limit
 
-	prescriptions, totalCount, err := c.service.GetPrescriptionsByUserID(ctx.Request.Context(), userID, page, limit)
+	prescriptions, totalCount, err := c.service.GetPrescriptionsByUserID(ctx.Request.Context(), userID, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
