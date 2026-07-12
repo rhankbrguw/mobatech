@@ -122,7 +122,7 @@ export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescri
                   <td className={TD_CLASS}>#{p.id}</td>
                   <td className={TD_CLASS}>{p.user_id}</td>
                   <td className={`${TD_CLASS} text-foreground/80`}>{p.doctor_name || "-"}</td>
-                  <td className={TD_CLASS}>{Formatters.date(p.CreatedAt || "", "short")}</td>
+                  <td className={TD_CLASS}>{Formatters.date(p.created_at || "", "short")}</td>
                   <td className={TD_CLASS}>{getStatusBadge(p.status)}</td>
                   <td className={TD_CLASS}>
                     <div className="flex justify-center">
