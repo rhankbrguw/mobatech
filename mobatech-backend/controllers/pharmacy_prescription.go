@@ -73,6 +73,28 @@ func (c *PharmacyController) DeletePrescription(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Prescription deleted", nil))
 }
 
+func (c *PharmacyController) RedeemPrescription(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, _ := strconv.Atoi(idStr)
+
+	prescription, err := c.authorizePrescriptionAccess(ctx, id)
+	if err != nil {
+		return
+	}
+
+	if prescription.Status != "Pending" {
+		ctx.Error(utils.NewAppError(utils.ErrValidation, http.StatusBadRequest, "Hanya e-resep berstatus Pending yang dapat ditebus", nil))
+		return
+	}
+
+	if err := c.service.UpdatePrescriptionStatus(ctx.Request.Context(), uint(id), "Requested"); err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Prescription redeemed successfully", nil))
+}
+
 func (c *PharmacyController) authorizePrescriptionAccess(ctx *gin.Context, id int) (*models.Prescription, error) {
 	prescription, err := c.service.GetPrescriptionByID(ctx.Request.Context(), uint(id))
 	if err != nil {

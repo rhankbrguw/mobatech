@@ -18,19 +18,13 @@ const defaultForm = { user_id: 0, appointment_id: 0, doctor_name: "", test_type:
 export function MedicalResultsClient({ initialData, initialMedicines, searchParams }: { initialData?: unknown, initialMedicines?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
   const role = user?.role || "admin";
-  const [users, setUsers] = useState<User[]>([]);
-  const [results, setResults] = useState<MedicalResult[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
-  const [form, setForm] = useState(defaultForm);
-  const [saving, setSaving] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); const [filterValue, setFilterValue] = useState("");
-  const [drawerItem, setDrawerItem] = useState<MedicalResult | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [users, setUsers] = useState<User[]>([]); const [results, setResults] = useState<MedicalResult[]>([]);
+  const [loading, setLoading] = useState(true); const [showForm, setShowForm] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null); const [form, setForm] = useState(defaultForm);
+  const [saving, setSaving] = useState(false); const [searchQuery, setSearchQuery] = useState(""); const [filterValue, setFilterValue] = useState("");
+  const [drawerItem, setDrawerItem] = useState<MedicalResult | null>(null); const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [prescriptionModalData, setPrescriptionModalData] = useState<MedicalResult | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1); const [totalPages, setTotalPages] = useState(1);
   const [toast, setToast] = useState<{ isOpen: boolean; message: string; type: "success" | "error" }>({ isOpen: false, message: "", type: "success" });
   const showToast = (message: string, type: "success" | "error") => setToast({ isOpen: true, message, type });
   const load = async () => {
@@ -54,12 +48,7 @@ export function MedicalResultsClient({ initialData, initialMedicines, searchPara
     } catch {} };
   useEffect(() => { load(); }, [searchQuery, filterValue, currentPage]);
   useEffect(() => { setCurrentPage(1); }, [searchQuery, filterValue]);
-  useEffect(() => {
-    loadUsers();
-    if (searchParams && searchParams.appointment_id) {
-      setForm({ ...defaultForm, appointment_id: Number(searchParams.appointment_id), user_id: searchParams.user_id ? Number(searchParams.user_id) : 0, doctor_name: typeof searchParams.doctor_name === 'string' ? searchParams.doctor_name : "" });
-      setShowForm(true); }
-  }, []);
+  useEffect(() => { loadUsers(); if (searchParams && searchParams.appointment_id) { setForm({ ...defaultForm, appointment_id: Number(searchParams.appointment_id), user_id: searchParams.user_id ? Number(searchParams.user_id) : 0, doctor_name: typeof searchParams.doctor_name === 'string' ? searchParams.doctor_name : "" }); setShowForm(true); } }, []);
   const openCreate = () => { setForm(defaultForm); setEditId(null); setShowForm(true); };
   const openEdit = (r: MedicalResult) => { setForm({ user_id: r.user_id, appointment_id: r.appointment_id || 0, doctor_name: r.doctor_name, test_type: r.test_type, test_name: r.test_name, result: r.result, notes: r.notes, file_url: r.file_url, result_date: r.result_date?.slice(0, 10) ?? "" }); setEditId(r.id); setShowForm(true); };
   const handleSave = async () => {

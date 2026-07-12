@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Prescription } from "@/types/api";
 import { api } from "@/lib/api";
 import { Check, Inbox } from "lucide-react";
@@ -11,22 +11,46 @@ import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { Card } from "@/components/ui/Card";
 import { ActionMenu } from "@/components/ui/ActionMenu";
+import { Pagination } from "@/components/ui/Pagination";
 
 const TH_CLASS = "align-middle whitespace-nowrap py-3 px-4 text-xs font-bold uppercase tracking-wider text-foreground/50 text-center";
 const TD_CLASS = "align-middle whitespace-nowrap py-4 px-4 border-b border-glass-border/50 text-center font-medium text-foreground";
 
-export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescriptions: Prescription[] }) {
-  const [prescriptions, setPrescriptions] = useState<Prescription[]>(initialPrescriptions);
+export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescriptions?: Prescription[] }) {
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>(initialPrescriptions || []);
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [toast, setToast] = useState<{isOpen: boolean, message: string, type: "success"|"error"}>({ isOpen: false, message: "", type: "success" });
   const [filterValue, setFilterValue] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const loadPrescriptions = async () => {
+    try {
+      const q = new URLSearchParams({ page: currentPage.toString(), limit: "10" });
+      if (searchQuery) q.append("search", searchQuery);
+      if (filterValue !== "all") q.append("filter", filterValue);
+      const res = await api.get<Prescription[]>(`/api/admin/pharmacy/prescriptions?${q}`);
+      setPrescriptions(res.data || []);
+      if (res.meta) setTotalPages(res.meta.total_pages);
+    } catch {
+      setToast({ isOpen: true, message: APP_STRINGS.login.networkError, type: "error" });
+    }
+  };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filterValue]);
+
+  useEffect(() => {
+    loadPrescriptions();
+  }, [searchQuery, filterValue, currentPage]);
 
   const handleUpdateStatus = async (id: number, status: string) => {
     setLoadingId(id);
     try {
       await api.put(`/api/admin/pharmacy/prescriptions/${id}/status`, { status });
-      setPrescriptions(prev => prev.map(p => p.id === id ? { ...p, status } : p));
+      await loadPrescriptions();
       setToast({ isOpen: true, message: APP_STRINGS.pharmacy.processSuccess, type: "success" });
     } catch {
       setToast({ isOpen: true, message: APP_STRINGS.pharmacy.processError, type: "error" });
@@ -43,19 +67,6 @@ export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescri
     };
     return badges[status] || <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-foreground/10 text-foreground/70 border border-foreground/10">{status}</span>;
   };
-
-  const filteredPrescriptions = prescriptions.filter(p => {
-    if (filterValue !== "all" && p.status !== filterValue) return false;
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      return (
-        p.id.toString().includes(q) ||
-        p.user_id.toString().includes(q) ||
-        (p.doctor_name && p.doctor_name.toLowerCase().includes(q))
-      );
-    }
-    return true;
-  });
 
   return (
     <div className="space-y-6 animate-slide-in">
@@ -97,7 +108,7 @@ export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescri
               </tr>
             </thead>
             <tbody>
-              {filteredPrescriptions.length === 0 ? (
+              {prescriptions.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="text-center py-16">
                     <div className="flex flex-col items-center justify-center text-foreground/50">
@@ -106,7 +117,7 @@ export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescri
                     </div>
                   </td>
                 </tr>
-              ) : filteredPrescriptions.map((p) => (
+              ) : prescriptions.map((p) => (
                 <tr key={p.id} className="hover:bg-overlay-dark] dark:hover:bg-overlay-light] transition-colors group">
                   <td className={TD_CLASS}>#{p.id}</td>
                   <td className={TD_CLASS}>{p.user_id}</td>
@@ -118,7 +129,7 @@ export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescri
                       <ActionMenu
                         items={[
                           ...(p.status === "Requested" ? [{ label: loadingId === p.id ? "Memproses..." : "Proses Tebus", icon: <Check size={14} />, onClick: () => handleUpdateStatus(p.id, "Redeemed"), disabled: loadingId === p.id, variant: "success" as const }] : []),
-                          ...(p.status === "Pending" ? [{ label: "Menunggu Pasien", icon: <Check size={14} />, onClick: () => {}, disabled: true }] : []),
+                          ...(p.status === "Pending" ? [{ label: loadingId === p.id ? "Memproses..." : "Proses Langsung", icon: <Check size={14} />, onClick: () => handleUpdateStatus(p.id, "Redeemed"), disabled: loadingId === p.id, variant: "success" as const }] : []),
                           ...(p.status === "Redeemed" ? [{ label: "Selesai", icon: <Check size={14} />, onClick: () => {}, disabled: true }] : [])
                         ]}
                       />
@@ -130,6 +141,9 @@ export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescri
           </table>
         </div>
       </Card>
+      
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast(t => ({...t, isOpen: false}))} />
     </div>
   );

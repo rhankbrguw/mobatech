@@ -63,6 +63,7 @@ const (
 	RoutePolyclinicsSchedulesParamSched_id = "/polyclinics/schedules/:sched_id"
 	RoutePrescriptions                     = "/prescriptions"
 	RoutePrescriptionsParamId              = "/prescriptions/:id"
+	RoutePrescriptionsParamIdRedeem        = "/prescriptions/:id/redeem"
 	RoutePrescriptionsParamIdStatus        = "/prescriptions/:id/status"
 	RouteProfile                           = "/profile"
 	RouteRecommendations                   = "/recommendations"

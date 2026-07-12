@@ -33,6 +33,7 @@ func setupPharmacyUserRoutes(r *gin.Engine, ctrl *controllers.PharmacyController
 	user.Use(middleware.AuthMiddleware())
 	user.GET(constants.RoutePrescriptions, ctrl.GetMyPrescriptions)
 	user.GET(constants.RoutePrescriptionsParamId, ctrl.GetPrescriptionDetail)
+	user.POST(constants.RoutePrescriptionsParamIdRedeem, ctrl.RedeemPrescription)
 	user.POST(constants.RoutePrescriptions, ctrl.CreatePrescription)
 	user.DELETE(constants.RoutePrescriptionsParamId, ctrl.DeletePrescription)
 	user.POST(constants.RouteOrders, ctrl.CreateOrder)

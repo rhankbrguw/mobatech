@@ -138,14 +138,6 @@ export const APP_STRINGS = {
     currentStock: "Stok Saat Ini",
   },
   theme: { defaultColor: "#1e5e44", defaultColorLight: "#1e5e4499" },
-  validation: {
-    nameEmpty: "Nama tidak boleh kosong.", nameInvalid: "Nama tidak boleh mengandung angka atau karakter khusus.", emailEmpty: "Email tidak boleh kosong.",
-    emailInvalid: "Format email tidak valid. Gunakan domain yang benar (contoh: .com, .id).", phoneEmpty: "Nomor HP tidak boleh kosong.",
-    phoneShort: "Nomor HP terlalu pendek.", phoneLong: "Nomor HP terlalu panjang.", passwordEmpty: "Kata sandi tidak boleh kosong.",
-    passwordWeak: "Kata sandi terlalu lemah (Min. 8 karakter, 1 huruf besar, 1 huruf kecil, 1 angka).", requiredSuffix: " tidak boleh kosong.",
-    quotaEmpty: "Kuota pasien tidak boleh kosong.", quotaMin: "Minimal pasien/kuota adalah 10.",
-  },
-  formatters: {
-    phonePrefix: "+62 ", phonePrefixIntl: "62", phonePrefixLocal: "0", currencyPrefix: "Rp ", currencyZero: "Rp 0", locale: "id-ID", timezone: "Asia/Jakarta"
-  }
+  validation: { nameEmpty: "Nama tidak boleh kosong.", nameInvalid: "Nama tidak boleh mengandung angka atau karakter khusus.", emailEmpty: "Email tidak boleh kosong.", emailInvalid: "Format email tidak valid. Gunakan domain yang benar.", phoneEmpty: "Nomor HP tidak boleh kosong.", phoneShort: "Nomor HP terlalu pendek.", phoneLong: "Nomor HP terlalu panjang.", passwordEmpty: "Kata sandi tidak boleh kosong.", passwordWeak: "Kata sandi terlalu lemah (Min. 8 karakter, 1 huruf besar, 1 huruf kecil, 1 angka).", requiredSuffix: " tidak boleh kosong.", quotaEmpty: "Kuota pasien tidak boleh kosong.", quotaMin: "Minimal pasien/kuota adalah 10." },
+  formatters: { phonePrefix: "+62 ", phonePrefixIntl: "62", phonePrefixLocal: "0", currencyPrefix: "Rp ", currencyZero: "Rp 0", locale: "id-ID", timezone: "Asia/Jakarta" }
 } as const;
