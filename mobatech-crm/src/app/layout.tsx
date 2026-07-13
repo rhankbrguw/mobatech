@@ -41,7 +41,7 @@ export default function RootLayout({
                   } else {
                     document.documentElement.classList.remove('dark');
                   }
-                } catch (e) { console.error(e); }
+                } catch (e) { /* ignored */ }
               })();
             `,
           }}

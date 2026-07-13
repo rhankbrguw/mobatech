@@ -23,7 +23,7 @@ export default function AIOrchestratorPage() {
         setVectorCount(res.data.vector_count);
       }
     } catch (err) {
-      console.error("Failed to fetch RAG status:", err);
+      /* ignored */
     }
   };
 
@@ -42,7 +42,7 @@ export default function AIOrchestratorPage() {
       });
       await fetchStatus();
     } catch (err) {
-      console.error(err);
+      /* ignored */
       setToast({
         isOpen: true,
         message: APP_STRINGS.aiOrchestrator.syncError,

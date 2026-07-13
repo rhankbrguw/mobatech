@@ -14,7 +14,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
   try {
     initialData = await serverFetch(`/ping`);
   } catch (e) {
-    console.error(e);
+    /* ignored */
   }
 
   return <><h1 className="sr-only">{metadata.title as string}</h1><AiAuditClient initialData={initialData} searchParams={await searchParams} /></>;

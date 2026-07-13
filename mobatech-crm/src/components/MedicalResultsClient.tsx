@@ -71,7 +71,7 @@ export function MedicalResultsClient({ initialData, initialMedicines, searchPara
           try {
             await api.post(`/api/admin/appointments/${payload.appointment_id}/complete`, {});
           } catch (e) {
-            console.error("Auto-complete antrean gagal:", e);
+            /* ignored */
           }
         }
         showToast(APP_STRINGS.common.medicalResultsAdded, "success"); 

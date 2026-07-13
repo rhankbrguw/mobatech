@@ -69,47 +69,26 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   Future<void> _saveProfile() async {
     final user = ref.read(userProfileProvider).value;
-    if (user == null) {
-      return;
-    }
-    if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (user == null || !(_formKey.currentState?.validate() ?? false)) return;
     setState(() => _isLoading = true);
 
     try {
-      final userAsync = ref.read(userProfileProvider);
-      final user = userAsync.value;
-      String? pathForUpload =
-          (_imagePath != null && (_imagePath?.startsWith('http') ?? false))
-          ? null
-          : _imagePath;
-
-      await ref
-          .read(authStateProvider.notifier)
-          .updateProfile(
+      String? pathForUpload = (_imagePath != null && (_imagePath!.startsWith('http'))) ? null : _imagePath;
+      await ref.read(authStateProvider.notifier).updateProfile(
             _fullNameController.text.trim(),
             '+62${_phoneController.text.trim()}',
             pathForUpload,
-            bloodType: user?.bloodType,
-            height: user?.height,
-            weight: user?.weight,
-            allergies: user?.allergies,
-            dob: _dobController.text.trim(),
-            gender: _selectedGender,
+            bloodType: user.bloodType, height: user.height,
+            weight: user.weight, allergies: user.allergies,
+            dob: _dobController.text.trim(), gender: _selectedGender,
           );
       ref.invalidate(userProfileProvider);
       if (mounted) {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        CustomSnackbar.showSuccess(
-          context,
-          ProfileStrings.extProfilberhasildiperbarui,
-        );
+        CustomSnackbar.showSuccess(context, ProfileStrings.extProfilberhasildiperbarui);
         Navigator.pop(context);
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        CustomSnackbar.showError(context, ErrorHandler.getMessage(e));
-      }
+      if (mounted) CustomSnackbar.showError(context, ErrorHandler.getMessage(e));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

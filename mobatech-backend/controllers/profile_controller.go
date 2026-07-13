@@ -96,7 +96,7 @@ func (c *ProfileController) DeleteFamilyMember(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		ctx.Error(utils.NewValidationError("Invalid ID"))
+		ctx.Error(utils.NewValidationError(constants.ErrInvalidID.Error()))
 		return
 	}
 

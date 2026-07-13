@@ -68,7 +68,7 @@ func (c *PharmacyController) CancelOrder(ctx *gin.Context) {
 	}
 
 	if order.Status != "Pending" {
-		ctx.Error(utils.NewValidationError("Only pending orders can be cancelled"))
+		ctx.Error(utils.NewValidationError(constants.ErrOnlyPendingCanBeCancelled.Error()))
 		return
 	}
 

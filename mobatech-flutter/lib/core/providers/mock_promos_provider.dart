@@ -38,14 +38,7 @@ class SpecialOffersNotifier extends AutoDisposeAsyncNotifier<List<SpecialOffer>>
     final totalPages = meta?['total_pages'] as int? ?? 1;
     _hasMore = currentPage < totalPages;
     return data.map((e) {
-      String colorStr = e['themeColor'] as String? ?? '';
-      Color c = AppColors.primary;
-      if (colorStr.isNotEmpty) {
-        try {
-          c = Color(int.parse(colorStr.replaceAll('#', '0xFF')));
-        } catch (_) {}
-      }
-      return SpecialOffer(e['title'] ?? '', e['subtitle'] ?? '', c);
+      return SpecialOffer(e['title'] ?? '', e['subtitle'] ?? '', _parseColor(e['themeColor'] as String?));
     }).toList();
   }
 
@@ -69,20 +62,22 @@ class SpecialOffersNotifier extends AutoDisposeAsyncNotifier<List<SpecialOffer>>
       _hasMore = currentPage < totalPages;
       final current = state.value ?? [];
       final nextOffers = data.map((e) {
-        String colorStr = e['themeColor'] as String? ?? '';
-        Color c = AppColors.primary;
-        if (colorStr.isNotEmpty) {
-          try {
-            c = Color(int.parse(colorStr.replaceAll('#', '0xFF')));
-          } catch (_) {}
-        }
-        return SpecialOffer(e['title'] ?? '', e['subtitle'] ?? '', c);
+        return SpecialOffer(e['title'] ?? '', e['subtitle'] ?? '', _parseColor(e['themeColor'] as String?));
       }).toList();
       state = AsyncData([...current, ...nextOffers]);
     } catch (e) {
       state = AsyncData(state.value ?? []);
     } finally {
       _isFetchingNextPage = false;
+    }
+  }
+
+  Color _parseColor(String? colorStr) {
+    if (colorStr == null || colorStr.isEmpty) return AppColors.primary;
+    try {
+      return Color(int.parse(colorStr.replaceAll('#', '0xFF')));
+    } catch (_) {
+      return AppColors.primary;
     }
   }
 }

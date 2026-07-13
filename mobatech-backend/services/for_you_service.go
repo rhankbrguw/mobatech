@@ -60,11 +60,13 @@ func (s *forYouService) extractUserContext(ctx context.Context, userID string) s
 			break
 		}
 		msgs, err := s.chatRepo.GetSessionMessages(ctx, session.ID)
-		if err == nil {
-			for _, msg := range msgs {
-				if msg.Role == "user" {
-					chatContext += "- " + msg.Content + "\n"
-				}
+		if err != nil {
+			continue
+		}
+		
+		for _, msg := range msgs {
+			if msg.Role == "user" {
+				chatContext += "- " + msg.Content + "\n"
 			}
 		}
 	}

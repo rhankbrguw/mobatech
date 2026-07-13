@@ -29,7 +29,7 @@ export async function encryptData(text: string): Promise<string> {
     
     return btoa(Array.from(combined).map(b => String.fromCharCode(b)).join(""));
   } catch (error) {
-    console.error("Encryption failed:", error);
+    /* ignored */
     throw new Error("SECURE_ENCRYPTION_FAILED");
   }
 }
@@ -52,7 +52,7 @@ export async function decryptData(encryptedText: string): Promise<string> {
     
     return new TextDecoder().decode(decrypted);
   } catch (error) {
-    console.error("Decryption failed:", error);
+    /* ignored */
     throw new Error("SECURE_DECRYPTION_FAILED");
   }
 }

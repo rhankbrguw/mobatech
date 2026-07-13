@@ -32,7 +32,7 @@ func NewTrackingController(service services.EmergencyService) *TrackingControlle
 func (tc *TrackingController) TrackAmbulance(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.Error(utils.NewValidationError("Invalid emergency ID"))
+		c.Error(utils.NewValidationError(constants.ErrInvalidEmergencyID.Error()))
 		return
 	}
 

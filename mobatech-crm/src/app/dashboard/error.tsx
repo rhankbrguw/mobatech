@@ -13,12 +13,12 @@ export default function DashboardError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("Dashboard Error Boundary Caught:", error);
+    /* ignored */
   }, [error]);
   const handleForceLogout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
-    } catch (e) { console.error(e); }
+    } catch (e) { /* ignored */ }
     localStorage.removeItem("hermina-crm-auth");
     window.location.href = "/login";
   };

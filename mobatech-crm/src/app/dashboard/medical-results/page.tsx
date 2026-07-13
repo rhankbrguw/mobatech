@@ -20,7 +20,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
     if (resData.status === "fulfilled") initialData = resData.value;
     if (resMed.status === "fulfilled") medicines = resMed.value;
   } catch (e) {
-    console.error(e);
+    /* ignored */
   }
 
   return <><h1 className="sr-only">{metadata.title as string}</h1><MedicalResultsClient initialData={initialData} initialMedicines={medicines} searchParams={await searchParams} /></>;

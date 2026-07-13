@@ -59,16 +59,7 @@ func (s *chatService) processStream(ctx context.Context, iter *genai.GenerateCon
 			errChan <- fmt.Errorf("stream error: %v", err)
 			return
 		}
-		for _, cand := range resp.Candidates {
-			if cand.Content != nil {
-				for _, part := range cand.Content.Parts {
-					if text, ok := part.(genai.Text); ok {
-						fullResponse += string(text)
-						outChan <- string(text)
-					}
-				}
-			}
-		}
+		fullResponse += s.extractAndSendParts(resp.Candidates, outChan)
 	}
 
 	s.repo.AddMessage(ctx, &models.ChatMessage{
@@ -76,4 +67,20 @@ func (s *chatService) processStream(ctx context.Context, iter *genai.GenerateCon
 		Role:      "model",
 		Content:   fullResponse,
 	})
+}
+
+func (s *chatService) extractAndSendParts(candidates []*genai.Candidate, outChan chan<- string) string {
+	var added string
+	for _, cand := range candidates {
+		if cand.Content == nil {
+			continue
+		}
+		for _, part := range cand.Content.Parts {
+			if text, ok := part.(genai.Text); ok {
+				added += string(text)
+				outChan <- string(text)
+			}
+		}
+	}
+	return added
 }

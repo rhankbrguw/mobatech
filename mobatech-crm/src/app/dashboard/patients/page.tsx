@@ -14,7 +14,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
   try {
     initialData = await serverFetch(`/api/admin/users?page=${page}&search=${search}`);
   } catch (e) {
-    console.error(e);
+    /* ignored */
   }
 
   return <><h1 className="sr-only">{metadata.title as string}</h1><PatientsClient initialData={initialData} searchParams={await searchParams} /></>;

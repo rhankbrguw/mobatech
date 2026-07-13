@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"backend/constants"
 	"backend/utils"
 	"io"
 	"strconv"
@@ -11,7 +12,7 @@ import (
 func (c *ChatController) StreamChat(ctx *gin.Context) {
 	sessionID, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	if err != nil {
-		ctx.Error(utils.NewValidationError("invalid session id"))
+		ctx.Error(utils.NewValidationError(constants.ErrInvalidSessionID.Error()))
 		return
 	}
 	var req struct {

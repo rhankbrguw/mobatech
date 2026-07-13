@@ -50,7 +50,7 @@ axiosInstance.interceptors.request.use(async (config: CustomInternalConfig) => {
         token = parsed?.state?.token;
       }
     } catch (e) {
-      console.error("Failed to read token from localStorage", e);
+      /* ignored */
     }
   }
   if (token) {
@@ -62,7 +62,7 @@ axiosInstance.interceptors.request.use(async (config: CustomInternalConfig) => {
       const encrypted = await encryptData(stringData);
       config.data = { encrypted_payload: encrypted };
     } catch (e) {
-      console.error("Encryption failed in interceptor:", e);
+      /* ignored */
     }
   }
   return config;
@@ -74,7 +74,7 @@ axiosInstance.interceptors.response.use(
         const decryptedStr = await decryptData(response.data.encrypted_payload);
         response.data = JSON.parse(decryptedStr);
       } catch (e) {
-        console.error("Decryption failed for response payload", e);
+        /* ignored */
       }
     }
     const normalizeKeys = (obj: unknown): unknown => {

@@ -31,24 +31,23 @@ class _DoctorDetailScreenState extends ConsumerState<DoctorDetailScreen> {
     super.dispose();
   }
 
-  void _bookAppointment() async {
+  bool _validateInput() {
     if (_selectedScheduleId == null) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      CustomSnackbar.showInfo(
-        context,
-        AppointmentStrings.extPilihjadwalterlebihdahulu,
-      );
-      return;
+      CustomSnackbar.showInfo(context, AppointmentStrings.extPilihjadwalterlebihdahulu);
+      return false;
     }
     if (_symptomsController.text.isEmpty) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       CustomSnackbar.showInfo(context, CoreStrings.extIsikeluhanterlebihdahulu);
-      return;
+      return false;
     }
+    return true;
+  }
 
-    setState(() {
-      _isBooking = true;
-    });
+  void _bookAppointment() async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    if (!_validateInput()) return;
+
+    setState(() => _isBooking = true);
 
     try {
       final repository = ref.read(appointmentRepositoryProvider);
@@ -59,24 +58,13 @@ class _DoctorDetailScreenState extends ConsumerState<DoctorDetailScreen> {
       if (mounted) {
         ref.invalidate(userAppointmentsProvider);
         ref.invalidate(doctorSchedulesProvider(widget.doctorId));
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        CustomSnackbar.showSuccess(
-          context,
-          AppointmentStrings.extJanjitemuberhasildibuat,
-        );
+        CustomSnackbar.showSuccess(context, AppointmentStrings.extJanjitemuberhasildibuat);
         Navigator.pop(context); // go back
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        CustomSnackbar.showError(context, ErrorHandler.getMessage(e));
-      }
+      if (mounted) CustomSnackbar.showError(context, ErrorHandler.getMessage(e));
     } finally {
-      if (mounted) {
-        setState(() {
-          _isBooking = false;
-        });
-      }
+      if (mounted) setState(() => _isBooking = false);
     }
   }
 

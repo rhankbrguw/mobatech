@@ -27,7 +27,7 @@ export default async function PharmacyPage({ searchParams }: { searchParams: Pro
     if (medicinesRes.status === "fulfilled") medicines = medicinesRes.value as Medicine[];
     if (categoriesRes.status === "fulfilled") categories = categoriesRes.value as MedicineCategory[];
   } catch (e) {
-    console.error("Error fetching pharmacy data:", e);
+    /* ignored */
   }
 
   return <><h1 className="sr-only">{metadata.title as string}</h1><PharmacyClient initialMedicines={medicines} categories={categories} initialOrders={orders} /></>;

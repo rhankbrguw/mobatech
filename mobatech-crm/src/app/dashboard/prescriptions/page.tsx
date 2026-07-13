@@ -23,7 +23,7 @@ export default async function Page({
   try {
     prescriptions = await serverFetch(`/api/admin/pharmacy/prescriptions?page=${page}&search=${search}`);
   } catch (e) {
-    console.error("Error fetching prescriptions:", e);
+    /* ignored */
   }
 
   return (

@@ -42,24 +42,26 @@ class RemindersNotifier extends StateNotifier<AsyncValue<List<Reminder>>> {
   Future<void> markAsRead(String id) async {
     try {
       await _repository.markReminderAsRead(id);
-      state = state.whenData((reminders) {
-        return reminders.map((r) {
-          if (r.id == id) {
-            return Reminder(
-              id: r.id,
-              title: r.title,
-              message: r.message,
-              dateTime: r.dateTime,
-              type: r.type,
-              isRead: true,
-            );
-          }
-          return r;
-        }).toList();
-      });
+      state = state.whenData((reminders) => _updateReminderStatus(reminders, id));
     } catch (e) {
       // Ignore error for now
     }
+  }
+
+  List<Reminder> _updateReminderStatus(List<Reminder> reminders, String id) {
+    return reminders.map((r) {
+      if (r.id == id) {
+        return Reminder(
+          id: r.id,
+          title: r.title,
+          message: r.message,
+          dateTime: r.dateTime,
+          type: r.type,
+          isRead: true,
+        );
+      }
+      return r;
+    }).toList();
   }
 }
 

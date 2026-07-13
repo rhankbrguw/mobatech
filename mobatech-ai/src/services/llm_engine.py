@@ -4,7 +4,7 @@ from google import genai
 from dotenv import load_dotenv
 import datetime
 import locale
-from typing import Any, Optional
+from typing import Optional
 import constants as const
 
 backend_env_path = os.path.join(os.path.dirname(__file__), const.LLM_BACKEND_ENV_PATH_REL)

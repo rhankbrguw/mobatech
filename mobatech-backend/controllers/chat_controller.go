@@ -52,7 +52,7 @@ func (c *ChatController) GetUserSessions(ctx *gin.Context) {
 func (c *ChatController) GetSessionMessages(ctx *gin.Context) {
 	sessionID, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	if err != nil {
-		ctx.Error(utils.NewValidationError("invalid session id"))
+		ctx.Error(utils.NewValidationError(constants.ErrInvalidSessionID.Error()))
 		return
 	}
 	messages, err := c.service.GetSessionMessages(ctx.Request.Context(), uint(sessionID))
@@ -84,7 +84,7 @@ func (c *ChatController) RenameSession(ctx *gin.Context) {
 	}
 	sessionID, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.Error(utils.NewValidationError("invalid session id"))
+		ctx.Error(utils.NewValidationError(constants.ErrInvalidSessionID.Error()))
 		return
 	}
 	var req struct {
