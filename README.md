@@ -127,3 +127,5 @@ This repository is an **Industry-Ready** boilerplate. It rigorously follows the 
 **Raihan Akbar** — [GitHub](https://github.com/rhankbrguw) · [LinkedIn](https://www.linkedin.com/in/raihan-akbar-2b5820334/)
 
 **Fahri Arkan** — [GitHub](https://github.com/sepUnch) · [LinkedIn](https://www.linkedin.com/in/fahri-arkan/)
+
+**Fahmi Zain** — [GitHub](https://github.com/Zain0205) · [LinkedIn](https://www.linkedin.com/in/fahmi-zain-2602412aa/)
