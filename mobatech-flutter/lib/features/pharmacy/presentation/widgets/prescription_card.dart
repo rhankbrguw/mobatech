@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:mobatech_app/core/constants/strings/core_strings.dart';
 import 'package:mobatech_app/core/constants/strings/error_strings.dart';
 import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
@@ -22,22 +23,28 @@ class PrescriptionCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundWhite.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppColors.backgroundWhite.withValues(alpha: 0.2),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.textDark.withValues(alpha: 0.1),
-              blurRadius: 15,
-              offset: const Offset(0, 4),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Container(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            decoration: BoxDecoration(
+              color: AppColors.backgroundWhite.withValues(alpha: 0.25),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: AppColors.backgroundWhite.withValues(alpha: 0.4),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.textDark.withValues(alpha: 0.08),
+                  blurRadius: 20,
+                  spreadRadius: -2,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
-          ],
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -77,7 +84,9 @@ class PrescriptionCard extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 
   Widget _buildDate() => Text(

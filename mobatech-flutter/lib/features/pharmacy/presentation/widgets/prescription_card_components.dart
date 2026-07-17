@@ -103,19 +103,45 @@ class PrescriptionNotes extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 12),
-        const Text(
-          CoreStrings.extCatatan,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-            color: AppColors.textDark,
+        const SizedBox(height: 16),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.backgroundWhite.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColors.primaryLight.withValues(alpha: 0.3),
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          prescription.notes,
-          style: const TextStyle(color: AppColors.textGrey, fontSize: 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.info_outline, size: 16, color: AppColors.primary),
+                  const SizedBox(width: 6),
+                  const Text(
+                    CoreStrings.extCatatan,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                prescription.notes,
+                style: const TextStyle(
+                  color: AppColors.textDark,
+                  fontSize: 14,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

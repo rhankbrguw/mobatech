@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Prescription } from "@/types/api";
 import { api } from "@/lib/api";
-import { Check, Inbox } from "lucide-react";
+import { Check, Inbox, Eye } from "lucide-react";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { APP_STRINGS } from "@/lib/constants";
 import { Formatters } from "@/lib/formatters";
@@ -12,13 +12,18 @@ import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { Card } from "@/components/ui/Card";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 import { Pagination } from "@/components/ui/Pagination";
+import { useAuthStore } from "@/store/useAuthStore";
+import { PrescriptionDetailDrawer } from "./PrescriptionDetailDrawer";
 
 const TH_CLASS = "align-middle whitespace-nowrap py-3 px-4 text-xs font-bold uppercase tracking-wider text-foreground/50 text-center";
 const TD_CLASS = "align-middle whitespace-nowrap py-4 px-4 border-b border-glass-border/50 text-center font-medium text-foreground";
 
 export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescriptions?: Prescription[] }) {
+  const user = useAuthStore((state) => state.user);
+  const userRole = user?.role || "admin";
   const [prescriptions, setPrescriptions] = useState<Prescription[]>(initialPrescriptions || []);
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [selectedPrescription, setSelectedPrescription] = useState<Prescription | null>(null);
   const [toast, setToast] = useState<{isOpen: boolean, message: string, type: "success"|"error"}>({ isOpen: false, message: "", type: "success" });
   const [filterValue, setFilterValue] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -128,8 +133,9 @@ export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescri
                     <div className="flex justify-center">
                       <ActionMenu
                         items={[
-                          ...(p.status === "Requested" ? [{ label: loadingId === p.id ? "Memproses..." : "Proses Tebus", icon: <Check size={14} />, onClick: () => handleUpdateStatus(p.id, "Redeemed"), disabled: loadingId === p.id, variant: "success" as const }] : []),
-                          ...(p.status === "Pending" ? [{ label: loadingId === p.id ? "Memproses..." : "Proses Langsung", icon: <Check size={14} />, onClick: () => handleUpdateStatus(p.id, "Redeemed"), disabled: loadingId === p.id, variant: "success" as const }] : []),
+                          { label: "Lihat Detail", icon: <Eye size={14} />, onClick: () => setSelectedPrescription(p) },
+                          ...(userRole === "pharmacist" && p.status === "Requested" ? [{ label: loadingId === p.id ? "Memproses..." : "Proses Tebus", icon: <Check size={14} />, onClick: () => handleUpdateStatus(p.id, "Redeemed"), disabled: loadingId === p.id, variant: "success" as const }] : []),
+                          ...(userRole === "pharmacist" && p.status === "Pending" ? [{ label: loadingId === p.id ? "Memproses..." : "Proses Langsung", icon: <Check size={14} />, onClick: () => handleUpdateStatus(p.id, "Redeemed"), disabled: loadingId === p.id, variant: "success" as const }] : []),
                           ...(p.status === "Redeemed" ? [{ label: "Selesai", icon: <Check size={14} />, onClick: () => {}, disabled: true }] : [])
                         ]}
                       />
@@ -145,6 +151,15 @@ export function PharmacyPrescriptions({ initialPrescriptions }: { initialPrescri
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast(t => ({...t, isOpen: false}))} />
+      
+      <PrescriptionDetailDrawer
+        prescription={selectedPrescription}
+        onClose={() => setSelectedPrescription(null)}
+        onProcess={(id) => {
+          setSelectedPrescription(null);
+          handleUpdateStatus(id, "Redeemed");
+        }}
+      />
     </div>
   );
 }

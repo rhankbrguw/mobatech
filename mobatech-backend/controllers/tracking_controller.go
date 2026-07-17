@@ -68,8 +68,8 @@ func (tc *TrackingController) startSimulation(ctx context.Context, conn *websock
 }
 
 func (tc *TrackingController) sendInitialStatus(ctx context.Context, conn *websocket.Conn, reqID uint) {
-	tc.service.UpdateStatus(ctx, reqID, constants.StatusDispatched)
-	conn.WriteJSON(map[string]interface{}{
+	_ = tc.service.UpdateStatus(ctx, reqID, constants.StatusDispatched)
+	_ = conn.WriteJSON(map[string]interface{}{
 		"type":    "status_update",
 		"status":  constants.StatusDispatched,
 		"message": constants.MsgAmbulanceDispatched,
@@ -85,7 +85,7 @@ func (tc *TrackingController) runMovementLoop(ctx context.Context, conn *websock
 		curLng := aLng + (pLng-aLng)*progress
 		remaining := totalSteps - step
 
-		tc.service.UpdateTracking(ctx, reqID, curLat, curLng, remaining, constants.StatusDispatched)
+		_ = tc.service.UpdateTracking(ctx, reqID, curLat, curLng, remaining, constants.StatusDispatched)
 		err := conn.WriteJSON(map[string]interface{}{
 			"type":              "location_update",
 			"ambulance_lat":     curLat,
@@ -102,12 +102,12 @@ func (tc *TrackingController) runMovementLoop(ctx context.Context, conn *websock
 }
 
 func (tc *TrackingController) finalizeArrival(ctx context.Context, conn *websocket.Conn, reqID uint, pLat, pLng float64) {
-	tc.service.UpdateTracking(ctx, reqID, pLat, pLng, 0, "Arrived")
-	conn.WriteJSON(map[string]interface{}{
+	_ = tc.service.UpdateTracking(ctx, reqID, pLat, pLng, 0, "Arrived")
+	_ = conn.WriteJSON(map[string]interface{}{
 		"type":    "status_update",
 		"status":  "Arrived",
 		"message": "Ambulans telah tiba di lokasi Anda",
 	})
-	conn.WriteMessage(websocket.CloseMessage,
+	_ = conn.WriteMessage(websocket.CloseMessage,
 		websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Ambulance arrived"))
 }

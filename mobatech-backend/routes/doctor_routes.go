@@ -52,17 +52,17 @@ func setupAdminDoctorRoutes(api *gin.RouterGroup, h *doctorRouteHandlers) {
 	admin := api.Group(constants.RouteAdmin)
 	admin.Use(middleware.AdminMiddleware())
 
-	admin.POST(constants.RouteDoctors, h.docCtrl.CreateDoctor)
-	admin.PUT(constants.RouteDoctorsParamId, h.docCtrl.UpdateDoctor)
-	admin.DELETE(constants.RouteDoctorsParamId, h.docCtrl.DeleteDoctor)
+	admin.POST(constants.RouteDoctors, middleware.RequireRole("admin"), h.docCtrl.CreateDoctor)
+	admin.PUT(constants.RouteDoctorsParamId, middleware.RequireRole("admin"), h.docCtrl.UpdateDoctor)
+	admin.DELETE(constants.RouteDoctorsParamId, middleware.RequireRole("admin"), h.docCtrl.DeleteDoctor)
 
-	admin.GET(constants.RouteSchedules, h.schCtrl.GetAllSchedules)
-	admin.POST(constants.RouteSchedules, h.schCtrl.CreateSchedule)
-	admin.PUT(constants.RouteSchedulesParamId, h.schCtrl.UpdateSchedule)
-	admin.DELETE(constants.RouteSchedulesParamId, h.schCtrl.DeleteSchedule)
+	admin.GET(constants.RouteSchedules, middleware.RequireRole("admin", "doctor"), h.schCtrl.GetAllSchedules)
+	admin.POST(constants.RouteSchedules, middleware.RequireRole("admin", "doctor"), h.schCtrl.CreateSchedule)
+	admin.PUT(constants.RouteSchedulesParamId, middleware.RequireRole("admin", "doctor"), h.schCtrl.UpdateSchedule)
+	admin.DELETE(constants.RouteSchedulesParamId, middleware.RequireRole("admin", "doctor"), h.schCtrl.DeleteSchedule)
 
-	admin.GET(constants.RouteAppointments, h.apptCtrl.GetAllAppointments)
-	admin.POST(constants.RouteAppointmentsParamIdApprove, h.apptCtrl.ApproveAppointment)
-	admin.POST(constants.RouteAppointmentsParamIdComplete, h.apptCtrl.CompleteAppointment)
-	admin.POST(constants.RouteAppointmentsParamIdCancel, h.apptCtrl.AdminCancelAppointment)
+	admin.GET(constants.RouteAppointments, middleware.RequireRole("admin", "doctor"), h.apptCtrl.GetAllAppointments)
+	admin.POST(constants.RouteAppointmentsParamIdApprove, middleware.RequireRole("doctor"), h.apptCtrl.ApproveAppointment)
+	admin.POST(constants.RouteAppointmentsParamIdComplete, middleware.RequireRole("doctor"), h.apptCtrl.CompleteAppointment)
+	admin.POST(constants.RouteAppointmentsParamIdCancel, middleware.RequireRole("admin", "doctor"), h.apptCtrl.AdminCancelAppointment)
 }

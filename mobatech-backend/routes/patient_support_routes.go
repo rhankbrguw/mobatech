@@ -27,10 +27,10 @@ func setupMedicalResultRoutes(r *gin.Engine, db *gorm.DB) {
 
 	mrAdminGroup := r.Group(constants.RouteApiAdminMedicalResults)
 	mrAdminGroup.Use(middleware.AdminMiddleware())
-	mrAdminGroup.GET("", mrController.GetAll)
-	mrAdminGroup.POST("", mrController.Create)
-	mrAdminGroup.PUT(constants.RouteParamId, mrController.Update)
-	mrAdminGroup.DELETE(constants.RouteParamId, mrController.Delete)
+	mrAdminGroup.GET("", middleware.RequireRole("admin", "doctor"), mrController.GetAll)
+	mrAdminGroup.POST("", middleware.RequireRole("doctor"), mrController.Create)
+	mrAdminGroup.PUT(constants.RouteParamId, middleware.RequireRole("doctor"), mrController.Update)
+	mrAdminGroup.DELETE(constants.RouteParamId, middleware.RequireRole("admin", "doctor"), mrController.Delete)
 }
 
 func setupReminderRoutes(r *gin.Engine, db *gorm.DB) {

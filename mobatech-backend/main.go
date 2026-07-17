@@ -28,7 +28,7 @@ func main() {
 	} else {
 		port = ":" + port
 	}
-	r.Run(port)
+	_ = r.Run(port)
 }
 
 func setupServer() *gin.Engine {

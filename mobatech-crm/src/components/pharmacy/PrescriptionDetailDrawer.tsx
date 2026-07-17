@@ -2,6 +2,7 @@ import { Prescription } from "@/types/api";
 import { SideDrawer } from "@/components/ui/SideDrawer";
 import { Pill, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface Props {
   prescription: Prescription | null;
@@ -10,6 +11,8 @@ interface Props {
 }
 
 export function PrescriptionDetailDrawer({ prescription, onClose, onProcess }: Props) {
+  const user = useAuthStore((state) => state.user);
+  const userRole = user?.role || "admin";
   if (!prescription) return null;
 
   return (
@@ -66,7 +69,7 @@ export function PrescriptionDetailDrawer({ prescription, onClose, onProcess }: P
           )}
         </div>
 
-        {prescription.status === "pending" && (
+        {prescription.status === "Pending" && userRole === "pharmacist" && (
           <div className="mt-auto pt-4 border-t border-glass-border">
             <Button className="w-full h-12 text-base font-bold bg-info hover:bg-info text-surface-primary" onClick={() => onProcess(prescription.id)} icon={<CheckCircle size={18} />}>
               Tebus & Proses Resep

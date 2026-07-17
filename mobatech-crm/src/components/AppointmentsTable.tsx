@@ -89,12 +89,12 @@ export function AppointmentsTable({ items, loading, processingId, onApprove, onC
                     items={[
                       { label: "Lihat Detail", icon: <Eye size={14} />, onClick: () => onViewDetails(item) },
                       ...(item.status === "pending" ? [
-                        { label: "Setujui", icon: <Check size={14} />, onClick: () => onApprove(item.id), disabled: processingId === item.id, variant: "success" as const },
+                        ...(userRole === "doctor" ? [{ label: "Setujui", icon: <Check size={14} />, onClick: () => onApprove(item.id), disabled: processingId === item.id, variant: "success" as const }] : []),
                         { label: "Tolak", icon: <X size={14} />, onClick: () => onCancel(item.id), disabled: processingId === item.id, variant: "danger" as const }
                       ] : []),
                       ...(item.status === "approved" ? [
-                        { label: "Proses Rekam Medis", icon: <Stethoscope size={14} />, onClick: () => router.push(`/dashboard/medical-results?appointment_id=${item.id}&user_id=${item.user_id}&doctor_name=${encodeURIComponent(item.doctor?.name || '')}`), disabled: userRole === "admin", variant: "info" as const },
-                        { label: "Akhiri Sesi", icon: <CheckCircle2 size={14} />, onClick: () => onComplete(item.id), disabled: processingId === item.id },
+                        ...(userRole === "doctor" ? [{ label: "Proses Rekam Medis", icon: <Stethoscope size={14} />, onClick: () => router.push(`/dashboard/medical-results?appointment_id=${item.id}&user_id=${item.user_id}&doctor_name=${encodeURIComponent(item.doctor?.name || '')}`), variant: "info" as const }] : []),
+                        ...(userRole === "doctor" ? [{ label: "Akhiri Sesi", icon: <CheckCircle2 size={14} />, onClick: () => onComplete(item.id), disabled: processingId === item.id }] : []),
                         { label: "Batalkan", icon: <X size={14} />, onClick: () => onCancel(item.id), disabled: processingId === item.id, variant: "danger" as const }
                       ] : [])
                     ]}

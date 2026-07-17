@@ -1,19 +1,39 @@
-import { ShieldAlert } from "lucide-react";
-import { Card } from "./Card";
+import { ShieldAlert, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export function ForbiddenView({ message = "Akses Ditolak" }: { message?: string }) {
   return (
-    <div className="flex items-center justify-center min-h-[50vh] animate-fade-in">
-      <Card className="max-w-md w-full flex flex-col items-center justify-center text-center p-8 border-error-muted bg-error-muted dark:bg-error-muted">
-        <div className="w-16 h-16 rounded-full bg-error dark:bg-error/50 flex items-center justify-center mb-4">
-          <ShieldAlert className="w-8 h-8 text-error dark:text-error" />
+    <div className="flex items-center justify-center min-h-[60vh] animate-slide-in p-4">
+      <div className="relative max-w-lg w-full">
+        {/* Glow Effects */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-error/30 to-error/10 blur-xl opacity-70 animate-pulse rounded-3xl" />
+        
+        {/* Main Card */}
+        <div className="relative glass-panel rounded-3xl border border-glass-border/40 p-10 flex flex-col items-center text-center shadow-2xl backdrop-blur-xl bg-surface-primary/80 dark:bg-overlay-dark/90">
+          <div className="relative mb-6">
+            <div className="absolute inset-0 bg-error/20 blur-md rounded-full animate-ping" />
+            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-error/20 to-error/5 border border-error/30 flex items-center justify-center relative z-10 shadow-[0_0_15px_rgba(255,0,0,0.1)]">
+              <ShieldAlert className="w-10 h-10 text-error drop-shadow-md" />
+            </div>
+          </div>
+          
+          <h2 className="text-3xl font-extrabold bg-gradient-to-br from-foreground to-foreground/50 bg-clip-text text-transparent mb-3">
+            403 Forbidden
+          </h2>
+          <p className="text-foreground/80 font-medium text-lg mb-2">{message}</p>
+          <p className="text-sm text-foreground/50 mb-8 max-w-sm">
+            Mohon maaf, Anda tidak memiliki tingkat otorisasi yang cukup (Role Privilege) untuk mengakses area ini.
+          </p>
+          
+          <Link 
+            href="/dashboard"
+            className="flex items-center justify-center gap-2 w-full max-w-[200px] h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_20px_-10px_rgba(0,0,0,0.3)] hover:shadow-primary/30"
+          >
+            <ArrowLeft size={18} />
+            Kembali
+          </Link>
         </div>
-        <h2 className="text-xl font-bold text-foreground mb-2">403 Forbidden</h2>
-        <p className="text-foreground/70">{message}</p>
-        <p className="text-sm text-foreground/50 mt-4">
-          Anda tidak memiliki izin untuk melihat halaman ini. Silakan hubungi administrator.
-        </p>
-      </Card>
+      </div>
     </div>
   );
 }

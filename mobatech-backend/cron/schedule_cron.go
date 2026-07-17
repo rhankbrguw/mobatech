@@ -31,7 +31,7 @@ func runNightlyCron(db *gorm.DB) {
 		time.Sleep(time.Until(next))
 
 		log.Println("[CRON] Executing Nightly 00:00 Tasks (RAG Sync & Garbage Collection)...")
-		http.Post("http://localhost:8000/api/rag/sync", "application/json", nil)
+		_, _ = http.Post("http://localhost:8000/api/rag/sync", "application/json", nil)
 		db.Where("status = ? AND created_at < ?", "cancelled", now.AddDate(0, -1, 0)).Delete(&models.Appointment{})
 	}
 }
@@ -105,6 +105,6 @@ func releaseUnpaidBookings(db *gorm.DB, now time.Time) int {
 func syncRAG() {
 	resp, err := http.Post("http://localhost:8000/api/rag/sync", "application/json", nil)
 	if err == nil {
-		resp.Body.Close()
+		_ = resp.Body.Close()
 	}
 }

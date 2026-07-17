@@ -62,7 +62,7 @@ func (s *chatService) processStream(ctx context.Context, iter *genai.GenerateCon
 		fullResponse += s.extractAndSendParts(resp.Candidates, outChan)
 	}
 
-	s.repo.AddMessage(ctx, &models.ChatMessage{
+	_ = s.repo.AddMessage(ctx, &models.ChatMessage{
 		SessionID: sessionID,
 		Role:      "model",
 		Content:   fullResponse,

@@ -85,12 +85,12 @@ func (s *pharmacyService) UpdateOrderStatus(ctx context.Context, id uint, status
 	if status == "Cancelled" && order.Status != "Cancelled" {
 		for _, item := range order.Items {
 			// Increase stock back by item.Quantity
-			s.repo.UpdateMedicineStock(ctx, item.MedicineID, item.Quantity)
+			_ = s.repo.UpdateMedicineStock(ctx, item.MedicineID, item.Quantity)
 		}
 	} else if order.Status == "Cancelled" && status != "Cancelled" {
 		// If order status is changed from Cancelled back to something else, deduct the stock again
 		for _, item := range order.Items {
-			s.repo.UpdateMedicineStock(ctx, item.MedicineID, -item.Quantity)
+			_ = s.repo.UpdateMedicineStock(ctx, item.MedicineID, -item.Quantity)
 		}
 	}
 

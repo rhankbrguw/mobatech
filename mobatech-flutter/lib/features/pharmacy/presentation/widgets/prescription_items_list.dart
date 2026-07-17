@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../models/prescription.dart';
-import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class PrescriptionItemsList extends StatelessWidget {
   final Prescription prescription;
@@ -23,48 +22,78 @@ class PrescriptionItemsList extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        ...prescription.items.map(
-          (item) => Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(
-                  Icons.medication,
-                  size: 16,
-                  color: AppColors.primary,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item.displayName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        '${item.dosageInstruction} • ${item.duration}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textGrey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  '${item.quantity}x',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                  ),
-                ),
-              ],
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.backgroundWhite,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColors.dividerGrey.withValues(alpha: 0.5),
             ),
+          ),
+          child: Column(
+            children: [
+              for (var i = 0; i < prescription.items.length; i++) ...[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryLight.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.medication,
+                        size: 16,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            prescription.items[i].displayName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: AppColors.textDark,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${prescription.items[i].dosageInstruction} • ${prescription.items[i].duration}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textGrey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundScreen,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        '${prescription.items[i].quantity}x',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: AppColors.textDark,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                if (i < prescription.items.length - 1)
+                  const Divider(height: 16, color: AppColors.dividerGrey),
+              ],
+            ],
           ),
         ),
       ],

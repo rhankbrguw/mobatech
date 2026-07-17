@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/medical_result.dart';
 import 'medical_result_detail_widgets.dart';
+import 'medical_result_document_widget.dart';
 import 'package:mobatech_app/core/theme/app_spacing.dart';
 
 class MedicalResultDetailScreen extends StatelessWidget {
@@ -22,8 +23,12 @@ class MedicalResultDetailScreen extends StatelessWidget {
           children: [
             MedicalResultHeader(result: result),
             const SizedBox(height: 24),
-            if (result.resultDetails != null)
-              MedicalResultDetailsBox(details: result.resultDetails ?? ''),
+            if (result.resultDetails != null && result.resultDetails!.isNotEmpty)
+              MedicalResultDetailsBox(details: result.resultDetails!),
+            if (result.documentUrl != null && result.documentUrl!.isNotEmpty) ...[
+              const SizedBox(height: 24),
+              MedicalResultDocument(documentUrl: result.documentUrl!),
+            ],
           ],
         ),
       ),

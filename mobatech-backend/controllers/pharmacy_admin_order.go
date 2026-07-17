@@ -51,6 +51,12 @@ func (c *PharmacyController) AdminUpdatePrescriptionStatus(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, _ := strconv.Atoi(idStr)
 
+	role, exists := ctx.Get("role")
+	if !exists || (role != "pharmacist" && role != "doctor") {
+		ctx.Error(utils.NewAppError(utils.ErrUnauthorized, http.StatusForbidden, "Akses ditolak: Hanya Apoteker atau Dokter yang dapat memproses E-Resep", nil))
+		return
+	}
+
 	var req struct {
 		Status string `json:"status"`
 	}

@@ -49,17 +49,27 @@ func setupPharmacyUserRoutes(r *gin.Engine, ctrl *controllers.PharmacyController
 func setupPharmacyAdminRoutes(r *gin.Engine, ctrl *controllers.PharmacyController) {
 	admin := r.Group(constants.RouteApiAdminPharmacy)
 	admin.Use(middleware.AdminMiddleware())
-	admin.POST(constants.RouteCategories, ctrl.AdminCreateCategory)
-	admin.PUT(constants.RouteCategoriesParamId, ctrl.AdminUpdateCategory)
-	admin.DELETE(constants.RouteCategoriesParamId, ctrl.AdminDeleteCategory)
-	admin.POST(constants.RouteMedicines, ctrl.AdminCreateMedicine)
-	admin.PUT(constants.RouteMedicinesParamId, ctrl.AdminUpdateMedicine)
-	admin.DELETE(constants.RouteMedicinesParamId, ctrl.AdminDeleteMedicine)
-	admin.POST(constants.RoutePrescriptions, ctrl.AdminCreatePrescription)
-	admin.GET(constants.RoutePrescriptions, ctrl.AdminGetAllPrescriptions)
-	admin.DELETE(constants.RoutePrescriptionsParamId, ctrl.AdminDeletePrescription)
-	admin.PUT(constants.RoutePrescriptionsParamIdStatus, ctrl.AdminUpdatePrescriptionStatus)
-	admin.GET(constants.RouteOrders, ctrl.AdminGetAllOrders)
-	admin.PUT(constants.RouteOrdersParamIdStatus, ctrl.AdminUpdateOrderStatus)
-	admin.PUT(constants.RouteOrdersParamIdPayment, ctrl.AdminUpdateOrderPayment)
+
+	// Only admin and pharmacist can manage catalog
+	catalog := admin.Group("")
+	catalog.Use(middleware.RequireRole("admin", "pharmacist"))
+	catalog.POST(constants.RouteCategories, ctrl.AdminCreateCategory)
+	catalog.PUT(constants.RouteCategoriesParamId, ctrl.AdminUpdateCategory)
+	catalog.DELETE(constants.RouteCategoriesParamId, ctrl.AdminDeleteCategory)
+	catalog.POST(constants.RouteMedicines, ctrl.AdminCreateMedicine)
+	catalog.PUT(constants.RouteMedicinesParamId, ctrl.AdminUpdateMedicine)
+	catalog.DELETE(constants.RouteMedicinesParamId, ctrl.AdminDeleteMedicine)
+
+	// Admin and Pharmacist can view orders and prescriptions, but only Pharmacist can process them (handled in controller or here)
+	// We will restrict creation of prescriptions to doctors in the backend controller, or here:
+	admin.POST(constants.RoutePrescriptions, middleware.RequireRole("doctor"), ctrl.AdminCreatePrescription)
+	
+	// Anyone with admin middleware (staff) can view for now, or we restrict:
+	admin.GET(constants.RoutePrescriptions, middleware.RequireRole("admin", "pharmacist", "doctor"), ctrl.AdminGetAllPrescriptions)
+	admin.DELETE(constants.RoutePrescriptionsParamId, middleware.RequireRole("doctor"), ctrl.AdminDeletePrescription)
+	admin.PUT(constants.RoutePrescriptionsParamIdStatus, middleware.RequireRole("pharmacist"), ctrl.AdminUpdatePrescriptionStatus)
+	
+	admin.GET(constants.RouteOrders, middleware.RequireRole("admin", "pharmacist"), ctrl.AdminGetAllOrders)
+	admin.PUT(constants.RouteOrdersParamIdStatus, middleware.RequireRole("pharmacist"), ctrl.AdminUpdateOrderStatus)
+	admin.PUT(constants.RouteOrdersParamIdPayment, middleware.RequireRole("admin", "pharmacist"), ctrl.AdminUpdateOrderPayment)
 }

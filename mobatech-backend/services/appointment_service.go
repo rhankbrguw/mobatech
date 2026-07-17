@@ -103,7 +103,7 @@ func (s *appointmentService) CancelAppointment(ctx context.Context, id uint, use
 	schedule, err := s.scheduleRepo.FindByID(ctx, appointment.DoctorScheduleID)
 	if err == nil && schedule.Booked > 0 {
 		schedule.Booked -= 1
-		s.scheduleRepo.Update(ctx, schedule)
+		_ = s.scheduleRepo.Update(ctx, schedule)
 	}
 	return nil
 }
@@ -124,7 +124,7 @@ func (s *appointmentService) ApproveAppointment(ctx context.Context, id uint) er
 
 func (s *appointmentService) rollbackScheduleBooking(ctx context.Context, schedule *models.DoctorSchedule) {
 	schedule.Booked -= 1
-	s.scheduleRepo.Update(ctx, schedule)
+	_ = s.scheduleRepo.Update(ctx, schedule)
 }
 
 func (s *appointmentService) CompleteAppointment(ctx context.Context, id uint) error {
