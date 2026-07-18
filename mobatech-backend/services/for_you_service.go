@@ -63,7 +63,7 @@ func (s *forYouService) extractUserContext(ctx context.Context, userID string) s
 		if err != nil {
 			continue
 		}
-		
+
 		for _, msg := range msgs {
 			if msg.Role == "user" {
 				chatContext += "- " + msg.Content + "\n"

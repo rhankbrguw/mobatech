@@ -33,12 +33,24 @@ func (c *PharmacyController) GetMedicines(ctx *gin.Context) {
 
 	var catID uint
 	if catIDStr != "" {
-		parsed, _ := strconv.Atoi(catIDStr)
+		parsed, err := strconv.Atoi(catIDStr)
+		if err != nil {
+			ctx.Error(utils.NewValidationError("Invalid parsed parameter"))
+			return
+		}
 		catID = uint(parsed)
 	}
 
-	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
-	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	page, err := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid page parameter"))
+		return
+	}
+	limit, err := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid limit parameter"))
+		return
+	}
 	offset := (page - 1) * limit
 
 	meds, totalCount, err := c.service.GetAllMedicines(ctx.Request.Context(), catID, search, limit, offset)
@@ -51,7 +63,11 @@ func (c *PharmacyController) GetMedicines(ctx *gin.Context) {
 
 func (c *PharmacyController) GetMedicineDetail(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	med, err := c.service.GetMedicineByID(ctx.Request.Context(), uint(id))
 	if err != nil {

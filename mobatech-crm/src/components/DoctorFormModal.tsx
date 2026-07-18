@@ -1,5 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { api } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { FormValidators } from "@/lib/validators";
@@ -8,6 +11,30 @@ import { Modal } from "@/components/Modal";
 import { Button } from "@/components/ui/Button";
 import { ImageUpload } from "./ImageUpload";
 import { PhoneInput } from "@/components/ui/PhoneInput";
+import { DoctorFormFields } from "./DoctorFormFields";
+
+const doctorSchema = z.object({
+  name: z.string()
+    .min(1, "Nama wajib diisi")
+    .superRefine((val, ctx) => {
+      const err = FormValidators.name(val);
+      if (err) ctx.addIssue({ code: z.ZodIssueCode.custom, message: err });
+    }),
+  polyclinic_id: z.number().min(1, "Poliklinik wajib dipilih"),
+  specialization: z.string().min(1, "Spesialisasi wajib diisi"),
+  contact_info: z.string()
+    .min(1, "Kontak wajib diisi")
+    .superRefine((val, ctx) => {
+      const err = FormValidators.phone(val);
+      if (err) ctx.addIssue({ code: z.ZodIssueCode.custom, message: err });
+    }),
+  description: z.string().min(1, "Deskripsi wajib diisi"),
+  image_url: z.string().optional(),
+  is_active: z.boolean(),
+  email: z.string().email("Email tidak valid").optional().or(z.literal("")),
+});
+
+export type DoctorFormValues = z.infer<typeof doctorSchema>;
 
 interface DoctorFormModalProps {
   isOpen: boolean; onClose: () => void; doctor: Doctor | null;
@@ -15,66 +42,102 @@ interface DoctorFormModalProps {
 }
 
 export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormModalProps) {
-  const [name, setName] = useState(""); const [polyclinicId, setPolyclinicId] = useState<number | undefined>();
-  const [specialization, setSpecialization] = useState(""); const [contactInfo, setContactInfo] = useState("+62");
-  const [description, setDescription] = useState(""); const [imageUrl, setImageUrl] = useState("");
-  const [isActive, setIsActive] = useState(true); const [submitting, setSubmitting] = useState(false);
   const [polyclinics, setPolyclinics] = useState<Polyclinic[]>([]);
-  const [email, setEmail] = useState("");
-  const [errors, setErrors] = useState<{name?: string, phone?: string}>({});
+  const [submitting, setSubmitting] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<DoctorFormValues>({
+    resolver: zodResolver(doctorSchema),
+    defaultValues: {
+      name: "",
+      polyclinic_id: 0,
+      specialization: "",
+      contact_info: "+62",
+      description: "",
+      image_url: "",
+      is_active: true,
+      email: "",
+    },
+  });
 
   useEffect(() => {
     if (isOpen) {
-      api.get<Polyclinic[]>("/api/polyclinics")
-        .then((p) => setPolyclinics(p.data || []));
+      const fetchPolys = async () => {
+        try {
+          const res = await api.get<Polyclinic[]>("/api/polyclinics");
+          setPolyclinics(res.data || []);
+        } catch (err) { console.error("Failed to fetch polyclinics", err); }
+      };
+      fetchPolys();
     }
   }, [isOpen]);
 
   useEffect(() => {
-    setName(doctor?.name || ""); setPolyclinicId(doctor?.polyclinic_id ?? undefined);
-    setSpecialization(doctor?.specialization || ""); setContactInfo(doctor?.contact_info || "+62");
-    setDescription(doctor?.description || ""); setImageUrl(doctor?.image_url || "");
-    setIsActive(doctor?.is_active ?? true); setEmail("");
-  }, [doctor, isOpen]);
+    if (isOpen) {
+      reset({
+        name: doctor?.name || "",
+        polyclinic_id: doctor?.polyclinic_id ?? 0,
+        specialization: doctor?.specialization || "",
+        contact_info: doctor?.contact_info || "+62",
+        description: doctor?.description || "",
+        image_url: doctor?.image_url || "",
+        is_active: doctor?.is_active ?? true,
+        email: "",
+      });
+    }
+  }, [doctor, isOpen, reset]);
 
-  const handlePolyChange = (val: string) => {
-    const id = Number(val); setPolyclinicId(id || undefined);
-    const poly = polyclinics.find((p) => p.id === id);
-    if (poly && !specialization) setSpecialization(poly.name);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); setErrors({});
-    const nameErr = FormValidators.name(name); const phoneErr = FormValidators.phone(contactInfo);
-    if (nameErr || phoneErr) return setErrors({ name: nameErr || undefined, phone: phoneErr || undefined });
+  const onSubmit = async (data: DoctorFormValues) => {
     setSubmitting(true);
     try {
-      const payload = { name, specialization, polyclinic_id: polyclinicId, contact_info: contactInfo, description, image_url: imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${name || "Doctor"}`, is_active: isActive, ...(email ? { email } : {}) };
+      const payload = {
+        name: data.name,
+        specialization: data.specialization,
+        polyclinic_id: data.polyclinic_id || undefined,
+        contact_info: data.contact_info,
+        description: data.description,
+        image_url: data.image_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name || "Doctor"}`,
+        is_active: data.is_active,
+        ...(data.email ? { email: data.email } : {})
+      };
       await onSave(payload);
       onClose();
-    } catch { } finally { setSubmitting(false); }
+    } catch (err) {
+      console.error("Error saving doctor:", err);
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  const { onChange: onPolyChange, onBlur: onPolyBlur, name: polyName, ref: polyRef } = register("polyclinic_id");
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={doctor ? APP_STRINGS.doctors.editTitle : APP_STRINGS.doctors.addTitle}>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div><label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.nameLabel}</label><input disabled={submitting} type="text" required value={name} onChange={(e) => setName(e.target.value)} className={`w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground ${errors.name ? "border-error focus:border-error" : ""}`} placeholder={APP_STRINGS.doctors.namePlaceholder} />{errors.name && <p className="text-xs text-error mt-1">{errors.name}</p>}</div>
-          <div><label className="block text-xs font-semibold mb-2">Poliklinik</label><select disabled={submitting} required value={polyclinicId ?? ""} onChange={(e) => handlePolyChange(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer focus:border-primary outline-none"><option value="">Pilih Poliklinik</option>{polyclinics.filter((p) => p.is_active).map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}</select></div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <DoctorFormFields 
+          register={register} 
+          control={control} 
+          errors={errors} 
+          submitting={submitting} 
+          polyclinics={polyclinics} 
+          setValue={setValue} 
+          getValues={getValues} 
+          doctor={doctor} 
+        />
+        <div className="flex justify-end gap-2 pt-2">
+          <Button type="button" variant="ghost" disabled={submitting} onClick={onClose}>{APP_STRINGS.doctors.cancelBtn}</Button>
+          <Button type="submit" isLoading={submitting}>{APP_STRINGS.doctors.saveBtn}</Button>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div><label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.specLabel}</label><input disabled={submitting} type="text" required value={specialization} onChange={(e) => setSpecialization(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder={APP_STRINGS.doctors.specPlaceholder} /></div>
-          {!doctor && (
-            <div><label className="block text-xs font-semibold mb-2">Email Korporat (Auto-Create Akun)</label><input disabled={submitting} type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="opsional: dr.nama@hermina.com" /></div>
-          )}
-        </div>
-        <div><label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.contactLabel}</label><PhoneInput disabled={submitting} value={contactInfo} onChange={setContactInfo} className={errors.phone ? "border-error focus-within:border-error" : ""} />{errors.phone && <p className="text-xs text-error mt-1">{errors.phone}</p>}</div>
-        <div><label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.descLabel}</label><textarea disabled={submitting} required value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none focus:border-primary outline-none" placeholder={APP_STRINGS.doctors.descPlaceholder} /></div>
-        <ImageUpload imageUrl={imageUrl} setImageUrl={setImageUrl} label={APP_STRINGS.doctors.imgLabel} />
-        <div className="flex items-center gap-2"><input disabled={submitting} type="checkbox" id="isActive" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="rounded border-glass-border text-primary focus:ring-primary w-4 h-4 cursor-pointer" /><label htmlFor="isActive" className="text-xs font-semibold cursor-pointer">{APP_STRINGS.doctors.activeLabel}</label></div>
-        <div className="flex justify-end gap-2 pt-2"><Button type="button" variant="ghost" disabled={submitting} onClick={onClose}>{APP_STRINGS.doctors.cancelBtn}</Button><Button type="submit" isLoading={submitting}>{APP_STRINGS.doctors.saveBtn}</Button></div>
       </form>
     </Modal>
   );
 }
+
 

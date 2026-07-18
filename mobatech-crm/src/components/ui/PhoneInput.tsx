@@ -15,11 +15,11 @@ function toDisplayFormat(digits: string): string {
 }
 
 function stripLeadingZeroOrCode(raw: string): string {
-  let val = raw.trim();
-  if (val.startsWith("+62")) val = val.slice(3);
-  else if (val.startsWith("62")) val = val.slice(2);
-  if (val.startsWith("0")) val = val.slice(1);
-  return val.replace(/\D/g, "");
+  let cleanedStr = raw.trim();
+  if (cleanedStr.startsWith("+62")) cleanedStr = cleanedStr.slice(3);
+  else if (cleanedStr.startsWith("62")) cleanedStr = cleanedStr.slice(2);
+  if (cleanedStr.startsWith("0")) cleanedStr = cleanedStr.slice(1);
+  return cleanedStr.replace(/\D/g, "");
 }
 
 export function PhoneInput({

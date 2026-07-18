@@ -61,7 +61,9 @@ func (s *appointmentService) BookAppointment(ctx context.Context, userID uint, r
 	req.Status = "pending"
 
 	if err := s.appointmentRepo.Create(ctx, req); err != nil {
-		s.rollbackScheduleBooking(ctx, schedule)
+		if rollbackErr := s.rollbackScheduleBooking(ctx, schedule); rollbackErr != nil {
+			return nil, fmt.Errorf("appointmentService.BookAppointment: create error (%v) and rollback error (%w)", err, rollbackErr)
+		}
 		return nil, fmt.Errorf("appointmentService.BookAppointment: %w", err)
 	}
 	return s.appointmentRepo.FindByID(ctx, req.ID)
@@ -103,7 +105,9 @@ func (s *appointmentService) CancelAppointment(ctx context.Context, id uint, use
 	schedule, err := s.scheduleRepo.FindByID(ctx, appointment.DoctorScheduleID)
 	if err == nil && schedule.Booked > 0 {
 		schedule.Booked -= 1
-		_ = s.scheduleRepo.Update(ctx, schedule)
+		if updateErr := s.scheduleRepo.Update(ctx, schedule); updateErr != nil {
+			return fmt.Errorf("appointmentService.CancelAppointment: schedule update failed: %w", updateErr)
+		}
 	}
 	return nil
 }
@@ -122,9 +126,9 @@ func (s *appointmentService) ApproveAppointment(ctx context.Context, id uint) er
 	return s.appointmentRepo.Update(ctx, appointment)
 }
 
-func (s *appointmentService) rollbackScheduleBooking(ctx context.Context, schedule *models.DoctorSchedule) {
+func (s *appointmentService) rollbackScheduleBooking(ctx context.Context, schedule *models.DoctorSchedule) error {
 	schedule.Booked -= 1
-	_ = s.scheduleRepo.Update(ctx, schedule)
+	return s.scheduleRepo.Update(ctx, schedule)
 }
 
 func (s *appointmentService) CompleteAppointment(ctx context.Context, id uint) error {

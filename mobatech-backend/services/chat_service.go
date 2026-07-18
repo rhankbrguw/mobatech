@@ -115,6 +115,8 @@ func (s *chatService) asyncGenerateTitle(ctx context.Context, sessionID uint, fi
 	resp, err := model.GenerateContent(ctx, genai.Text(prompt))
 	if err == nil && len(resp.Candidates) > 0 && len(resp.Candidates[0].Content.Parts) > 0 {
 		title := fmt.Sprintf("%v", resp.Candidates[0].Content.Parts[0])
-		_ = s.repo.UpdateSessionTitle(ctx, sessionID, title)
+		if updateErr := s.repo.UpdateSessionTitle(ctx, sessionID, title); updateErr != nil {
+			fmt.Printf("asyncGenerateTitle: failed to update session title: %v\n", updateErr)
+		}
 	}
 }

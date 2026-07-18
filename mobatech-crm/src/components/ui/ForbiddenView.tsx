@@ -12,7 +12,7 @@ export function ForbiddenView({ message = "Akses Ditolak" }: { message?: string 
         <div className="relative glass-panel rounded-3xl border border-glass-border/40 p-10 flex flex-col items-center text-center shadow-2xl backdrop-blur-xl bg-surface-primary/80 dark:bg-overlay-dark/90">
           <div className="relative mb-6">
             <div className="absolute inset-0 bg-error/20 blur-md rounded-full animate-ping" />
-            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-error/20 to-error/5 border border-error/30 flex items-center justify-center relative z-10 shadow-[0_0_15px_rgba(255,0,0,0.1)]">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-error/20 to-error/5 border border-error/30 flex items-center justify-center relative z-10 shadow-[0_0_15px_var(--error-muted)]">
               <ShieldAlert className="w-10 h-10 text-error drop-shadow-md" />
             </div>
           </div>
@@ -27,7 +27,7 @@ export function ForbiddenView({ message = "Akses Ditolak" }: { message?: string 
           
           <Link 
             href="/dashboard"
-            className="flex items-center justify-center gap-2 w-full max-w-[200px] h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_20px_-10px_rgba(0,0,0,0.3)] hover:shadow-primary/30"
+            className="flex items-center justify-center gap-2 w-full max-w-[200px] h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-primary/30"
           >
             <ArrowLeft size={18} />
             Kembali

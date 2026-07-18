@@ -23,8 +23,16 @@ func (ctrl *BranchController) GetBranches(c *gin.Context) {
 	search := c.Query("search")
 	filter := c.Query("filter")
 
-	page, _ := strconv.Atoi(c.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
-	limit, _ := strconv.Atoi(c.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	page, err := strconv.Atoi(c.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
+	if err != nil {
+		c.Error(utils.NewValidationError("Invalid page parameter"))
+		return
+	}
+	limit, err := strconv.Atoi(c.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	if err != nil {
+		c.Error(utils.NewValidationError("Invalid limit parameter"))
+		return
+	}
 	offset := (page - 1) * limit
 
 	var branches []models.Branch

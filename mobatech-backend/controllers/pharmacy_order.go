@@ -49,7 +49,11 @@ func (c *PharmacyController) GetMyOrders(ctx *gin.Context) {
 }
 func (c *PharmacyController) GetOrderDetail(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	order, err := c.authorizeOrderAccess(ctx, id)
 	if err != nil {
@@ -60,7 +64,11 @@ func (c *PharmacyController) GetOrderDetail(ctx *gin.Context) {
 }
 func (c *PharmacyController) CancelOrder(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	order, err := c.authorizeOrderAccess(ctx, id)
 	if err != nil {

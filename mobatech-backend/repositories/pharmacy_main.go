@@ -31,7 +31,7 @@ type PharmacyRepository interface {
 	CreatePrescription(ctx context.Context, p *models.Prescription) error
 	CheckPrescriptionExistsByAppointment(ctx context.Context, appointmentID uint) (bool, error)
 	DeletePrescription(ctx context.Context, id uint) error
-	UpdatePrescriptionStatus(ctx context.Context, id uint, status string) error
+	UpdatePrescriptionStatus(ctx context.Context, id uint, status string, notes *string) error
 
 	GetOrdersByUserID(ctx context.Context, userID uint) ([]models.PharmacyOrder, error)
 	GetOrderByID(ctx context.Context, id uint) (*models.PharmacyOrder, error)

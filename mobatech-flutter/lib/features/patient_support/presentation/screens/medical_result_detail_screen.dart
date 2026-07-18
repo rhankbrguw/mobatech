@@ -24,6 +24,7 @@ class MedicalResultDetailScreen extends StatelessWidget {
             MedicalResultHeader(result: result),
             const SizedBox(height: 24),
             if (result.resultDetails != null && result.resultDetails!.isNotEmpty)
+              // Explanatory comment for null assertion (!): resultDetails is checked for null in the if condition.
               MedicalResultDetailsBox(details: result.resultDetails!),
             if (result.documentUrl != null && result.documentUrl!.isNotEmpty) ...[
               const SizedBox(height: 24),

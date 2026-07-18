@@ -16,7 +16,7 @@ export default function NotFound() {
         <div className="relative glass-panel rounded-3xl border border-glass-border/40 p-12 flex flex-col items-center text-center shadow-2xl backdrop-blur-xl bg-surface-primary/80 dark:bg-overlay-dark/90">
           <div className="relative mb-6">
             <div className="absolute inset-0 bg-primary/20 blur-md rounded-full animate-ping" style={{ animationDuration: '3s' }} />
-            <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-primary/20 to-primary/5 border border-primary/30 flex items-center justify-center relative z-10 shadow-[0_0_20px_rgba(var(--primary),0.2)]">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-primary/20 to-primary/5 border border-primary/30 flex items-center justify-center relative z-10 shadow-[0_0_20px_var(--primary)]">
               <FileQuestion className="w-12 h-12 text-primary drop-shadow-lg" />
             </div>
           </div>
@@ -31,7 +31,7 @@ export default function NotFound() {
           
           <Link 
             href="/dashboard"
-            className="flex items-center justify-center gap-2 w-full h-14 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(var(--primary),0.4)]"
+            className="flex items-center justify-center gap-2 w-full h-14 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_var(--primary)]"
           >
             <ArrowLeft size={20} />
             Kembali ke Dashboard

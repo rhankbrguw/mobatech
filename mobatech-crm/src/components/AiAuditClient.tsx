@@ -74,8 +74,8 @@ export function AiAuditClient({ initialData, searchParams }: { initialData?: unk
   const executeManualSync = async () => {
     try {
       setIsSyncing(true);
-      const res = await api.post<{ status: string; message: string }>("/api/admin/rag/sync", {});
-      if (res.data.status === "success") {
+      const res = await api.post<{ success: boolean; message: string }>("/api/admin/rag/sync", {});
+      if (res.success) {
         setToast({ isOpen: true, message: APP_STRINGS.common.ragSyncSuccess, type: "success" });
         loadStatus();
       } else {

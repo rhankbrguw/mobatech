@@ -1,9 +1,31 @@
-import { useState } from "react";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/ui/Button";
 import { Prescription, Medicine, PrescriptionItem } from "@/types/api";
 import { Pill, Plus } from "lucide-react";
 import { PrescriptionItemCard, PrescriptionEmptyState } from "./PrescriptionItemCard";
+import { useForm, useFieldArray, useWatch, Path, PathValue } from "react-hook-form";
+import { Field } from "./PrescriptionFormField";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+const prescriptionItemSchema = z.object({
+  medicine_id: z.coerce.number().catch(0).nullable().optional(),
+  custom_medicine: z.string().optional(),
+  dosage_instruction: z.string().optional(),
+  duration: z.string().optional(),
+  quantity: z.coerce.number().min(1).catch(1),
+  notes: z.string().optional()
+});
+
+const formSchema = z.object({
+  user_id: z.coerce.number().min(1).catch(0),
+  appointment_id: z.coerce.number().catch(0).nullable().optional(),
+  doctor_name: z.string().optional(),
+  diagnosis: z.string().optional(),
+  items: z.array(prescriptionItemSchema).default([])
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 interface PrescriptionFormModalProps {
   isOpen: boolean;
@@ -21,56 +43,64 @@ export function PrescriptionFormModal({
   initialAppointmentId, initialUserId,
   initialDoctorName, initialDiagnosis, medicines
 }: PrescriptionFormModalProps) {
-  const [form, setForm] = useState<Partial<Prescription>>({
-    user_id: initialUserId || 0,
-    appointment_id: initialAppointmentId || 0,
-    doctor_name: initialDoctorName || "",
-    diagnosis: initialDiagnosis || "",
-    items: []
+  
+  const { register, control, handleSubmit, setValue, formState: { isSubmitting } } = useForm<FormValues>({
+    resolver: zodResolver(formSchema) as unknown as import("react-hook-form").Resolver<FormValues>,
+    defaultValues: {
+      user_id: initialUserId || 0,
+      appointment_id: initialAppointmentId || 0,
+      doctor_name: initialDoctorName || "",
+      diagnosis: initialDiagnosis || "",
+      items: []
+    }
   });
-  const [isSaving, setIsSaving] = useState(false);
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "items"
+  });
+
+  const watchItems = useWatch({ control, name: "items" });
+  const watchUserId = useWatch({ control, name: "user_id" });
 
   const addItem = () => {
-    const item = { medicine_id: 0, custom_medicine: "", dosage_instruction: "", duration: "", quantity: 1, notes: "" } as PrescriptionItem;
-    setForm(f => ({ ...f, items: [...(f.items || []), item] }));
-  };
-
-  const removeItem = (i: number) => {
-    setForm(f => ({ ...f, items: f.items?.filter((_, idx) => idx !== i) }));
+    append({ medicine_id: 0, custom_medicine: "", dosage_instruction: "", duration: "", quantity: 1, notes: "" });
   };
 
   const updateItem = (i: number, field: string, val: string | number) => {
-    setForm(f => {
-      const next = [...(f.items || [])] as PrescriptionItem[];
-      next[i] = { ...next[i], [field]: val };
-      return { ...f, items: next };
-    });
+    setValue(`items.${i}.${field}` as Path<FormValues>, val as PathValue<FormValues, Path<FormValues>>, { shouldValidate: true, shouldDirty: true });
   };
 
-  const handleSubmit = async () => {
-    if (!form.user_id || !form.items?.length) return;
-    setIsSaving(true);
+  const removeItem = (i: number) => {
+    remove(i);
+  };
+
+  const onSubmit = async (data: FormValues) => {
+    if (!data.user_id || !data.items?.length) return;
     try {
       const processed = {
-        ...form,
-        items: form.items.map(i => ({ ...i, medicine_id: i.medicine_id === 0 ? null : i.medicine_id }))
+        ...data,
+        items: data.items.map(i => ({ 
+          ...i, 
+          medicine_id: i.medicine_id === 0 ? null : i.medicine_id 
+        }))
       };
-      await onSave(processed);
+      await onSave(processed as Partial<Prescription>);
       onClose();
-    } finally { setIsSaving(false); }
+    } catch (e) {
+      console.error(e);
+    }
   };
-
-  const setField = (key: string, v: string | number) => setForm(f => ({ ...f, [key]: v }));
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Terbitkan E-Resep Baru">
       <div className="space-y-5">
         {/* ── Metadata ── */}
         <div className="grid grid-cols-2 gap-3">
-          <Field label="ID Pasien *" type="number" value={form.user_id || ""} onChange={v => setField("user_id", v === "" ? 0 : Number(v))} />
-          <Field label="ID Janji Temu" type="number" value={form.appointment_id || ""} onChange={v => setField("appointment_id", v === "" ? 0 : Number(v))} />
-          <Field label="Nama Dokter" value={form.doctor_name || ""} onChange={v => setField("doctor_name", v)} />
-          <Field label="Diagnosa Medis" value={form.diagnosis || ""} onChange={v => setField("diagnosis", v)} />
+          <Field label="ID Pasien *" type="number" registerProps={register("user_id")} />
+          <Field label="ID Janji Temu" type="number" registerProps={register("appointment_id")} />
+          <Field label="Nama Dokter" registerProps={register("doctor_name")} />
+          <Field label="Diagnosa Medis" registerProps={register("diagnosis")} />
         </div>
 
         {/* ── Medicine List ── */}
@@ -79,8 +109,8 @@ export function PrescriptionFormModal({
             <div className="flex items-center gap-2">
               <Pill size={16} className="text-primary" />
               <span className="text-sm font-bold">Daftar Obat</span>
-              {(form.items?.length ?? 0) > 0 && (
-                <span className="text-xs font-bold bg-primary/15 text-primary px-2 py-0.5 rounded-full">{form.items?.length}</span>
+              {(fields.length > 0) && (
+                <span className="text-xs font-bold bg-primary/15 text-primary px-2 py-0.5 rounded-full">{fields.length}</span>
               )}
             </div>
             <button type="button" onClick={addItem} className="flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary/80 bg-primary/10 hover:bg-primary/20 px-3 py-1.5 rounded-full transition-colors cursor-pointer">
@@ -88,30 +118,33 @@ export function PrescriptionFormModal({
             </button>
           </div>
 
-          {!form.items?.length && <PrescriptionEmptyState onAdd={addItem} />}
+          {!fields.length && <PrescriptionEmptyState onAdd={addItem} />}
 
           <div className="space-y-2">
-            {form.items?.map((item: PrescriptionItem, idx: number) => (
-              <PrescriptionItemCard key={idx} item={item} index={idx} medicines={medicines} onUpdate={updateItem} onRemove={removeItem} />
-            ))}
+            {fields.map((field, idx) => {
+              const itemData = watchItems?.[idx] || field;
+              return (
+                <PrescriptionItemCard 
+                  key={field.id} 
+                  item={itemData as unknown as PrescriptionItem}
+                  index={idx} 
+                  medicines={medicines} 
+                  onUpdate={updateItem} 
+                  onRemove={removeItem} 
+                />
+              );
+            })}
           </div>
         </div>
 
         {/* ── Footer ── */}
         <div className="flex justify-end gap-2 pt-2 border-t border-glass-border/50">
-          <Button variant="ghost" onClick={onClose} disabled={isSaving}>Batal</Button>
-          <Button onClick={handleSubmit} isLoading={isSaving} disabled={!form.items?.length || !form.user_id}>Terbitkan E-Resep</Button>
+          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>Batal</Button>
+          <Button onClick={handleSubmit(onSubmit as unknown as import("react-hook-form").SubmitHandler<FormValues>)} isLoading={isSubmitting} disabled={!fields.length || !watchUserId}>Terbitkan E-Resep</Button>
         </div>
       </div>
     </Modal>
   );
 }
 
-function Field({ label, value, onChange, type = "text" }: { label: string; value: string | number; onChange: (v: string) => void; type?: string }) {
-  return (
-    <div className="space-y-1">
-      <label className="text-xs text-foreground/50 font-semibold">{label}</label>
-      <input type={type} value={value} onChange={e => onChange(e.target.value)} className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground" />
-    </div>
-  );
-}
+

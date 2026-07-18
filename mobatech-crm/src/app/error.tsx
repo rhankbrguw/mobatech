@@ -29,7 +29,7 @@ export default function ErrorPage({
         <div className="relative glass-panel rounded-3xl border border-glass-border/40 p-10 flex flex-col items-center text-center shadow-2xl backdrop-blur-xl bg-surface-primary/80 dark:bg-overlay-dark/90">
           <div className="relative mb-6">
             <div className="absolute inset-0 bg-error/20 blur-md rounded-full animate-ping" style={{ animationDuration: '2.5s' }} />
-            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-error/20 to-error/5 border border-error/30 flex items-center justify-center relative z-10 shadow-[0_0_20px_rgba(255,0,0,0.15)]">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-error/20 to-error/5 border border-error/30 flex items-center justify-center relative z-10 shadow-[0_0_20px_var(--error-muted)]">
               <ServerCrash className="w-10 h-10 text-error drop-shadow-md" />
             </div>
           </div>

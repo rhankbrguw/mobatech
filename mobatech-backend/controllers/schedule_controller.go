@@ -20,7 +20,11 @@ func NewScheduleController(scheduleService services.ScheduleService) *ScheduleCo
 }
 
 func (c *ScheduleController) GetDoctorSchedules(ctx *gin.Context) {
-	doctorID, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	doctorID, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid doctorID parameter"))
+		return
+	}
 	schedules, err := c.scheduleService.GetDoctorSchedules(ctx.Request.Context(), uint(doctorID))
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
@@ -30,7 +34,11 @@ func (c *ScheduleController) GetDoctorSchedules(ctx *gin.Context) {
 }
 
 func (c *ScheduleController) GetAllSchedules(ctx *gin.Context) {
-	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	limit, err := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid limit parameter"))
+		return
+	}
 	schedules, err := c.scheduleService.GetUpcomingSchedules(ctx.Request.Context(), limit)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
@@ -60,7 +68,11 @@ func (c *ScheduleController) CreateSchedule(ctx *gin.Context) {
 }
 
 func (c *ScheduleController) UpdateSchedule(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 	var input models.DoctorSchedule
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
@@ -82,7 +94,11 @@ func (c *ScheduleController) UpdateSchedule(ctx *gin.Context) {
 }
 
 func (c *ScheduleController) DeleteSchedule(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 	if err := c.scheduleService.DeleteSchedule(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

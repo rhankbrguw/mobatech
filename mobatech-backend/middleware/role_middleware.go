@@ -13,9 +13,9 @@ func RequireRole(roles ...string) gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, utils.BuildError(utils.ErrUnauthenticated, "Unauthorized", nil))
 			return
 		}
-		
+
 		userRole := roleVal.(string)
-		
+
 		hasAccess := false
 		for _, r := range roles {
 			if userRole == r {
@@ -23,12 +23,12 @@ func RequireRole(roles ...string) gin.HandlerFunc {
 				break
 			}
 		}
-		
+
 		if !hasAccess {
 			c.AbortWithStatusJSON(http.StatusForbidden, utils.BuildError(utils.ErrUnauthorized, "Access denied for your role", nil))
 			return
 		}
-		
+
 		c.Next()
 	}
 }

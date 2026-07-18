@@ -24,8 +24,16 @@ func (c *ReminderController) GetAll(ctx *gin.Context) {
 	filter := ctx.Query("filter")
 	pageStr := ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage)
 	limitStr := ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit)
-	page, _ := strconv.Atoi(pageStr)
-	limit, _ := strconv.Atoi(limitStr)
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid page parameter"))
+		return
+	}
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid limit parameter"))
+		return
+	}
 	offset := (page - 1) * limit
 	reminders, totalCount, err := c.service.GetAllReminders(ctx.Request.Context(), search, filter, limit, offset)
 	if err != nil {
@@ -91,7 +99,11 @@ func (c *ReminderController) MarkAsRead(ctx *gin.Context) {
 	}
 	userID := uint(userIDFloat.(float64))
 
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	if err := c.service.MarkAsRead(ctx.Request.Context(), uint(id), userID); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
@@ -102,7 +114,11 @@ func (c *ReminderController) MarkAsRead(ctx *gin.Context) {
 }
 
 func (c *ReminderController) Delete(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 	if err := c.service.DeleteReminder(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
 		return

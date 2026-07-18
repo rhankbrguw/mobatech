@@ -68,12 +68,16 @@ func (tc *TrackingController) startSimulation(ctx context.Context, conn *websock
 }
 
 func (tc *TrackingController) sendInitialStatus(ctx context.Context, conn *websocket.Conn, reqID uint) {
-	_ = tc.service.UpdateStatus(ctx, reqID, constants.StatusDispatched)
-	_ = conn.WriteJSON(map[string]interface{}{
+	if err := tc.service.UpdateStatus(ctx, reqID, constants.StatusDispatched); err != nil {
+		log.Printf("sendInitialStatus: failed to update status: %v", err)
+	}
+	if err := conn.WriteJSON(map[string]interface{}{
 		"type":    "status_update",
 		"status":  constants.StatusDispatched,
 		"message": constants.MsgAmbulanceDispatched,
-	})
+	}); err != nil {
+		log.Printf("sendInitialStatus: WS write error: %v", err)
+	}
 }
 
 func (tc *TrackingController) runMovementLoop(ctx context.Context, conn *websocket.Conn, reqID uint, totalSteps int, pLat, pLng, aLat, aLng float64) {
@@ -85,7 +89,9 @@ func (tc *TrackingController) runMovementLoop(ctx context.Context, conn *websock
 		curLng := aLng + (pLng-aLng)*progress
 		remaining := totalSteps - step
 
-		_ = tc.service.UpdateTracking(ctx, reqID, curLat, curLng, remaining, constants.StatusDispatched)
+		if updateErr := tc.service.UpdateTracking(ctx, reqID, curLat, curLng, remaining, constants.StatusDispatched); updateErr != nil {
+			log.Printf("runMovementLoop: failed to update tracking: %v", updateErr)
+		}
 		err := conn.WriteJSON(map[string]interface{}{
 			"type":              "location_update",
 			"ambulance_lat":     curLat,
@@ -102,12 +108,18 @@ func (tc *TrackingController) runMovementLoop(ctx context.Context, conn *websock
 }
 
 func (tc *TrackingController) finalizeArrival(ctx context.Context, conn *websocket.Conn, reqID uint, pLat, pLng float64) {
-	_ = tc.service.UpdateTracking(ctx, reqID, pLat, pLng, 0, "Arrived")
-	_ = conn.WriteJSON(map[string]interface{}{
+	if updateErr := tc.service.UpdateTracking(ctx, reqID, pLat, pLng, 0, "Arrived"); updateErr != nil {
+		log.Printf("finalizeArrival: failed to update tracking: %v", updateErr)
+	}
+	if err := conn.WriteJSON(map[string]interface{}{
 		"type":    "status_update",
 		"status":  "Arrived",
 		"message": "Ambulans telah tiba di lokasi Anda",
-	})
-	_ = conn.WriteMessage(websocket.CloseMessage,
-		websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Ambulance arrived"))
+	}); err != nil {
+		log.Printf("finalizeArrival: WS write error: %v", err)
+	}
+	if err := conn.WriteMessage(websocket.CloseMessage,
+		websocket.FormatCloseMessage(websocket.CloseNormalClosure, "Ambulance arrived")); err != nil {
+		log.Printf("finalizeArrival: WS close write error: %v", err)
+	}
 }

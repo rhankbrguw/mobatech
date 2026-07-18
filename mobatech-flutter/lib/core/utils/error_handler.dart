@@ -21,17 +21,17 @@ class ErrorHandler {
     }
 
     if (error.response?.data != null) {
-      final data = error.response?.data;
-      if (data is Map<String, dynamic>) {
-        return _extractMessageFromMap(data);
+      final payload = error.response?.data;
+      if (payload is Map<String, dynamic>) {
+        return _extractMessageFromMap(payload);
       }
     }
     return ErrorStrings.errRequestFailed;
   }
 
-  static String _extractMessageFromMap(Map<String, dynamic> data) {
-    if (data.containsKey('errors') && data['errors'] != null) {
-      final errors = data['errors'] as Map<String, dynamic>;
+  static String _extractMessageFromMap(Map<String, dynamic> payload) {
+    if (payload.containsKey('errors') && payload['errors'] != null) {
+      final errors = payload['errors'] as Map<String, dynamic>;
       if (errors.isNotEmpty) {
         final firstError = errors.values.first;
         if (firstError is List && firstError.isNotEmpty) {
@@ -39,8 +39,8 @@ class ErrorHandler {
         }
       }
     }
-    if (data.containsKey('message')) return data['message'].toString();
-    if (data.containsKey('error')) return data['error'].toString();
+    if (payload.containsKey('message')) return payload['message'].toString();
+    if (payload.containsKey('error')) return payload['error'].toString();
     return ErrorStrings.errRequestFailed;
   }
 

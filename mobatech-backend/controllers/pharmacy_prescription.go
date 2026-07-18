@@ -19,8 +19,16 @@ func (c *PharmacyController) GetMyPrescriptions(ctx *gin.Context) {
 	}
 	userID := uint(userIDVal.(float64))
 
-	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
-	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	page, err := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid page parameter"))
+		return
+	}
+	limit, err := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid limit parameter"))
+		return
+	}
 	offset := (page - 1) * limit
 
 	prescriptions, totalCount, err := c.service.GetPrescriptionsByUserID(ctx.Request.Context(), userID, limit, offset)
@@ -63,7 +71,11 @@ func (c *PharmacyController) DeletePrescription(ctx *gin.Context) {
 	userID := uint(userIDVal.(float64))
 
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	if err := c.service.DeletePrescription(ctx.Request.Context(), uint(id), &userID); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
@@ -75,7 +87,11 @@ func (c *PharmacyController) DeletePrescription(ctx *gin.Context) {
 
 func (c *PharmacyController) RedeemPrescription(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	prescription, err := c.authorizePrescriptionAccess(ctx, id)
 	if err != nil {
@@ -87,7 +103,7 @@ func (c *PharmacyController) RedeemPrescription(ctx *gin.Context) {
 		return
 	}
 
-	if err := c.service.UpdatePrescriptionStatus(ctx.Request.Context(), uint(id), "Requested"); err != nil {
+	if err := c.service.UpdatePrescriptionStatus(ctx.Request.Context(), uint(id), "Requested", nil); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -119,7 +135,11 @@ func (c *PharmacyController) authorizePrescriptionAccess(ctx *gin.Context, id in
 
 func (c *PharmacyController) GetPrescriptionDetail(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	prescription, err := c.authorizePrescriptionAccess(ctx, id)
 	if err != nil {

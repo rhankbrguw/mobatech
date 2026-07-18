@@ -54,7 +54,7 @@ export function PharmacyMedicines({ initialMedicines, categories }: { initialMed
     try {
       const res = await api.get<MedicineCategory[]>("/api/pharmacy/categories");
       setLocalCategories(res.data || []);
-    } catch { }
+    } catch (err) { console.error("Error saving medicine:", err); }
   };
 
   useEffect(() => { loadCategories(); }, []);

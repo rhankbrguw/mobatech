@@ -54,7 +54,15 @@ export function DoctorsClient({ searchParams }: { initialData?: unknown, searchP
     } finally { setLoading(false); }
   };
 
-  useEffect(() => { api.get<Polyclinic[]>("/api/polyclinics").then((res) => setPolyclinics(res.data || [])).catch(() => {}); }, []);
+  useEffect(() => {
+    const loadPoly = async () => {
+      try {
+        const res = await api.get<Polyclinic[]>("/api/polyclinics");
+        setPolyclinics(res.data || []);
+      } catch (err) { console.error("Failed to fetch polyclinics", err); }
+    };
+    loadPoly();
+  }, []);
   useEffect(() => { setCurrentPage(1); }, [searchQuery, filterValue]);
   useEffect(() => {
     loadItems();

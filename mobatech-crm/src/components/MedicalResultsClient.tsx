@@ -45,7 +45,7 @@ export function MedicalResultsClient({ initialData, initialMedicines, searchPara
     try {
       const res = await api.get<User[]>("/api/admin/users?role=patient");
       setUsers(res.data || []);
-    } catch {} };
+    } catch (err) { console.error("Error saving medical result:", err); } };
   useEffect(() => { load(); }, [searchQuery, filterValue, currentPage]);
   useEffect(() => { setCurrentPage(1); }, [searchQuery, filterValue]);
   useEffect(() => { loadUsers(); if (searchParams && searchParams.appointment_id) { setForm({ ...defaultForm, appointment_id: Number(searchParams.appointment_id), user_id: searchParams.user_id ? Number(searchParams.user_id) : 0, doctor_name: typeof searchParams.doctor_name === 'string' ? searchParams.doctor_name : "" }); setShowForm(true); } }, []);

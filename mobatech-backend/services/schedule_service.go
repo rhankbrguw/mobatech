@@ -37,7 +37,9 @@ func triggerRAGSync() {
 		url := "http://localhost:8000/api/rag/sync"
 		resp, err := http.Post(url, "application/json", bytes.NewBuffer([]byte("{}")))
 		if err == nil {
-			_ = resp.Body.Close()
+			if closeErr := resp.Body.Close(); closeErr != nil {
+				fmt.Printf("triggerRAGSync: failed to close response body: %v\n", closeErr)
+			}
 		}
 	}()
 }

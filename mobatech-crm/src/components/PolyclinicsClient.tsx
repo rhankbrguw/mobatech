@@ -55,9 +55,9 @@ export function PolyclinicsClient({ initialData, searchParams }: { initialData?:
           <div className="space-y-3">
             <div className="flex justify-center mb-4">
               {drawerItem.image_url ? (
-                <img src={drawerItem.image_url} alt={drawerItem.name} className="w-24 h-24 rounded-xl object-cover shadow-lg border-2 border-white/20" />
+                <img src={drawerItem.image_url} alt={drawerItem.name} className="w-24 h-24 rounded-xl object-cover shadow-lg border-2 border-primary-foreground/20" />
               ) : (
-                <div className="w-24 h-24 rounded-xl bg-white/10 flex items-center justify-center border-2 border-white/20 shadow-lg text-3xl">🏥</div>
+                <div className="w-24 h-24 rounded-xl bg-primary-foreground/10 flex items-center justify-center border-2 border-primary-foreground/20 shadow-lg text-3xl">🏥</div>
               )}
             </div>
             <div><strong>Nama:</strong> {drawerItem.name}</div>

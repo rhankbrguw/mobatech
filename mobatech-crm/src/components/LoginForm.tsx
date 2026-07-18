@@ -1,41 +1,46 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm, FieldErrors } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { useAuthStore } from "@/store/useAuthStore";
 import { api, ApiError } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { LoginResponseData } from "@/types/api";
-import { FormValidators } from "@/lib/validators";
 import { Eye, EyeOff } from "lucide-react";
+
+const loginSchema = z.object({
+  email: z.string().min(1, { message: "empty" }).email({ message: "invalid_email" }),
+  password: z.string().min(1, { message: "empty" }),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm({ showToast }: { showToast: (msg: string, type: "success"|"error"|"warning") => void }) {
   const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
   
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const validateForm = () => {
-    if (!email || !password) {
-      showToast(APP_STRINGS.login.emptyFieldsError, "warning");
-      return false;
-    }
-    const emailError = FormValidators.email(email);
-    if (emailError) {
-      showToast(APP_STRINGS.login.invalidEmailError, "warning");
-      return false;
-    }
-    return true;
-  };
+  const {
+    register,
+    handleSubmit,
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
+  const onSubmit = async (data: LoginFormValues) => {
     setLoading(true);
     try {
-      const res = await api.post<LoginResponseData>("/api/auth/login", { email, password });
+      const res = await api.post<LoginResponseData>("/api/auth/login", { 
+        email: data.email, 
+        password: data.password 
+      });
       
       if (res.data.user.role === 'patient') {
         showToast(APP_STRINGS.common.loginPatientError, "error");
@@ -63,16 +68,23 @@ export function LoginForm({ showToast }: { showToast: (msg: string, type: "succe
     }
   };
 
+  const onError = (errors: FieldErrors<LoginFormValues>) => {
+    if (errors.email?.message === "empty" || errors.password?.message === "empty") {
+      showToast(APP_STRINGS.login.emptyFieldsError, "warning");
+    } else if (errors.email?.message === "invalid_email") {
+      showToast(APP_STRINGS.login.invalidEmailError, "warning");
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-5">
       <div>
         <label className="block text-xs font-semibold text-foreground/80 mb-2 uppercase tracking-wider">
           {APP_STRINGS.login.emailLabel}
         </label>
         <input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          {...register("email")}
           placeholder={APP_STRINGS.login.emailPlaceholder}
           className="w-full h-11 px-4 rounded-xl border glass-input text-sm text-foreground"
           disabled={loading}
@@ -86,8 +98,7 @@ export function LoginForm({ showToast }: { showToast: (msg: string, type: "succe
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            {...register("password")}
             placeholder={APP_STRINGS.login.passwordPlaceholder}
             className="w-full h-11 pl-4 pr-10 rounded-xl border glass-input text-sm text-foreground"
             disabled={loading}

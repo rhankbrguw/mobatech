@@ -42,6 +42,9 @@ class GlassStatusChip extends StatelessWidget {
       case 'cancelled':
         label = 'Dibatalkan';
         break;
+      case 'rejected':
+        label = 'Ditolak';
+        break;
       case 'active':
         label = 'Aktif';
         break;

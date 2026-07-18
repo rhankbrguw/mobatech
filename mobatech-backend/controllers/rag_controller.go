@@ -37,7 +37,8 @@ func (c *RAGController) TriggerManualSync(ctx *gin.Context) {
 		return
 	}
 
-	if resp.StatusCode != http.StatusOK || result["status"] == "error" {
+	successVal, ok := result["success"].(bool)
+	if resp.StatusCode != http.StatusOK || (ok && !successVal) || result["status"] == "error" {
 		ctx.JSON(http.StatusInternalServerError, utils.BuildError("INTERNAL_ERROR", "Gagal menyelaraskan database vektor.", result))
 		return
 	}
@@ -66,5 +67,5 @@ func (c *RAGController) GetRAGStatus(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", result))
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", result["data"]))
 }

@@ -31,8 +31,16 @@ func (c *ProfileController) UpdateProfile(ctx *gin.Context) {
 	fullName := ctx.PostForm("full_name")
 	phone := ctx.PostForm("phone_number")
 	bloodType := ctx.PostForm("blood_type")
-	height, _ := strconv.Atoi(ctx.PostForm("height"))
-	weight, _ := strconv.Atoi(ctx.PostForm("weight"))
+	height, err := strconv.Atoi(ctx.PostForm("height"))
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid height parameter"))
+		return
+	}
+	weight, err := strconv.Atoi(ctx.PostForm("weight"))
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid weight parameter"))
+		return
+	}
 	allergies := ctx.PostForm("allergies")
 	dob := ctx.PostForm("date_of_birth")
 	gender := ctx.PostForm("gender")

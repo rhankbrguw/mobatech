@@ -35,12 +35,11 @@ func (c *AppointmentController) GetAllAppointments(ctx *gin.Context) {
 		userID = uint(userIDFloat.(float64))
 	}
 
-	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
-	if page < 1 {
-		page = 1
+	page, limit, offset, err := utils.GetPaginationParams(ctx)
+	if err != nil {
+		ctx.Error(err)
+		return
 	}
-	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
-	offset := (page - 1) * limit
 
 	appointments, totalCount, err := c.appointmentService.GetAllAppointments(ctx.Request.Context(), search, filter, userID, role, limit, offset)
 	if err != nil {
@@ -58,12 +57,11 @@ func (c *AppointmentController) GetUserAppointments(ctx *gin.Context) {
 	}
 	userID := uint(userIDFloat.(float64))
 
-	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
-	if page < 1 {
-		page = 1
+	page, limit, offset, err := utils.GetPaginationParams(ctx)
+	if err != nil {
+		ctx.Error(err)
+		return
 	}
-	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
-	offset := (page - 1) * limit
 
 	appointments, totalCount, err := c.appointmentService.GetUserAppointments(ctx.Request.Context(), userID, limit, offset)
 	if err != nil {
@@ -104,42 +102,13 @@ func (c *AppointmentController) CancelAppointment(ctx *gin.Context) {
 	}
 	userID := uint(userIDFloat.(float64))
 
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	if err := c.appointmentService.CancelAppointment(ctx.Request.Context(), uint(id), userID, false); err != nil {
-		ctx.Error(utils.FormatValidationError(err))
-		return
-	}
-
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
-}
-
-func (c *AppointmentController) AdminCancelAppointment(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
-
-	if err := c.appointmentService.CancelAppointment(ctx.Request.Context(), uint(id), 0, true); err != nil {
-		ctx.Error(utils.FormatValidationError(err))
-		return
-	}
-
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
-}
-
-func (c *AppointmentController) ApproveAppointment(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
-
-	if err := c.appointmentService.ApproveAppointment(ctx.Request.Context(), uint(id)); err != nil {
-		ctx.Error(utils.FormatValidationError(err))
-		return
-	}
-
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
-}
-
-func (c *AppointmentController) CompleteAppointment(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
-
-	if err := c.appointmentService.CompleteAppointment(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
 		return
 	}

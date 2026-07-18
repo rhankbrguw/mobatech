@@ -46,8 +46,8 @@ func (s *pharmacyService) DeletePrescription(ctx context.Context, id uint, userI
 	return s.repo.DeletePrescription(ctx, id)
 }
 
-func (s *pharmacyService) UpdatePrescriptionStatus(ctx context.Context, id uint, status string) error {
-	return s.repo.UpdatePrescriptionStatus(ctx, id, status)
+func (s *pharmacyService) UpdatePrescriptionStatus(ctx context.Context, id uint, status string, notes *string) error {
+	return s.repo.UpdatePrescriptionStatus(ctx, id, status, notes)
 }
 
 func (s *pharmacyService) GetOrdersByUserID(ctx context.Context, userID uint) ([]models.PharmacyOrder, error) {
@@ -85,12 +85,16 @@ func (s *pharmacyService) UpdateOrderStatus(ctx context.Context, id uint, status
 	if status == "Cancelled" && order.Status != "Cancelled" {
 		for _, item := range order.Items {
 			// Increase stock back by item.Quantity
-			_ = s.repo.UpdateMedicineStock(ctx, item.MedicineID, item.Quantity)
+			if updateErr := s.repo.UpdateMedicineStock(ctx, item.MedicineID, item.Quantity); updateErr != nil {
+				return fmt.Errorf("pharmacyService.UpdateOrderStatus: failed to rollback stock: %w", updateErr)
+			}
 		}
 	} else if order.Status == "Cancelled" && status != "Cancelled" {
 		// If order status is changed from Cancelled back to something else, deduct the stock again
 		for _, item := range order.Items {
-			_ = s.repo.UpdateMedicineStock(ctx, item.MedicineID, -item.Quantity)
+			if updateErr := s.repo.UpdateMedicineStock(ctx, item.MedicineID, -item.Quantity); updateErr != nil {
+				return fmt.Errorf("pharmacyService.UpdateOrderStatus: failed to deduct stock: %w", updateErr)
+			}
 		}
 	}
 

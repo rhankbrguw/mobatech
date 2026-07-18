@@ -56,8 +56,12 @@ func (r *pharmacyRepository) CheckPrescriptionExistsByAppointment(ctx context.Co
 func (r *pharmacyRepository) DeletePrescription(ctx context.Context, id uint) error {
 	return r.db.Delete(&models.Prescription{}, id).Error
 }
-func (r *pharmacyRepository) UpdatePrescriptionStatus(ctx context.Context, id uint, status string) error {
-	return r.db.Model(&models.Prescription{}).Where("id = ?", id).Update("status", status).Error
+func (r *pharmacyRepository) UpdatePrescriptionStatus(ctx context.Context, id uint, status string, notes *string) error {
+	updates := map[string]interface{}{"status": status}
+	if notes != nil {
+		updates["notes"] = *notes
+	}
+	return r.db.Model(&models.Prescription{}).Where("id = ?", id).Updates(updates).Error
 }
 func (r *pharmacyRepository) GetOrdersByUserID(ctx context.Context, userID uint) ([]models.PharmacyOrder, error) {
 	var orders []models.PharmacyOrder

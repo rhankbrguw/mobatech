@@ -16,7 +16,9 @@ SCHEDULER_CRON_MINUTE = 0
 # File Paths
 DATA_PATH_REL = os.getenv("DATA_PATH_REL", "../data/mock_medical_knowledge.csv")
 BACKEND_ENV_PATH_REL = os.getenv("BACKEND_ENV_PATH_REL", "../../mobatech-backend/.env")
-LLM_BACKEND_ENV_PATH_REL = os.getenv("LLM_BACKEND_ENV_PATH_REL", "../../../mobatech-backend/.env")
+LLM_BACKEND_ENV_PATH_REL = os.getenv(
+    "LLM_BACKEND_ENV_PATH_REL", "../../../mobatech-backend/.env"
+)
 
 # RAG & Embeddings
 EMBEDDING_MODEL_NAME = "paraphrase-multilingual-MiniLM-L12-v2"
@@ -38,7 +40,9 @@ MSG_RUNNING_SYNC = "Running automated hourly Vector DB sync..."
 GEMINI_MODEL_NAME = "gemini-1.5-flash"
 LOCALE_ID = "id_ID.UTF-8"
 TIME_FORMAT = "%A, %d %B %Y %H:%M WIB"
-ERR_LLM_OFFLINE = "Sistem AI sedang offline. Silakan tambahkan GEMINI_API_KEY di environment."
+ERR_LLM_OFFLINE = (
+    "Sistem AI sedang offline. Silakan tambahkan GEMINI_API_KEY di environment."
+)
 ERR_LLM_EXCEPTION = "Maaf, terjadi gangguan pada sistem AI: {error}"
 ERR_LOCALE_FAILED = "Gagal mengatur locale: {e}"
 
@@ -66,14 +70,14 @@ NER_MODEL_NAME = "cahya/bert-base-indonesian-NER"
 NER_AGGREGATION_STRATEGY = "simple"
 WARN_NER_NOT_LOADED = "Warning: NER model not loaded. Using fallback regex anonymizer."
 ERR_NER_LOAD_FAILED = "Error loading NER model: {error}"
-REGEX_NIK = r'\b\d{16}\b'
-REGEX_PHONE = r'\b(?:08|\+628)\d{8,11}\b'
+REGEX_NIK = r"\b\d{16}\b"
+REGEX_PHONE = r"\b(?:08|\+628)\d{8,11}\b"
 REDACTED_NIK = "[REDACTED_NIK]"
 REDACTED_PHONE = "[REDACTED_PHONE]"
 RS_NAME_ORIGINAL = "Hermina"
 RS_NAME_REDACTED = "[RS_NAME]"
 ASCII_ENCODING = "ascii"
-REGEX_WHITESPACE = r'\s+'
+REGEX_WHITESPACE = r"\s+"
 REPLACE_WHITESPACE = " "
 
 # Database Sync
@@ -82,20 +86,22 @@ DB_ENV_KEYS = {
     "user": "DB_USER",
     "password": "DB_PASSWORD",  # nosec B105
     "name": "DB_NAME",
-    "port": "DB_PORT"
+    "port": "DB_PORT",
 }
 DB_DEFAULTS = {
     "host": "127.0.0.1",
     "user": "root",
     "password": "",  # nosec B105
     "name": "mobatech",
-    "port": 3306
+    "port": 3306,
 }
 
 QUERY_DOCTORS = "SELECT id, name, specialization, description FROM doctors WHERE deleted_at IS NULL AND is_active = 1"
 QUERY_SCHEDULES = "SELECT id, doctor_id, date, start_time, end_time, quota, booked FROM doctor_schedules WHERE deleted_at IS NULL AND is_available = 1"
 QUERY_POLYCLINICS = "SELECT id, name, description FROM polyclinics WHERE deleted_at IS NULL AND is_active = 1"
-QUERY_BRANCHES = "SELECT id, name, address, gmaps_link FROM branches WHERE deleted_at IS NULL"
+QUERY_BRANCHES = (
+    "SELECT id, name, address, gmaps_link FROM branches WHERE deleted_at IS NULL"
+)
 
 KNOWLEDGE_START_ID = 100
 CAT_LAYANAN = "Layanan"

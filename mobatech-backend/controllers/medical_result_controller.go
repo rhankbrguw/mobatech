@@ -24,8 +24,16 @@ func (c *MedicalResultController) GetAll(ctx *gin.Context) {
 	filter := ctx.Query("filter")
 	pageStr := ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage)
 	limitStr := ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit)
-	page, _ := strconv.Atoi(pageStr)
-	limit, _ := strconv.Atoi(limitStr)
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid page parameter"))
+		return
+	}
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid limit parameter"))
+		return
+	}
 	offset := (page - 1) * limit
 
 	roleFloat, _ := ctx.Get("role")
@@ -65,7 +73,11 @@ func (c *MedicalResultController) GetUserResults(ctx *gin.Context) {
 }
 
 func (c *MedicalResultController) GetByID(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 	result, err := c.service.GetMedicalResultByID(ctx.Request.Context(), uint(id))
 	if err != nil {
 		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, err.Error(), nil))
@@ -97,7 +109,11 @@ func (c *MedicalResultController) Create(ctx *gin.Context) {
 }
 
 func (c *MedicalResultController) Update(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	var req models.MedicalResult
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -116,7 +132,11 @@ func (c *MedicalResultController) Update(ctx *gin.Context) {
 }
 
 func (c *MedicalResultController) Delete(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 	if err := c.service.DeleteMedicalResult(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
 		return

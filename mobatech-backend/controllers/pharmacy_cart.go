@@ -58,7 +58,11 @@ func (c *PharmacyController) UpdateCartItem(ctx *gin.Context) {
 	userID := uint(userIDVal.(float64))
 
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	var req struct {
 		Quantity int `json:"quantity"`
@@ -84,7 +88,11 @@ func (c *PharmacyController) RemoveFromCart(ctx *gin.Context) {
 	userID := uint(userIDVal.(float64))
 
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	if err := c.service.RemoveFromCart(ctx.Request.Context(), userID, uint(id)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))

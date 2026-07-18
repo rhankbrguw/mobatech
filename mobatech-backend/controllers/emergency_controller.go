@@ -68,8 +68,16 @@ func (c *EmergencyController) GetAllAdmin(ctx *gin.Context) {
 	filter := ctx.Query("filter")
 	pageStr := ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage)
 	limitStr := ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit)
-	page, _ := strconv.Atoi(pageStr)
-	limit, _ := strconv.Atoi(limitStr)
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid page parameter"))
+		return
+	}
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid limit parameter"))
+		return
+	}
 	offset := (page - 1) * limit
 	reqs, totalCount, err := c.service.GetAllRequests(ctx.Request.Context(), search, filter, limit, offset)
 	if err != nil {
@@ -81,7 +89,11 @@ func (c *EmergencyController) GetAllAdmin(ctx *gin.Context) {
 
 func (c *EmergencyController) UpdateStatusAdmin(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	var req struct {
 		Status string `json:"status"`

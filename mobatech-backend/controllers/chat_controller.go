@@ -68,8 +68,12 @@ func (c *ChatController) DeleteSession(ctx *gin.Context) {
 		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
 		return
 	}
-	sessionID, _ := strconv.Atoi(ctx.Param("id"))
-	err := c.service.DeleteSession(ctx.Request.Context(), uint(userID.(float64)), uint(sessionID))
+	sessionID, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid sessionID parameter"))
+		return
+	}
+	err = c.service.DeleteSession(ctx.Request.Context(), uint(userID.(float64)), uint(sessionID))
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -105,8 +109,16 @@ func (c *ChatController) GetAllSessions(ctx *gin.Context) {
 	search := ctx.Query("search")
 	pageStr := ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage)
 	limitStr := ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit)
-	page, _ := strconv.Atoi(pageStr)
-	limit, _ := strconv.Atoi(limitStr)
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid page parameter"))
+		return
+	}
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid limit parameter"))
+		return
+	}
 	offset := (page - 1) * limit
 	sessions, totalCount, err := c.service.GetAllSessions(ctx.Request.Context(), search, limit, offset)
 	if err != nil {

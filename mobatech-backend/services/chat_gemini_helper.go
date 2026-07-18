@@ -22,7 +22,10 @@ func (s *chatService) setupGemini(ctx context.Context) (*genai.GenerativeModel, 
 
 	model := client.GenerativeModel("gemini-2.5-flash")
 
-	loc, _ := time.LoadLocation("Asia/Jakarta")
+	loc, err := time.LoadLocation("Asia/Jakarta")
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to load location: %v", err)
+	}
 	currentTime := time.Now().In(loc).Format("15:04 WIB, Monday, 02 January 2006")
 	formattedPrompt := fmt.Sprintf(constants.GeminiSystemPrompt, currentTime)
 
@@ -62,11 +65,13 @@ func (s *chatService) processStream(ctx context.Context, iter *genai.GenerateCon
 		fullResponse += s.extractAndSendParts(resp.Candidates, outChan)
 	}
 
-	_ = s.repo.AddMessage(ctx, &models.ChatMessage{
+	if err := s.repo.AddMessage(ctx, &models.ChatMessage{
 		SessionID: sessionID,
 		Role:      "model",
 		Content:   fullResponse,
-	})
+	}); err != nil {
+		errChan <- fmt.Errorf("failed to save assistant message: %v", err)
+	}
 }
 
 func (s *chatService) extractAndSendParts(candidates []*genai.Candidate, outChan chan<- string) string {

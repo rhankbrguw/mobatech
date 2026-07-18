@@ -117,6 +117,8 @@ class AppColors {
       case 'cancelled':
       case 'dibatalkan':
       case 'unavailable':
+      case 'rejected':
+      case 'ditolak':
         return errorRed;
       case 'dispatched':
         return ambulanceBlueDark;

@@ -23,12 +23,24 @@ func (c *DoctorController) GetDoctors(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
 	specialization := ctx.Query("specialization")
-	polyclinicID, _ := strconv.ParseUint(ctx.DefaultQuery("polyclinic_id", "0"), 10, 32)
-	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
+	polyclinicID, err := strconv.ParseUint(ctx.DefaultQuery("polyclinic_id", "0"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid polyclinicID parameter"))
+		return
+	}
+	page, err := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid page parameter"))
+		return
+	}
 	if page < 1 {
 		page = 1
 	}
-	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	limit, err := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid limit parameter"))
+		return
+	}
 	offset := (page - 1) * limit
 
 	doctors, totalCount, err := c.doctorService.GetAllDoctors(ctx.Request.Context(), search, filter, specialization, uint(polyclinicID), limit, offset)
@@ -40,7 +52,11 @@ func (c *DoctorController) GetDoctors(ctx *gin.Context) {
 }
 
 func (c *DoctorController) GetDoctorByID(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 	doctor, err := c.doctorService.GetDoctorByID(ctx.Request.Context(), uint(id))
 	if err != nil {
 		ctx.Error(utils.NewAppError(utils.ErrNotFound, http.StatusNotFound, constants.MsgDoctorNotFound, nil))
@@ -65,7 +81,11 @@ func (c *DoctorController) CreateDoctor(ctx *gin.Context) {
 }
 
 func (c *DoctorController) UpdateDoctor(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 	var input models.Doctor
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
@@ -82,7 +102,11 @@ func (c *DoctorController) UpdateDoctor(ctx *gin.Context) {
 }
 
 func (c *DoctorController) DeleteDoctor(ctx *gin.Context) {
-	id, _ := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 	if err := c.doctorService.DeleteDoctor(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

@@ -21,25 +21,39 @@ func (s *chatService) buildRAGPrompt(ctx context.Context, userMessage string) st
 }
 
 func (s *chatService) fetchRAGContext(ctx context.Context, query string) (string, string) {
-	payload, _ := json.Marshal(map[string]string{"query": query})
+	payload, err := json.Marshal(map[string]string{"query": query})
+	if err != nil {
+		return "", ""
+	}
 	resp, err := http.Post("http://127.0.0.1:8000/api/rag/context", "application/json", bytes.NewBuffer(payload))
-	if err != nil || resp.StatusCode != 200 {
+	if err != nil {
 		return "", ""
 	}
 	defer resp.Body.Close()
 
-	body, _ := io.ReadAll(resp.Body)
-	var ragResp map[string]interface{}
-	if err := json.Unmarshal(body, &ragResp); err == nil {
-		anonymized := ""
-		if val, ok := ragResp["anonymized_query"].(string); ok {
-			anonymized = val
-		}
+	if resp.StatusCode != 200 {
+		return "", ""
+	}
 
-		if ctxList, ok := ragResp["context"].([]interface{}); ok && len(ctxList) > 0 {
-			result := ""
-			for _, ctx := range ctxList {
-				result += fmt.Sprintf("- %v\n", ctx)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", ""
+	}
+
+	var env struct {
+		Success bool `json:"success"`
+		Data    struct {
+			AnonymizedQuery string   `json:"anonymized_query"`
+			Context         []string `json:"context"`
+		} `json:"data"`
+	}
+
+	if err := json.Unmarshal(body, &env); err == nil && env.Success {
+		anonymized := env.Data.AnonymizedQuery
+		result := ""
+		if len(env.Data.Context) > 0 {
+			for _, ctxStr := range env.Data.Context {
+				result += fmt.Sprintf("- %v\n", ctxStr)
 			}
 			return result, anonymized
 		}

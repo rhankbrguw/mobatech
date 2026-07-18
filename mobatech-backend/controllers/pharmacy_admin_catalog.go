@@ -24,7 +24,11 @@ func (c *PharmacyController) AdminCreateCategory(ctx *gin.Context) {
 
 func (c *PharmacyController) AdminUpdateCategory(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	var cat models.MedicineCategory
 	if err := ctx.ShouldBindJSON(&cat); err != nil {
@@ -42,7 +46,11 @@ func (c *PharmacyController) AdminUpdateCategory(ctx *gin.Context) {
 
 func (c *PharmacyController) AdminDeleteCategory(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	if err := c.service.DeleteCategory(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
@@ -66,7 +74,11 @@ func (c *PharmacyController) AdminCreateMedicine(ctx *gin.Context) {
 
 func (c *PharmacyController) AdminUpdateMedicine(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	var med models.Medicine
 	if err := ctx.ShouldBindJSON(&med); err != nil {
@@ -84,7 +96,11 @@ func (c *PharmacyController) AdminUpdateMedicine(ctx *gin.Context) {
 
 func (c *PharmacyController) AdminDeleteMedicine(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	if err := c.service.DeleteMedicine(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))

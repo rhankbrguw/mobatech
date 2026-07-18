@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"backend/constants"
+	"backend/controllers/dto"
 	"backend/models"
 	"backend/utils"
 	"net/http"
@@ -24,9 +24,11 @@ func (c *PharmacyController) AdminCreatePrescription(ctx *gin.Context) {
 }
 
 func (c *PharmacyController) AdminGetAllPrescriptions(ctx *gin.Context) {
-	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
-	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
-	offset := (page - 1) * limit
+	page, limit, offset, err := utils.GetPaginationParams(ctx)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
 	prescriptions, totalCount, err := c.service.GetAllPrescriptions(ctx.Request.Context(), limit, offset)
 	if err != nil {
@@ -38,7 +40,11 @@ func (c *PharmacyController) AdminGetAllPrescriptions(ctx *gin.Context) {
 
 func (c *PharmacyController) AdminDeletePrescription(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	if err := c.service.DeletePrescription(ctx.Request.Context(), uint(id), nil); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
@@ -49,7 +55,11 @@ func (c *PharmacyController) AdminDeletePrescription(ctx *gin.Context) {
 
 func (c *PharmacyController) AdminUpdatePrescriptionStatus(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 
 	role, exists := ctx.Get("role")
 	if !exists || (role != "pharmacist" && role != "doctor") {
@@ -57,15 +67,13 @@ func (c *PharmacyController) AdminUpdatePrescriptionStatus(ctx *gin.Context) {
 		return
 	}
 
-	var req struct {
-		Status string `json:"status"`
-	}
+	var req dto.AdminUpdatePrescriptionStatusReq
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
 		return
 	}
 
-	if err := c.service.UpdatePrescriptionStatus(ctx.Request.Context(), uint(id), req.Status); err != nil {
+	if err := c.service.UpdatePrescriptionStatus(ctx.Request.Context(), uint(id), req.Status, &req.Notes); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
@@ -76,9 +84,11 @@ func (c *PharmacyController) AdminGetAllOrders(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
 
-	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
-	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
-	offset := (page - 1) * limit
+	page, limit, offset, err := utils.GetPaginationParams(ctx)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
 	orders, totalCount, err := c.service.GetAllOrders(ctx.Request.Context(), search, filter, limit, offset)
 	if err != nil {
@@ -90,11 +100,13 @@ func (c *PharmacyController) AdminGetAllOrders(ctx *gin.Context) {
 
 func (c *PharmacyController) AdminUpdateOrderStatus(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
-
-	var req struct {
-		Status string `json:"status"`
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
 	}
+
+	var req dto.AdminUpdateOrderStatusReq
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
 		return
@@ -109,11 +121,13 @@ func (c *PharmacyController) AdminUpdateOrderStatus(ctx *gin.Context) {
 
 func (c *PharmacyController) AdminUpdateOrderPayment(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.Atoi(idStr)
-
-	var req struct {
-		PaymentStatus string `json:"payment_status"`
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
 	}
+
+	var req dto.AdminUpdateOrderPaymentReq
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
 		return

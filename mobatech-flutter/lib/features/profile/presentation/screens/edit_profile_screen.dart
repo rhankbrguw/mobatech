@@ -73,6 +73,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     setState(() => _isLoading = true);
 
     try {
+      // Explanatory comment for null assertion (!): We proved _imagePath is not null in the condition before it.
       String? pathForUpload = (_imagePath != null && (_imagePath!.startsWith('http'))) ? null : _imagePath;
       await ref.read(authStateProvider.notifier).updateProfile(
             _fullNameController.text.trim(),

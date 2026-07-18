@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"backend/constants"
+	"backend/controllers/dto"
 	"backend/services"
 	"backend/utils"
 	"net/http"
@@ -18,12 +19,7 @@ func NewAuthController(service services.AuthService) *AuthController {
 	return &AuthController{service}
 }
 func (c *AuthController) Register(ctx *gin.Context) {
-	var req struct {
-		FullName    string `json:"full_name" binding:"required"`
-		Email       string `json:"email" binding:"required,email"`
-		PhoneNumber string `json:"phone_number" binding:"required"`
-		Password    string `json:"password" binding:"required,min=6"`
-	}
+	var req dto.RegisterReq
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
 		return
@@ -36,10 +32,7 @@ func (c *AuthController) Register(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", user))
 }
 func (c *AuthController) Login(ctx *gin.Context) {
-	var req struct {
-		Email    string `json:"email" binding:"required,email"`
-		Password string `json:"password" binding:"required"`
-	}
+	var req dto.LoginReq
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
 		return
@@ -80,9 +73,11 @@ func (c *AuthController) GetAllUsers(ctx *gin.Context) {
 		viewerID = uint(userIDFloat.(float64))
 	}
 
-	page, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamPage, constants.PaginationDefaultPage))
-	limit, _ := strconv.Atoi(ctx.DefaultQuery(constants.QueryParamLimit, constants.PaginationDefaultLimit))
-	offset := (page - 1) * limit
+	page, limit, offset, err := utils.GetPaginationParams(ctx)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
 
 	users, totalCount, err := c.service.GetAllUsers(ctx.Request.Context(), search, filter, roleFilter, viewerID, viewerRole, limit, offset)
 	if err != nil {
@@ -92,14 +87,7 @@ func (c *AuthController) GetAllUsers(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", users, page, limit, totalCount))
 }
 func (c *AuthController) AdminCreateUser(ctx *gin.Context) {
-	var req struct {
-		FullName    string `json:"full_name" binding:"required"`
-		Email       string `json:"email" binding:"required,email"`
-		PhoneNumber string `json:"phone_number" binding:"required"`
-		Password    string `json:"password" binding:"required,min=6"`
-		Role        string `json:"role" binding:"required"`
-		ImageURL    string `json:"image_url"`
-	}
+	var req dto.AdminCreateUserReq
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
 		return
@@ -113,14 +101,12 @@ func (c *AuthController) AdminCreateUser(ctx *gin.Context) {
 }
 func (c *AuthController) AdminUpdateUser(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.ParseUint(idStr, 10, 32)
-	var req struct {
-		FullName    string `json:"full_name"`
-		Email       string `json:"email"`
-		PhoneNumber string `json:"phone_number"`
-		Role        string `json:"role"`
-		ImageURL    string `json:"image_url"`
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
 	}
+	var req dto.AdminUpdateUserReq
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(utils.FormatValidationError(err))
 		return
@@ -134,7 +120,11 @@ func (c *AuthController) AdminUpdateUser(ctx *gin.Context) {
 }
 func (c *AuthController) AdminDeleteUser(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	id, _ := strconv.ParseUint(idStr, 10, 32)
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
 	if err := c.service.DeleteUser(ctx.Request.Context(), uint(id)); err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

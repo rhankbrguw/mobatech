@@ -25,7 +25,7 @@ type PharmacyService interface {
 	GetAllPrescriptions(ctx context.Context, limit int, offset int) ([]models.Prescription, int64, error)
 	CreatePrescription(ctx context.Context, p *models.Prescription) error
 	DeletePrescription(ctx context.Context, id uint, userID *uint) error
-	UpdatePrescriptionStatus(ctx context.Context, id uint, status string) error
+	UpdatePrescriptionStatus(ctx context.Context, id uint, status string, notes *string) error
 
 	GetOrdersByUserID(ctx context.Context, userID uint) ([]models.PharmacyOrder, error)
 	GetOrderByID(ctx context.Context, id uint) (*models.PharmacyOrder, error)
