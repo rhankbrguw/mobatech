@@ -1,0 +1,144 @@
+part of 'cart_screen.dart';
+
+class _CartItemList extends ConsumerWidget {
+  final dynamic cart;
+  const _CartItemList({required this.cart});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (cart.items.isEmpty) {
+      return const SliverFillRemaining(
+        child: Center(child: Text(PharmacyStrings.extKeranjangandakosong)),
+      );
+    }
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final item = cart.items[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            child: _CartItemWidget(item: item),
+          );
+        }, childCount: cart.items.length),
+      ),
+    );
+  }
+}
+
+class _CartItemWidget extends ConsumerWidget {
+  final dynamic item;
+  const _CartItemWidget({required this.item});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.sm12),
+      decoration: BoxDecoration(
+        color: AppColors.BACKGROUND_WHITE,
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.SHADOW_COLOR,
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          _buildItemImage(),
+          const SizedBox(width: AppSpacing.sm12),
+          _buildItemDetails(),
+          _buildQuantityControls(ref),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildItemImage() {
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        color: AppColors.BACKGROUND_WAVE,
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadiusMd),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadiusMd),
+        child: item.medicine.imageUrl.isNotEmpty
+            ? Image.network(
+                item.medicine.imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => const Icon(
+                  Icons.medication,
+                  color: AppColors.BACKGROUND_WHITE,
+                ),
+              )
+            : const Icon(Icons.medication, color: AppColors.BACKGROUND_WHITE),
+      ),
+    );
+  }
+
+  Widget _buildItemDetails() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            item.medicine.name,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.TEXT_DARK,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            Formatters.formatCurrency(item.medicine.price),
+            style: const TextStyle(
+              color: AppColors.PRIMARY,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuantityControls(WidgetRef ref) {
+    return Row(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.remove_circle_outline,
+            color: AppColors.TEXT_GREY,
+          ),
+          onPressed: () {
+            if (item.quantity > 1) {
+              ref
+                  .read(cartProvider.notifier)
+                  .updateCartItem(item.id, item.quantity - 1);
+            } else {
+              ref.read(cartProvider.notifier).removeFromCart(item.id);
+            }
+          },
+        ),
+        Text(
+          '${item.quantity}',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        IconButton(
+          icon: const Icon(Icons.add_circle_outline, color: AppColors.PRIMARY),
+          onPressed: () {
+            ref
+                .read(cartProvider.notifier)
+                .updateCartItem(item.id, item.quantity + 1);
+          },
+        ),
+      ],
+    );
+  }
+}

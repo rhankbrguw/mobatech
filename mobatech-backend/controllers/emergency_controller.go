@@ -1,0 +1,120 @@
+package controllers
+
+import (
+	"backend/constants"
+	"backend/models"
+	"backend/services"
+	"backend/utils"
+	"context"
+	"log"
+	"net/http"
+	"strconv"
+	"time"
+
+	"github.com/gin-gonic/gin"
+)
+
+type EmergencyController struct {
+	service services.EmergencyService
+}
+
+func NewEmergencyController(service services.EmergencyService) *EmergencyController {
+	return &EmergencyController{service}
+}
+
+func (c *EmergencyController) SubmitRequest(ctx *gin.Context) {
+	var req models.EmergencyRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.Error(utils.FormatValidationError(err))
+		return
+	}
+
+	userID, exists := ctx.Get("user_id")
+	if !exists {
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
+		return
+	}
+	req.UserID = uint(userID.(float64))
+
+	if err := c.service.CreateRequest(ctx.Request.Context(), &req); err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+
+	// Auto-dispatch after 3 seconds in a background goroutine
+	go func(emergencyID uint) {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Printf("Recovered from panic in emergency auto-dispatch: %v", r)
+			}
+		}()
+		time.Sleep(3 * time.Second)
+		if err := c.service.UpdateStatus(context.Background(), emergencyID, "Dispatched"); err != nil {
+			log.Printf("Warning: failed to auto-dispatch emergency ID %d: %v", emergencyID, err)
+		}
+	}(req.ID)
+
+	ctx.JSON(http.StatusCreated, utils.BuildSuccess("CREATED", "Resource created successfully", req))
+}
+
+func (c *EmergencyController) GetUserHistory(ctx *gin.Context) {
+	userID, exists := ctx.Get("user_id")
+	if !exists {
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, constants.MsgUnauthorized, nil))
+		return
+	}
+
+	history, err := c.service.GetHistoryByUser(ctx.Request.Context(), uint(userID.(float64)))
+	if err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", history))
+}
+
+func (c *EmergencyController) GetAllAdmin(ctx *gin.Context) {
+	search := ctx.Query(constants.QUERY_PARAM_SEARCH)
+	filter := ctx.Query(constants.QUERY_PARAM_FILTER)
+	pageStr := ctx.DefaultQuery(constants.QUERY_PARAM_PAGE, constants.PAGINATION_DEFAULT_PAGE)
+	limitStr := ctx.DefaultQuery(constants.QUERY_PARAM_LIMIT, constants.PAGINATION_DEFAULT_LIMIT)
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid page parameter"))
+		return
+	}
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid limit parameter"))
+		return
+	}
+	offset := (page - 1) * limit
+	reqs, totalCount, err := c.service.GetAllRequests(ctx.Request.Context(), search, filter, limit, offset)
+	if err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", reqs, page, limit, totalCount))
+}
+
+func (c *EmergencyController) UpdateStatusAdmin(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("Invalid id parameter"))
+		return
+	}
+
+	var req struct {
+		Status string `json:"status"`
+	}
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.Error(utils.FormatValidationError(err))
+		return
+	}
+
+	if err := c.service.UpdateStatus(ctx.Request.Context(), uint(id), req.Status); err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
+}

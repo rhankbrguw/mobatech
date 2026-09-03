@@ -1,0 +1,144 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/formatters.dart';
+import '../../models/medicine.dart';
+import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class MedicineCardDetails extends StatelessWidget {
+  final Medicine medicine;
+  final VoidCallback onAddToCart;
+
+  const MedicineCardDetails({
+    super.key,
+    required this.medicine,
+    required this.onAddToCart,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.sm12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [_buildTextInfo(), _buildPriceAndAction()],
+      ),
+    );
+  }
+
+  Widget _buildTextInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          medicine.name,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: AppTypography.md,
+            color: AppColors.TEXT_DARK,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              medicine.genericName,
+              style: const TextStyle(
+                fontSize: AppTypography.sm,
+                color: AppColors.TEXT_GREY,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 2.0), // AppSpacing
+            Text(
+              medicine.stock > 0 ? '${medicine.stock} Tersedia' : 'Stok Habis',
+              style: TextStyle(
+                fontSize: AppTypography.xs,
+                fontWeight: FontWeight.w600,
+                color: medicine.stock > 0
+                    ? AppColors.TEXT_LIGHT_GREY
+                    : AppColors.ERROR_RED,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPriceAndAction() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          Formatters.formatCurrency(medicine.price),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.PRIMARY,
+            fontSize: AppTypography.md,
+          ),
+        ),
+        medicine.requiresPrescription
+            ? _buildPrescriptionLabel()
+            : _buildAddToCartButton(),
+      ],
+    );
+  }
+
+  Widget _buildPrescriptionLabel() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.ICON_ORANGE.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadiusSm),
+      ),
+      child: const Text(
+        CoreStrings.prescriptionLabel,
+        style: TextStyle(
+          color: AppColors.ICON_ORANGE,
+          fontSize: AppTypography.xs,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddToCartButton() {
+    final isOutOfStock = medicine.stock <= 0;
+    return GestureDetector(
+      onTap: isOutOfStock ? null : onAddToCart,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm12,
+          vertical: 6,
+        ),
+        decoration: BoxDecoration(
+          color: isOutOfStock
+              ? AppColors.BACKGROUND_WAVE
+              : AppColors.PRIMARY_LIGHT,
+          borderRadius: BorderRadius.circular(AppSpacing.borderRadiusSm),
+        ),
+        child: isOutOfStock
+            ? const Text(
+                PharmacyStrings.extStokhabis,
+                style: TextStyle(
+                  color: AppColors.TEXT_GREY,
+                  fontSize: AppTypography.xs,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            : const Icon(Icons.add, color: AppColors.PRIMARY, size: 18),
+      ),
+    );
+  }
+}

@@ -1,0 +1,81 @@
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/custom_bottom_nav_bar.dart';
+import '../../../../core/providers/mock_ui_providers.dart';
+
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+import 'package:mobatech_app/core/theme/app_typography.dart';
+part 'for_you_screen_components.dart';
+
+class ForYouScreen extends ConsumerWidget {
+  const ForYouScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncArticles = ref.watch(forYouArticlesProvider);
+
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: AppColors.BACKGROUND_SCREEN,
+        appBar: const _ForYouAppBar(),
+        body: TabBarView(
+          children: [
+            asyncArticles.when(
+              data: (articles) {
+                return TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Transform.translate(
+                        offset: Offset(0, 30 * (1 - value)),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(
+                      // AppSpacing
+                      horizontal: AppSpacing.lg,
+                      vertical: AppSpacing.md20,
+                    ),
+                    itemCount: articles.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: AppSpacing.sm12),
+                    itemBuilder: (context, index) {
+                      return _ArticleCard(article: articles[index]);
+                    },
+                  ),
+                );
+              },
+              loading: () => const Center(
+                child: CircularProgressIndicator(color: AppColors.PRIMARY),
+              ),
+              error: (e, st) => const Center(
+                child: Text(
+                  ErrorStrings.extGagalmemuatrekomendasi,
+                  style: TextStyle(color: AppColors.TEXT_GREY),
+                ),
+              ),
+            ),
+            const Center(
+              child: Text(
+                'Belum ada promo saat ini.',
+                style: TextStyle(color: AppColors.TEXT_GREY),
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: const CustomBottomNavBar(currentIndex: 2),
+      ),
+    );
+  }
+}

@@ -1,0 +1,123 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/error_handler.dart';
+import '../../../../core/widgets/skeleton_loader.dart';
+import '../../providers/appointment_provider.dart';
+import '../widgets/appointment_card.dart';
+import '../widgets/user_appointments_app_bar.dart';
+import '../widgets/user_appointments_empty.dart';
+import '../widgets/cancel_appointment_dialog.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class UserAppointmentsScreen extends ConsumerStatefulWidget {
+  const UserAppointmentsScreen({super.key});
+
+  @override
+  ConsumerState<UserAppointmentsScreen> createState() =>
+      _UserAppointmentsScreenState();
+}
+
+class _UserAppointmentsScreenState
+    extends ConsumerState<UserAppointmentsScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        ref.read(userAppointmentsProvider.notifier).fetchNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final appointmentsAsync = ref.watch(userAppointmentsProvider);
+    return Scaffold(
+      backgroundColor: AppColors.BACKGROUND_SCREEN,
+      body: appointmentsAsync.when(
+        data: (appointments) {
+          final isFetchingNextPage = ref
+              .read(userAppointmentsProvider.notifier)
+              .isFetchingNextPage;
+          return RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(userAppointmentsProvider);
+            },
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0.0, end: 1.0),
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeOutCubic,
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value,
+                  child: Transform.translate(
+                    offset: Offset(0, 30 * (1 - value)),
+                    child: child,
+                  ),
+                );
+              },
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 800),
+                  child: CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      const UserAppointmentsAppBar(),
+                      if (appointments.isEmpty)
+                        const SliverFillRemaining(child: EmptyAppointments())
+                      else
+                        SliverPadding(
+                          padding: const EdgeInsets.all(AppSpacing.lg),
+                          sliver: SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                if (index == appointments.length) {
+                                  return const Padding(
+                                    padding: EdgeInsets.all(AppSpacing.md),
+                                    child: Center(
+                                      child: CupertinoActivityIndicator(
+                                        radius: 14,
+                                      ),
+                                    ),
+                                  );
+                                }
+                                final appointment = appointments[index];
+                                return AppointmentCard(
+                                  appointment: appointment,
+                                  onCancel: () => CancelAppointmentDialog.show(
+                                    context,
+                                    ref,
+                                    appointment.id,
+                                  ),
+                                );
+                              },
+                              childCount:
+                                  appointments.length +
+                                  (isFetchingNextPage ? 1 : 0),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+        loading: () => const CardSkeletonLoader(count: 4),
+        error: (e, stack) => Center(child: Text(ErrorHandler.getMessage(e))),
+      ),
+    );
+  }
+}
