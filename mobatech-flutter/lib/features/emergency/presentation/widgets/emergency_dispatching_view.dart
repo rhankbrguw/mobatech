@@ -1,0 +1,120 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/home_strings.dart';
+
+import '../../../../core/theme/app_colors.dart';
+
+class EmergencyDispatchingView extends StatefulWidget {
+  const EmergencyDispatchingView({super.key});
+
+  @override
+  State<EmergencyDispatchingView> createState() =>
+      _EmergencyDispatchingViewState();
+}
+
+class _EmergencyDispatchingViewState extends State<EmergencyDispatchingView>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat(reverse: true);
+
+    _pulseAnimation = Tween<double>(begin: 0.8, end: 1.2).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const ValueKey('dispatching'),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [AppColors.EMERGENCY_DARK1, AppColors.EMERGENCY_DARK2],
+        ),
+      ),
+      child: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Pulsating ambulance icon
+              AnimatedBuilder(
+                animation: _pulseAnimation,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _pulseAnimation.value,
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.ERROR_RED.withAlpha(30),
+                        border: Border.all(
+                          color: AppColors.ERROR_RED.withAlpha(
+                            (100 * _pulseAnimation.value).toInt(),
+                          ),
+                          width: 3,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.local_hospital,
+                        color: AppColors.ERROR_RED,
+                        size: 52,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: AppSpacing.xxl),
+              const Text(
+                HomeStrings.searchingAmbulance,
+                style: TextStyle(
+                  color: AppColors.BACKGROUND_WHITE,
+                  fontSize: AppTypography.xxl22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm12),
+              Text(
+                CoreStrings.contactingEmergencyUnit,
+                style: TextStyle(
+                  color: AppColors.BACKGROUND_WHITE.withAlpha(180),
+                  fontSize: AppTypography.md,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xxxl),
+              SizedBox(
+                // AppSpacing
+                width: 200,
+                child: LinearProgressIndicator(
+                  backgroundColor: AppColors.BACKGROUND_WHITE.withAlpha(25),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppColors.ERROR_RED,
+                  ),
+                  minHeight: 3,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

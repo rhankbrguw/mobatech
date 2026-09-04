@@ -1,0 +1,96 @@
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/skeleton_loader.dart';
+import 'pulsing_location_dot.dart';
+import '../../../../core/constants/config.dart';
+
+import 'package:mobatech_app/core/theme/app_typography.dart';
+
+class LocationCardMapPreview extends StatelessWidget {
+  final bool isLocating;
+  final String? locationError;
+  final double? userLat;
+  final double? userLng;
+  final MapController mapController;
+
+  const LocationCardMapPreview({
+    super.key,
+    required this.isLocating,
+    required this.locationError,
+    required this.userLat,
+    required this.userLng,
+    required this.mapController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLocating) {
+      return Container(
+        color: AppColors.BACKGROUND_LIGHT_GREY,
+        child: const SkeletonLoader(
+          width: double.infinity,
+          height: double.infinity,
+          borderRadius: 0,
+        ),
+      );
+    }
+    if (locationError != null) {
+      return Container(
+        color: AppColors.BACKGROUND_LIGHT_GREY,
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.location_off,
+                size: 36,
+                color: AppColors.TEXT_LIGHT_GREY,
+              ),
+              SizedBox(height: AppSpacing.sm),
+              Text(
+                CoreStrings.locationUnavailable,
+                style: TextStyle(
+                  color: AppColors.TEXT_GREY,
+                  fontSize: AppTypography.sm13,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    if (userLat != null && userLng != null) {
+      return FlutterMap(
+        mapController: mapController,
+        options: MapOptions(
+          initialCenter: LatLng(userLat ?? 0.0, userLng ?? 0.0),
+          initialZoom: 16.0,
+          interactionOptions: const InteractionOptions(
+            flags: InteractiveFlag.none,
+          ),
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: AppConfig.mapTileUrl,
+            userAgentPackageName: 'com.mobatech.app',
+          ),
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: LatLng(userLat ?? 0.0, userLng ?? 0.0),
+                width: 50,
+                height: 50,
+                child: const PulsingLocationDot(),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+    return Container(color: AppColors.BACKGROUND_LIGHT_GREY);
+  }
+}

@@ -1,0 +1,51 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/phone_prefix_formatter.dart';
+import '../../../../core/widgets/app_text_field.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class PhoneTextField extends StatelessWidget {
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+
+  const PhoneTextField({super.key, this.controller, this.validator});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppTextField(
+      label: "", // No floating label for auth fields initially
+      controller: controller,
+      keyboardType: TextInputType.phone,
+      validator: validator,
+      inputFormatters: [PhonePrefixFormatter()],
+      prefixIcon: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '+62',
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.TEXT_LIGHT_GREY
+                    : AppColors.TEXT_GREY,
+                fontSize: AppTypography.md,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Container(
+              width: 1,
+              height: 24,
+              color: AppColors.getGlassBorder(
+                Theme.of(context).brightness == Brightness.dark,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+          ],
+        ),
+      ),
+    );
+  }
+}

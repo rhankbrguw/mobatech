@@ -1,0 +1,85 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/theme/app_colors.dart';
+import 'package:mobatech_app/core/providers/mock_ui_providers.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class OfferCard extends StatelessWidget {
+  final SpecialOffer offer;
+  const OfferCard({super.key, required this.offer});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppSpacing.borderRadiusXl),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(AppSpacing.xl),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                offer.themeColor.withValues(alpha: 0.8),
+                offer.themeColor,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(AppSpacing.borderRadiusXl),
+            boxShadow: [
+              BoxShadow(
+                color: offer.themeColor.withValues(alpha: 0.4),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              const Icon(
+                Icons.card_giftcard,
+                size: 80,
+                color: AppColors.TEXT_WHITE,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Text(
+                offer.title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: AppTypography.xxxl26,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.TEXT_WHITE,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm12),
+              _buildSubtitle(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubtitle() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.TEXT_WHITE.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(AppSpacing.md20),
+      ),
+      child: Text(
+        offer.subtitle,
+        style: const TextStyle(
+          color: AppColors.TEXT_WHITE,
+          fontSize: AppTypography.lg,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+}

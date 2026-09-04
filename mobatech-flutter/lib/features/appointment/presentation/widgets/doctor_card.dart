@@ -1,0 +1,129 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../data/models/doctor.dart';
+import '../../../../core/utils/formatters.dart';
+import 'doctor_card_parts.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class DoctorCard extends StatelessWidget {
+  final Doctor doctor;
+  final VoidCallback? onTap;
+
+  const DoctorCard({super.key, required this.doctor, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.SHADOW_COLOR.withValues(alpha: 0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Material(
+            color: AppColors.BACKGROUND_WHITE.withValues(alpha: 0.85),
+            child: InkWell(
+              onTap: onTap,
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10), // AppSpacing
+                      child: doctor.imageUrl.isNotEmpty
+                          ? Image.network(
+                              doctor.imageUrl
+                                  .replaceAll('/svg', '/png')
+                                  .replaceAll('.svg', '.png'),
+                              width: 70,
+                              height: 90,
+                              fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
+                              errorBuilder: (_, __, ___) => _buildPlaceholder(),
+                            )
+                          : _buildPlaceholder(),
+                    ),
+                    const SizedBox(width: 14), // AppSpacing
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            doctor.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppTypography.md15,
+                              color: AppColors.TEXT_DARK,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 6.0), // AppSpacing
+                          _buildInfoRow(
+                            Icons.local_hospital_outlined,
+                            doctor.polyclinicName ?? 'Belum ada poliklinik',
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          _buildInfoRow(
+                            Icons.medical_services_outlined,
+                            doctor.specialization,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          _buildInfoRow(
+                            Icons.phone_outlined,
+                            Formatters.formatPhoneNumber(doctor.contactInfo),
+                          ),
+                          const SizedBox(height: 6.0), // AppSpacing
+                          DoctorStatusBadge(isActive: doctor.isAvailableToday),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Image.asset(
+      'assets/doctor.png',
+      width: 80,
+      height: 100,
+      fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
+    );
+  }
+
+  Widget _buildInfoRow(
+    IconData icon,
+    String text, {
+    Color color = AppColors.TEXT_DARK,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: 14, color: AppColors.PRIMARY),
+        const SizedBox(width: AppSpacing.sm),
+        Text(
+          text,
+          style: TextStyle(fontSize: AppTypography.sm, color: color),
+        ),
+      ],
+    );
+  }
+}

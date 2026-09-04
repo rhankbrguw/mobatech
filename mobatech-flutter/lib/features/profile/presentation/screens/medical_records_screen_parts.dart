@@ -1,0 +1,134 @@
+part of 'medical_records_screen.dart';
+
+class _MedicalRecordsAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
+  const _MedicalRecordsAppBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: const Text(
+        ProfileStrings.extDatarekammedis,
+        style: TextStyle(
+          color: AppColors.TEXT_WHITE,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      backgroundColor: AppColors.PRIMARY,
+      centerTitle: true,
+      elevation: 0,
+      iconTheme: const IconThemeData(color: AppColors.BACKGROUND_WHITE),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(AppSpacing.borderRadiusXl),
+        ),
+      ),
+      flexibleSpace: ClipRRect(
+        borderRadius: const BorderRadius.vertical(
+          bottom: Radius.circular(AppSpacing.borderRadiusXl),
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              right: -20,
+              top: -20,
+              child: Opacity(
+                opacity: 0.4,
+                child: Image.asset('assets/header_logo.png', width: 220),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _AppointmentsList extends StatelessWidget {
+  final AsyncValue<List<dynamic>> appointmentsAsync;
+
+  const _AppointmentsList({required this.appointmentsAsync});
+
+  @override
+  Widget build(BuildContext context) {
+    return appointmentsAsync.when(
+      data: (appointments) {
+        if (appointments.isEmpty) {
+          return const SliverToBoxAdapter(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(AppSpacing.lg),
+                child: Text(
+                  ProfileStrings.extBelumadariwayatmedis,
+                  style: TextStyle(color: AppColors.TEXT_GREY),
+                ),
+              ),
+            ),
+          );
+        }
+        final sorted = List.of(appointments)
+          ..sort((a, b) {
+            final dateA = a.schedule?.date ?? DateTime.now();
+            final dateB = b.schedule?.date ?? DateTime.now();
+            return dateB.compareTo(dateA);
+          });
+
+        return SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final appt = sorted[index];
+              final isDone = appt.status.toLowerCase() == 'completed';
+              final dateStr = appt.schedule?.date != null
+                  ? Formatters.formatDateID(
+                      appt.schedule?.date ?? DateTime.now(),
+                    )
+                  : '-';
+              final docSpec = appt.doctor?.specialization ?? 'Umum';
+              final docName = appt.doctor?.name ?? 'Dokter Tidak Diketahui';
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                child: MedicalRecordCard(
+                  date: dateStr,
+                  type: 'Konsultasi $docSpec',
+                  doctor: docName,
+                  status: appt.status.toUpperCase(),
+                  icon: Icons.medical_services_outlined,
+                  color: isDone ? AppColors.PRIMARY : AppColors.ICON_ORANGE,
+                ),
+              );
+            }, childCount: sorted.length),
+          ),
+        );
+      },
+      loading: () => const SliverToBoxAdapter(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: Column(
+            children: [
+              SkeletonLoader(
+                width: double.infinity,
+                height: 100,
+                borderRadius: 20,
+              ),
+              SizedBox(height: AppSpacing.md),
+              SkeletonLoader(
+                width: double.infinity,
+                height: 100,
+                borderRadius: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+      error: (err, stack) => SliverToBoxAdapter(
+        child: Center(child: Text(ErrorHandler.getMessage(err))),
+      ),
+    );
+  }
+}

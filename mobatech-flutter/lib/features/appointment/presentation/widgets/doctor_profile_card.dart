@@ -1,0 +1,53 @@
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../data/models/doctor.dart';
+import 'doctor_profile_card_components.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class DoctorProfileCard extends StatelessWidget {
+  final Doctor doctor;
+
+  const DoctorProfileCard({super.key, required this.doctor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppSpacing.md20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.SHADOW_COLOR.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.md20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            color: AppColors.BACKGROUND_WHITE.withValues(alpha: 0.85),
+            padding: const EdgeInsets.all(AppSpacing.md20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DoctorImageWidget(doctor: doctor),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(child: DoctorInfoWidget(doctor: doctor)),
+                  ],
+                ),
+                DoctorAboutWidget(doctor: doctor),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,150 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../data/models/reminder.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+import '../../../../core/utils/formatters.dart';
+
+class ReminderCard extends StatelessWidget {
+  final Reminder reminder;
+  final VoidCallback onTap;
+
+  const ReminderCard({super.key, required this.reminder, required this.onTap});
+
+  IconData _getIconData(String type) {
+    switch (type.toLowerCase()) {
+      case 'medication':
+        return Icons.medication;
+      case 'appointment':
+        return Icons.calendar_today;
+      case 'checkup':
+      case 'result':
+        return Icons.medical_information;
+      default:
+        return Icons.notifications;
+    }
+  }
+
+  Color _getIconColor(String type) {
+    switch (type.toLowerCase()) {
+      case 'medication':
+        return AppColors.ERROR_RED;
+      case 'appointment':
+        return AppColors.PRIMARY;
+      case 'checkup':
+      case 'result':
+        return AppColors.ICON_BLUE;
+      default:
+        return AppColors.PRIMARY;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm12),
+      decoration: BoxDecoration(
+        color: reminder.isRead
+            ? AppColors.BACKGROUND_WHITE
+            : AppColors.PRIMARY_LIGHT.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+        border: Border.all(
+          color: reminder.isRead
+              ? AppColors.BORDER_GREY
+              : AppColors.PRIMARY_LIGHT,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.SHADOW_COLOR,
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: InkWell(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.sm12),
+                    decoration: BoxDecoration(
+                      color: _getIconColor(
+                        reminder.type,
+                      ).withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      _getIconData(reminder.type),
+                      color: _getIconColor(reminder.type),
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                reminder.title,
+                                style: TextStyle(
+                                  fontWeight: reminder.isRead
+                                      ? FontWeight.normal
+                                      : FontWeight.bold,
+                                  color: AppColors.TEXT_DARK,
+                                  fontSize: AppTypography.lg,
+                                ),
+                              ),
+                            ),
+                            if (!reminder.isRead)
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: AppColors.PRIMARY,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 6.0), // AppSpacing
+                        Text(
+                          reminder.message,
+                          style: const TextStyle(
+                            color: AppColors.TEXT_GREY,
+                            fontSize: AppTypography.md,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        Text(
+                          Formatters.parseAndFormatDateTimeID(
+                            reminder.dateTime,
+                          ),
+                          style: const TextStyle(
+                            color: AppColors.TEXT_LIGHT_GREY,
+                            fontSize: AppTypography.sm,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
