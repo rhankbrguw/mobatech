@@ -1,0 +1,66 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class AppointmentFilterChip extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final IconData? icon;
+
+  const AppointmentFilterChip({
+    super.key,
+    required this.label,
+    this.isSelected = false,
+    this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      margin: const EdgeInsets.only(right: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: AppSpacing.sm,
+      ),
+      decoration: BoxDecoration(
+        color: isSelected
+            ? AppColors.BACKGROUND_WHITE
+            : AppColors.BACKGROUND_WHITE.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+        border: Border.all(
+          color: isSelected
+              ? AppColors.BACKGROUND_WHITE
+              : AppColors.BACKGROUND_WHITE.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(
+              icon,
+              size: 16,
+              color: isSelected
+                  ? AppColors.PRIMARY
+                  : AppColors.BACKGROUND_WHITE,
+            ),
+            const SizedBox(width: 6.0), // AppSpacing
+          ],
+          Text(
+            label,
+            style: TextStyle(
+              color: isSelected
+                  ? AppColors.PRIMARY
+                  : AppColors.BACKGROUND_WHITE,
+              fontSize: AppTypography.sm,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

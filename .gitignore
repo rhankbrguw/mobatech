@@ -1,0 +1,61 @@
+.agent
+
+# System
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node / CRM
+node_modules/
+.next/
+dist/
+build/
+npm-debug.log
+yarn-error.log
+
+# Go / Backend
+/tmp/
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Flutter / Mobile
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+ios/Flutter/.last_build_id
+ios/Pods/
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+
+# Python / AI
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+credentials.json
+.agents/skills/

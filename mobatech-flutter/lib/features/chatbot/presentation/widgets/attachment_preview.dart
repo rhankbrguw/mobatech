@@ -1,0 +1,76 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class AttachmentPreview extends StatelessWidget {
+  final XFile? selectedImage;
+  final FilePickerResult? selectedFile;
+  final VoidCallback onRemove;
+
+  const AttachmentPreview({
+    super.key,
+    this.selectedImage,
+    this.selectedFile,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (selectedImage == null && selectedFile == null) {
+      return const SizedBox.shrink(); // AppSpacing
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm12),
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      decoration: BoxDecoration(
+        color: AppColors.BACKGROUND_WHITE,
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+        border: Border.all(color: AppColors.PRIMARY_LIGHT),
+      ),
+      child: Row(
+        children: [
+          if (selectedImage != null)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(AppSpacing.borderRadiusSm),
+              child: Image.file(
+                File(selectedImage?.path ?? ''),
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
+            )
+          else if (selectedFile != null)
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: AppColors.ORANGE10,
+                borderRadius: BorderRadius.circular(AppSpacing.borderRadiusSm),
+              ),
+              child: const Icon(
+                Icons.description,
+                color: AppColors.ICON_ORANGE,
+              ),
+            ),
+          const SizedBox(width: AppSpacing.sm12),
+          Expanded(
+            child: Text(
+              selectedImage?.name ?? selectedFile?.files.single.name ?? '',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.close, color: AppColors.TEXT_GREY),
+            onPressed: onRemove,
+          ),
+        ],
+      ),
+    );
+  }
+}
