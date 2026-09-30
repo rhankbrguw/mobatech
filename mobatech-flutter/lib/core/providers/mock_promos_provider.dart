@@ -1,0 +1,102 @@
+import 'dart:async';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
+import '../../../../core/network/dio_client.dart';
+
+class SpecialOffer {
+  final String title;
+  final String subtitle;
+  final Color themeColor;
+
+  SpecialOffer(this.title, this.subtitle, this.themeColor);
+}
+
+class SpecialOffersNotifier extends AsyncNotifier<List<SpecialOffer>> {
+  int _page = 1;
+  bool _hasMore = true;
+  bool _isFetchingNextPage = false;
+
+  bool get hasMore => _hasMore;
+  bool get isFetchingNextPage => _isFetchingNextPage;
+
+  @override
+  FutureOr<List<SpecialOffer>> build() async {
+    _page = 1;
+    _hasMore = true;
+    _isFetchingNextPage = false;
+    final dio = ref.watch(dioProvider);
+    final response = await dio.get(
+      '/promos',
+      queryParameters: {'page': 1, 'limit': 10},
+    );
+    final dynamic payload = response.data;
+    final List data = payload is Map && payload.containsKey('data')
+        ? payload['data']
+        : payload as List;
+    final meta = payload is Map && payload.containsKey('meta')
+        ? payload['meta'] as Map<String, dynamic>?
+        : response.extra['meta'] as Map<String, dynamic>?;
+    final currentPage = meta?['current_page'] as int? ?? 1;
+    final totalPages = meta?['total_pages'] as int? ?? 1;
+    _hasMore = currentPage < totalPages;
+    return data.map((e) {
+      return SpecialOffer(
+        e['title'] ?? '',
+        e['subtitle'] ?? '',
+        _parseColor(e['themeColor'] as String?),
+      );
+    }).toList();
+  }
+
+  Future<void> fetchNextPage() async {
+    if (_isFetchingNextPage || !_hasMore) return;
+    _isFetchingNextPage = true;
+    state = AsyncData(state.value ?? []);
+    try {
+      final dio = ref.read(dioProvider);
+      final response = await dio.get(
+        '/promos',
+        queryParameters: {'page': _page + 1, 'limit': 10},
+      );
+      final dynamic payload = response.data;
+      final List data = payload is Map && payload.containsKey('data')
+          ? payload['data']
+          : payload as List;
+      final meta = payload is Map && payload.containsKey('meta')
+          ? payload['meta'] as Map<String, dynamic>?
+          : response.extra['meta'] as Map<String, dynamic>?;
+      final currentPage = meta?['current_page'] as int? ?? 1;
+      final totalPages = meta?['total_pages'] as int? ?? 1;
+      _page++;
+      _hasMore = currentPage < totalPages;
+      final current = state.value ?? [];
+      final nextOffers = data.map((e) {
+        return SpecialOffer(
+          e['title'] ?? '',
+          e['subtitle'] ?? '',
+          _parseColor(e['themeColor'] as String?),
+        );
+      }).toList();
+      state = AsyncData([...current, ...nextOffers]);
+    } catch (e) {
+      state = AsyncData(state.value ?? []);
+    } finally {
+      _isFetchingNextPage = false;
+    }
+  }
+
+  Color _parseColor(String? colorStr) {
+    if (colorStr == null || colorStr.isEmpty) return AppColors.PRIMARY;
+    try {
+      return Color(int.parse(colorStr.replaceAll('#', '0xFF')));
+    } catch (_) {
+      return AppColors.PRIMARY;
+    }
+  }
+}
+
+final specialOffersProvider =
+    AsyncNotifierProvider<SpecialOffersNotifier, List<SpecialOffer>>(
+      SpecialOffersNotifier.new,
+    );

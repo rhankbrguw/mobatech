@@ -1,0 +1,117 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/app_constants.dart';
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  late final AnimationController _scaleController;
+  late final AnimationController _fadeController;
+  late final Animation<double> _scaleAnimation;
+  late final Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: AppDurations.scaleIn,
+    );
+    _scaleAnimation = Tween<double>(begin: 0.6, end: 1.0).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.easeOutBack),
+    );
+
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: AppDurations.fadeIn,
+    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeIn));
+
+    _startAnimations();
+    _checkAuthAndNavigate();
+  }
+
+  void _startAnimations() async {
+    _scaleController.forward();
+    await Future.delayed(const Duration(milliseconds: 400));
+    if (mounted) _fadeController.forward();
+  }
+
+  void _checkAuthAndNavigate() async {
+    await Future.delayed(AppDurations.splashDelay);
+    if (!mounted) return;
+
+    const secureStorage = FlutterSecureStorage();
+    final token = await secureStorage.read(key: 'jwt_token');
+
+    if (!mounted) return;
+
+    if (token != null && token.isNotEmpty) {
+      context.go('/home');
+    } else {
+      context.go('/onboarding');
+    }
+  }
+
+  @override
+  void dispose() {
+    _scaleController.dispose();
+    _fadeController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.PRIMARY, AppColors.PRIMARY_LIGHT],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ScaleTransition(
+                scale: _scaleAnimation,
+                child: Image.asset('assets/hermina_logo.png', width: 160),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: const Text(
+                  CoreStrings.splashTagline,
+                  style: TextStyle(
+                    fontSize: AppTypography.lg,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.TEXT_WHITE,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,52 @@
+package controllers
+
+import (
+	"backend/constants"
+	"backend/utils"
+	"io"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+)
+
+func (c *ChatController) StreamChat(ctx *gin.Context) {
+	sessionID, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.Error(utils.NewValidationError(constants.ErrInvalidSessionID.Error()))
+		return
+	}
+	var req struct {
+		Message string `json:"message"`
+	}
+	if err := ctx.BindJSON(&req); err != nil {
+		ctx.Error(utils.FormatValidationError(err))
+		return
+	}
+	outChan := make(chan string)
+	errChan := make(chan error)
+	go c.service.StreamChat(ctx.Request.Context(), uint(sessionID), req.Message, outChan, errChan)
+	c.handleStream(ctx, outChan, errChan)
+}
+
+func (c *ChatController) handleStream(ctx *gin.Context, outChan <-chan string, errChan <-chan error) {
+	ctx.Stream(func(w io.Writer) bool {
+		select {
+		case msg, ok := <-outChan:
+			if !ok {
+				return false
+			}
+			ctx.SSEvent("message", struct {
+				Text string `json:"text"`
+			}{Text: msg})
+			return true
+		case _, ok := <-errChan:
+			if !ok {
+				return false
+			}
+			ctx.SSEvent("error", constants.MsgInternalServer)
+			return false
+		case <-ctx.Request.Context().Done():
+			return false
+		}
+	})
+}

@@ -1,0 +1,89 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/profile_strings.dart';
+import '../../../../core/utils/custom_snackbar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/error_handler.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
+import '../providers/profile_provider.dart';
+
+class FamilyMemberMenu extends ConsumerWidget {
+  final int id;
+
+  const FamilyMemberMenu({super.key, required this.id});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.more_vert, color: AppColors.ICON_GREY),
+      color: AppColors.BACKGROUND_WHITE,
+      onSelected: (value) async {
+        if (value == 'delete') {
+          try {
+            await ref.read(authStateProvider.notifier).deleteFamilyMember(id);
+            ref.invalidate(userProfileProvider);
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              CustomSnackbar.showSuccess(
+                context,
+                ProfileStrings.extAnggotakeluargaberhasildihapus,
+              );
+            }
+          } catch (e) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              CustomSnackbar.showError(context, ErrorHandler.getMessage(e));
+            }
+          }
+        }
+      },
+      itemBuilder: (context) => [
+        const PopupMenuItem(
+          value: 'delete',
+          child: Row(
+            children: [
+              Icon(Icons.delete_outline, color: AppColors.ERROR_RED, size: 20),
+              SizedBox(width: AppSpacing.sm),
+              Text(
+                CoreStrings.extHapus,
+                style: TextStyle(color: AppColors.ERROR_RED),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class FamilyMemberAvatar extends StatelessWidget {
+  final String name;
+  final bool isPrimary;
+
+  const FamilyMemberAvatar({
+    super.key,
+    required this.name,
+    required this.isPrimary,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      radius: 28,
+      backgroundColor: isPrimary
+          ? AppColors.PRIMARY
+          : AppColors.TEXT_GREY.withValues(alpha: 0.2),
+      child: Text(
+        name.isNotEmpty ? name[0].toUpperCase() : '?',
+        style: TextStyle(
+          fontSize: AppTypography.xxxl,
+          fontWeight: FontWeight.bold,
+          color: isPrimary ? AppColors.BACKGROUND_WHITE : AppColors.TEXT_DARK,
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,130 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/skeleton_loader.dart';
+import '../../../../core/utils/error_handler.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../data/models/doctor_schedule.dart';
+import 'schedules_card_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class SchedulesCard extends StatelessWidget {
+  final AsyncValue<List<DoctorSchedule>> schedulesAsync;
+  final int? selectedScheduleId;
+  final ValueChanged<int?> onScheduleSelected;
+
+  const SchedulesCard({
+    super.key,
+    required this.schedulesAsync,
+    required this.selectedScheduleId,
+    required this.onScheduleSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppSpacing.md20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.SHADOW_COLOR.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.md20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            color: AppColors.BACKGROUND_WHITE.withValues(alpha: 0.85),
+            padding: const EdgeInsets.all(AppSpacing.md20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Pilih Jadwal',
+                  style: TextStyle(
+                    fontSize: AppTypography.lg,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.TEXT_DARK,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                schedulesAsync.when(
+                  data: (schedules) {
+                    if (schedules.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'Tidak ada jadwal tersedia',
+                          style: TextStyle(color: AppColors.TEXT_GREY),
+                        ),
+                      );
+                    }
+                    return StreamBuilder<int>(
+                      stream: Stream.periodic(
+                        const Duration(minutes: 1),
+                        (i) => i,
+                      ),
+                      builder: (context, snapshot) {
+                        final now = DateTime.now();
+                        // Hanya tampilkan jadwal untuk HARI INI
+                        final todaySchedules = schedules.where((s) {
+                          if (s.date == null) return false;
+                          // Pastikan date di-parse ke local untuk perbandingan
+                          final localDate =
+                              (s.date?.toLocal() ?? DateTime.now());
+                          return localDate.year == now.year &&
+                              localDate.month == now.month &&
+                              localDate.day == now.day;
+                        }).toList();
+
+                        if (todaySchedules.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              'Tidak ada jadwal tersedia untuk hari ini',
+                              style: TextStyle(color: AppColors.TEXT_GREY),
+                            ),
+                          );
+                        }
+
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: todaySchedules.length,
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: AppSpacing.sm12),
+                          itemBuilder: (context, index) {
+                            final schedule = todaySchedules[index];
+                            final isSelected =
+                                selectedScheduleId == schedule.id;
+                            return ScheduleItemCard(
+                              schedule: schedule,
+                              isSelected: isSelected,
+                              onTap: () {
+                                if (selectedScheduleId == schedule.id) {
+                                  onScheduleSelected(null);
+                                } else {
+                                  onScheduleSelected(schedule.id);
+                                }
+                              },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                  loading: () => const CardSkeletonLoader(count: 3),
+                  error: (e, _) => Text(ErrorHandler.getMessage(e)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
