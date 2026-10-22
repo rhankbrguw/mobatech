@@ -1,0 +1,99 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class FaqSection extends StatelessWidget {
+  const FaqSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final faqs = [
+      {
+        'q': 'Bagaimana cara membatalkan janji temu?',
+        'a':
+            'Anda dapat membatalkan janji temu melalui menu Jadwal di Halaman Utama paling lambat 2 jam sebelum waktu praktek.',
+      },
+      {
+        'q': 'Di mana saya bisa melihat hasil laboratorium?',
+        'a':
+            'Hasil laboratorium dapat dilihat di menu Data Rekam Medis pada halaman Profil setelah dokter menerbitkan hasil tersebut.',
+      },
+      {
+        'q': 'Apakah aplikasi ini gratis?',
+        'a':
+            'Ya, aplikasi ini sepenuhnya gratis untuk diunduh dan digunakan. Namun untuk beberapa layanan medis tetap dikenakan biaya sesuai prosedur.',
+      },
+    ];
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.BACKGROUND_WHITE,
+        borderRadius: BorderRadius.circular(AppSpacing.md20),
+        border: Border.all(color: AppColors.TEXT_GREY.withValues(alpha: 0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.SHADOW_COLOR.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.md20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Material(
+            color: AppColors.TRANSPARENT,
+            child: Column(
+              children: faqs.asMap().entries.map((entry) {
+                final idx = entry.key;
+                final faq = entry.value;
+                return Column(
+                  children: [
+                    Theme(
+                      data: ThemeData(dividerColor: AppColors.TRANSPARENT),
+                      child: ExpansionTile(
+                        iconColor: AppColors.PRIMARY,
+                        collapsedIconColor: AppColors.ICON_GREY,
+                        title: Text(
+                          faq['q'] ?? '',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.TEXT_DARK,
+                            fontSize: AppTypography.md,
+                          ),
+                        ),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              AppSpacing.md,
+                              0,
+                              AppSpacing.md,
+                              AppSpacing.md,
+                            ),
+                            child: Text(
+                              faq['a'] ?? '',
+                              style: const TextStyle(
+                                color: AppColors.TEXT_GREY,
+                                fontSize: AppTypography.sm13,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (idx < faqs.length - 1)
+                      const Divider(height: 1, indent: 16, endIndent: 16),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

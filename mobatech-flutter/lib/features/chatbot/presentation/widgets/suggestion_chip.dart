@@ -1,0 +1,61 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class SuggestionChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const SuggestionChip({super.key, required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppSpacing.md20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.SHADOW_COLOR.withValues(alpha: 0.05),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.md20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: 10,
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.BACKGROUND_WHITE.withValues(alpha: 0.85),
+              borderRadius: BorderRadius.circular(AppSpacing.md20),
+              border: Border.all(
+                color: AppColors.BORDER_GREY.withValues(alpha: 0.5),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(icon, size: 16, color: AppColors.TEXT_GREY),
+                const SizedBox(width: 6.0), // AppSpacing
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: AppTypography.sm,
+                    color: AppColors.TEXT_GREY,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

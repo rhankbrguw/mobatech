@@ -1,0 +1,112 @@
+import 'package:mobatech_app/core/theme/app_typography.dart';
+import 'package:flutter/material.dart';
+import 'package:mobatech_app/core/constants/strings/core_strings.dart';
+import 'package:mobatech_app/core/constants/strings/error_strings.dart';
+import 'package:mobatech_app/core/constants/strings/pharmacy_strings.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_colors.dart';
+
+import '../widgets/shimmer_loading.dart';
+import 'catalog_widgets.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class SearchAndCategories extends StatelessWidget {
+  final TextEditingController searchController;
+  final ValueChanged<String> onSearchChanged;
+  final int? selectedCategoryId;
+  final ValueChanged<int?> onCategorySelected;
+  final AsyncValue<List<dynamic>> categoriesAsync;
+
+  const SearchAndCategories({
+    super.key,
+    required this.searchController,
+    required this.onSearchChanged,
+    required this.selectedCategoryId,
+    required this.onCategorySelected,
+    required this.categoriesAsync,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.BACKGROUND_LIGHT_GREY,
+                borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+                border: Border.all(
+                  color: AppColors.BORDER_GREY.withValues(alpha: 0.5),
+                ),
+              ),
+              child: TextField(
+                controller: searchController,
+                onChanged: onSearchChanged,
+                decoration: const InputDecoration(
+                  hintText: PharmacyStrings.searchMedicineHint,
+                  hintStyle: TextStyle(
+                    color: AppColors.TEXT_GREY,
+                    fontSize: AppTypography.md,
+                  ),
+                  prefixIcon: Icon(Icons.search, color: AppColors.ICON_GREY),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(
+                    // AppSpacing
+                    horizontal: AppSpacing.md,
+                    vertical: 14,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            categoriesAsync.when(
+              data: (categories) => SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    CategoryChip(
+                      label: CoreStrings.allCategory,
+                      isSelected: selectedCategoryId == null,
+                      onSelected: () => onCategorySelected(null),
+                    ),
+                    ...categories.map(
+                      (c) => CategoryChip(
+                        label: c.name,
+                        isSelected: selectedCategoryId == c.id,
+                        onSelected: () => onCategorySelected(c.id),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              loading: () => SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(
+                    4,
+                    (index) => const Padding(
+                      padding: EdgeInsets.only(right: AppSpacing.sm),
+                      child: ShimmerLoading(
+                        width: 80,
+                        height: 35,
+                        borderRadius: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              error: (err, stack) =>
+                  const Text(ErrorStrings.errorLoadCategories),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
