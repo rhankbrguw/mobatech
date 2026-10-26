@@ -1,0 +1,73 @@
+import 'package:flutter/material.dart';
+import '../../../../../core/theme/app_colors.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class CheckoutPaymentMethod extends StatelessWidget {
+  final String paymentMethod;
+  final ValueChanged<String> onChanged;
+
+  const CheckoutPaymentMethod({
+    super.key,
+    required this.paymentMethod,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _buildPaymentOption(
+          'Transfer Bank',
+          'Transfer',
+          Icons.account_balance_outlined,
+        ),
+        const SizedBox(height: AppSpacing.sm12),
+        _buildPaymentOption('Tunai (Cash)', 'Cash', Icons.money_outlined),
+        const SizedBox(height: AppSpacing.sm12),
+        _buildPaymentOption(
+          'BPJS Kesehatan',
+          'BPJS',
+          Icons.health_and_safety_outlined,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPaymentOption(String title, String value, IconData icon) {
+    final isSelected = paymentMethod == value;
+    return GestureDetector(
+      onTap: () => onChanged(value),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: AppColors.BACKGROUND_WHITE,
+          borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+          border: Border.all(
+            color: isSelected ? AppColors.PRIMARY : AppColors.BORDER_GREY,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? AppColors.PRIMARY : AppColors.ICON_GREY,
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: isSelected ? AppColors.TEXT_DARK : AppColors.TEXT_GREY,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+            ),
+            if (isSelected)
+              const Icon(Icons.check_circle, color: AppColors.PRIMARY),
+          ],
+        ),
+      ),
+    );
+  }
+}

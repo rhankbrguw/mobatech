@@ -1,0 +1,57 @@
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../appointment/data/models/appointment.dart';
+import 'agenda_schedule_info.dart';
+
+import 'agenda_card_components.dart';
+import 'package:mobatech_app/core/theme/app_spacing.dart';
+
+class AgendaCard extends StatelessWidget {
+  final Appointment appointment;
+  const AgendaCard({super.key, required this.appointment});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        context.push('/appointment/user-appointments');
+      },
+      child: Container(
+        margin: const EdgeInsets.only(
+          top: AppSpacing.sm12,
+          left: AppSpacing.lg,
+          right: AppSpacing.lg,
+        ),
+        decoration: _buildDecoration(),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Column(
+              children: [
+                AgendaDoctorInfo(appointment: appointment),
+                AgendaScheduleInfo(appointment: appointment),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  BoxDecoration _buildDecoration() {
+    return BoxDecoration(
+      color: AppColors.BACKGROUND_WHITE.withValues(alpha: 0.85),
+      borderRadius: BorderRadius.circular(AppSpacing.borderRadiusLg),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.SHADOW_COLOR.withValues(alpha: 0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    );
+  }
+}
